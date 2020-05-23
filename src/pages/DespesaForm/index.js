@@ -218,7 +218,7 @@ export default function DespesaForm({navigation}) {
 
   return (
     <Container>
-      <StatusBar barStyle="light-content" backgroundColor={colors.dark} />
+      <StatusBar barStyle="light-content" backgroundColor={colors.colorStandardPrimary} />
       <HeaderForm>
         <TxtHeaderForm>
           {isEdition ? 'ATUALIZAR DESPESA' : 'NOVA DESPESA'}

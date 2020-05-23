@@ -21,7 +21,7 @@ export default Dash = ({navigation}) => {
   return (
     <Container>
       <Header title="Finax" />
-      <StatusBar barStyle="light-content" backgroundColor="#121212" />
+      <StatusBar barStyle="light-content" backgroundColor="#283B47" />
       <CompHead>
         <TxtDescricao>Saldo Receitas</TxtDescricao>
         <TxtSaldo>R$ 9.857,96</TxtSaldo>
@@ -44,7 +44,7 @@ Dash.navigationOptions = {
       easing: Easing.out(Easing.poly(4)),
       timing: Animated.timing,
     },
-    screenInterpolator: sceneProps => {
+    screenInterpolator: (sceneProps) => {
       const {layout, position, scene} = sceneProps;
       const {index} = scene;
 

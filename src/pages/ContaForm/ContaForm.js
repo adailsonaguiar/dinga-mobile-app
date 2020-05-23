@@ -47,23 +47,24 @@ export default function ContaForm({navigation}) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getDate().then(date => {
+    getDate().then((date) => {
       setday(date.day);
       setMonth(date.month);
       setYear(date.year);
     });
+    const params = state ? state.params : null;
     const detectionAccountParams = () => {
-      if (state.params.account) {
+      if (account) {
         setEdit(true);
         return true;
       }
       return false;
     };
     const getAccountEdit = () => {
-      setAccount(state.params.account.account);
-      setId(state.params.account.id);
-      setDescription(state.params.account.description);
-      setBalance(state.params.account.balance / 100);
+      setAccount(params.account.account);
+      setId(params.account.id);
+      setDescription(params.account.description);
+      setBalance(params.account.balance / 100);
     };
     if (detectionAccountParams()) {
       setTimeout(() => {
@@ -72,17 +73,17 @@ export default function ContaForm({navigation}) {
     }
   }, []);
 
-  const setIconAccount = code => {
+  const setIconAccount = (code) => {
     setIcon(contas[code].icon);
   };
 
-  const setPropertyAccount = code => {
+  const setPropertyAccount = (code) => {
     setAccount(code);
     setDescription(contas[code].description);
     setIconAccount(code);
   };
 
-  const getId = async schema => {
+  const getId = async (schema) => {
     try {
       const realm = await getRealm();
       const maxId = realm.objects(schema).max('id') + 1;
@@ -95,12 +96,9 @@ export default function ContaForm({navigation}) {
     }
   };
 
-  const formatBalance = balance => {
+  const formatBalance = (balance) => {
     if (typeof balance == 'string') {
-      const removedChar = balance
-        .substr(2)
-        .replace('.', '')
-        .replace(',', '.');
+      const removedChar = balance.substr(2).replace('.', '').replace(',', '.');
       const patternParse = parseFloat(removedChar) * 100;
       return patternParse;
     }
@@ -119,7 +117,7 @@ export default function ContaForm({navigation}) {
     dispatch(loadAccounts(month, year));
   };
 
-  const saveAccount = async account => {
+  const saveAccount = async (account) => {
     setLoading(true);
     const realm = await getRealm();
     try {
@@ -211,7 +209,10 @@ export default function ContaForm({navigation}) {
 
   return (
     <Container>
-      <StatusBar barStyle="light-content" backgroundColor={colors.dark} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={colors.colorStandardPrimary}
+      />
       <HeaderForm>
         <TxtHeaderForm>
           {isEdition ? 'ATUALIZAR CONTA' : 'NOVA CONTA'}
@@ -230,7 +231,7 @@ export default function ContaForm({navigation}) {
         <InputContainer>
           <Picker
             selectedValue={account}
-            onValueChange={selected => {
+            onValueChange={(selected) => {
               setPropertyAccount(selected);
             }}
             style={styles.input}>
@@ -246,7 +247,7 @@ export default function ContaForm({navigation}) {
         <Input
           placeholder="Descrição"
           value={description}
-          onChangeText={description => {
+          onChangeText={(description) => {
             setDescription(description);
           }}
         />
@@ -261,7 +262,7 @@ export default function ContaForm({navigation}) {
               suffixUnit: '',
             }}
             value={balance}
-            onChangeText={balance => {
+            onChangeText={(balance) => {
               setBalance(balance);
             }}
             style={styles.input}

@@ -25,16 +25,17 @@ import {
   BtnNovaConta,
   TxtNovaConta,
 } from './styles';
+import colors from '../../styles/colors';
 
 const Carteiras = ({navigation}) => {
   const [arrayAccounts] = useState(accountsUtil);
   const [currentDate, setCurrentDate] = useState('');
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
-  const accounts = useSelector(state => state.accounts.accounts);
+  const accounts = useSelector((state) => state.accounts.accounts);
 
   useEffect(() => {
-    getDate().then(date => {
+    getDate().then((date) => {
       setCurrentDate(`${date.day}/${date.month}/${date.year}`);
       dispatch(loadAccounts(date.month, date.year));
     });
@@ -43,7 +44,7 @@ const Carteiras = ({navigation}) => {
 
   const sumTotalValue = () => {
     let sumValue = 0;
-    accounts.forEach(account => {
+    accounts.forEach((account) => {
       sumValue += account.balance;
     });
     setTotalValue(formatMoney(sumValue));
@@ -51,7 +52,7 @@ const Carteiras = ({navigation}) => {
 
   return (
     <Container>
-      <StatusBar barStyle="light-content" backgroundColor="#121212" />
+      <StatusBar barStyle="light-content" backgroundColor={colors.colorStandardPrimary} />
       <Header title="Finax" />
       <HerderList>
         <TitleComponent>SUAS CONTAS</TitleComponent>
@@ -80,7 +81,7 @@ const Carteiras = ({navigation}) => {
               </ColRight>
             </Conta>
           )}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item) => item.id.toString()}
         />
       </Lista>
       <Footer>

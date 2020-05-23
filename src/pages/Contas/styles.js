@@ -3,7 +3,7 @@ import colors from '../../styles/colors';
 
 export const Container = styled.View`
   flex: 1;
-  background: ${colors.dark};
+  background: ${colors.colorStandardPrimary};
 `;
 export const HerderList = styled.View`
   flex: 1;
@@ -70,7 +70,7 @@ export const Atualizado = styled.Text`
   font-size: 11px;
 `;
 export const Footer = styled.View`
-  background: #191919;
+  background: ${colors.colorStandardSecondary};
   height: 61px;
   align-items: center;
   padding-left: 20px;
@@ -83,7 +83,7 @@ export const SaldoTotal = styled.Text`
   font-size: 11px;
 `;
 export const BtnNovaConta = styled.TouchableOpacity`
-  background: #282828;
+  background: ${colors.greenApp};
   border-radius: 10px;
   flex: 2;
   height: 47px;

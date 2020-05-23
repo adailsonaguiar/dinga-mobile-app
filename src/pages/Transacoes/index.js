@@ -5,6 +5,7 @@ import accountsUtil from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
+import colors from '../../styles/colors';
 
 import {
   Container,
@@ -31,10 +32,10 @@ const Transacoes = ({navigation}) => {
   const [currentDate, setCurrentDate] = useState('');
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
-  const accounts = useSelector(state => state.accounts.accounts);
+  const accounts = useSelector((state) => state.accounts.accounts);
 
   useEffect(() => {
-    getDate().then(date => {
+    getDate().then((date) => {
       setCurrentDate(`${date.day}/${date.month}/${date.year}`);
       dispatch(loadAccounts(date.month, date.year));
     });
@@ -43,7 +44,7 @@ const Transacoes = ({navigation}) => {
 
   const sumTotalValue = () => {
     let sumValue = 0;
-    accounts.forEach(account => {
+    accounts.forEach((account) => {
       sumValue += account.balance;
     });
     setTotalValue(formatMoney(sumValue));
@@ -51,7 +52,7 @@ const Transacoes = ({navigation}) => {
 
   return (
     <Container>
-      <StatusBar barStyle="light-content" backgroundColor="#121212" />
+      <StatusBar barStyle="light-content" backgroundColor={colors.colorStandardPrimary} />
       <Header />
       <HerderList>
         <TitleComponent>SUAS TRANSAÇÕES</TitleComponent>
@@ -80,7 +81,7 @@ const Transacoes = ({navigation}) => {
               </ColRight>
             </Conta>
           )}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item) => item.id.toString()}
         />
       </Lista>
       <Footer>
