@@ -3,7 +3,7 @@ import colors from '../../styles/colors';
 
 export const Container = styled.View`
   flex: 1;
-  background: ${colors.colorStandardPrimary};
+  background: ${colors.backgroundColorPrimary};
 `;
 export const HerderList = styled.View`
   flex: 1;
@@ -28,7 +28,7 @@ export const Lista = styled.View`
 export const Conta = styled.TouchableOpacity`
   flex-direction: row;
   border-top-width: 1px;
-  border-top-color: #1d1d1d;
+  border-top-color: ${colors.colorStroke};
   height: 70px;
   align-items: center;
   padding-left: 20px;
@@ -70,7 +70,7 @@ export const Atualizado = styled.Text`
   font-size: 11px;
 `;
 export const Footer = styled.View`
-  background: ${colors.colorStandardSecondary};
+  background: ${colors.backgroundColorSecondary};
   height: 61px;
   align-items: center;
   padding-left: 20px;
@@ -83,7 +83,7 @@ export const SaldoTotal = styled.Text`
   font-size: 11px;
 `;
 export const BtnNovaConta = styled.TouchableOpacity`
-  background: ${colors.greenApp};
+  background: ${colors.backgroundColorPrimary};
   border-radius: 10px;
   flex: 2;
   height: 47px;
@@ -94,6 +94,6 @@ export const BtnNovaConta = styled.TouchableOpacity`
 `;
 export const TxtNovaConta = styled.Text`
   color: ${colors.fontLight};
-  font-family: Roboto-Bold;
+  font-family: Roboto-Medium;
   font-size: 11px;
 `;

@@ -3,7 +3,7 @@ import colors from '../../styles/colors';
 
 export const Container = styled.View`
   flex: 1;
-  background: ${colors.colorStandardPrimary};
+  background: ${colors.backgroundColorPrimary};
 `;
 export const HerderList = styled.View`
   flex: 1;
@@ -70,7 +70,7 @@ export const Atualizado = styled.Text`
   font-size: 11px;
 `;
 export const Footer = styled.View`
-  background: ${colors.colorStandardSecondary};
+  background: ${colors.backgroundColorSecondary};
   height: 61px;
   align-items: center;
   padding-left: 20px;

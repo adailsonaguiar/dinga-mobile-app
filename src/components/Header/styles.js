@@ -1,7 +1,8 @@
 import styled from 'styled-components/native';
+import colors from '../../styles/colors';
 
 export const Container = styled.View`
-  background: #283b47;
+  background: ${colors.backgroundColorPrimary};
   height: 50px;
   flex-direction: row;
   align-items: center;

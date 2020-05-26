@@ -4,11 +4,11 @@ import colors from '../../styles/colors';
 
 export const Container = styled.View`
   flex: 1;
-  background: ${colors.colorStandardPrimary};
+  background: ${colors.backgroundColorPrimary};
 `;
 export const HeaderForm = styled.View`
   flex: 1;
-  background: ${colors.colorStandardPrimary};
+  background: ${colors.backgroundColorPrimary};
   flex: 1;
   flex-direction: row;
   justify-content: space-between;

@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import {widthPercentageToDP as wp} from '../../utils/ResponsiveDimensionsLayout';
+import colors from '../../styles/colors';
 
 export const Container = styled.View`
   background: #fff;
@@ -7,7 +8,7 @@ export const Container = styled.View`
 `;
 
 export const CompHead = styled.View`
-  background: #283B47;
+  background: ${colors.backgroundColorPrimary};
   flex-direction: column;
   align-items: center;
   padding-top: 30px;
@@ -22,10 +23,23 @@ export const TitleGrid = styled.Text`
   text-align: center;
 `;
 
+export const ContainerSaldo = styled.View`
+  flex-direction: row;
+  align-items: flex-end;
+`;
+
+export const Cifra = styled.Text`
+  color: #fff;
+  font-size: ${wp('3%')}px;
+  font-family: Roboto-Bold;
+  margin-bottom: 4px;
+  margin-right: 5px;
+`;
+
 export const TxtSaldo = styled.Text`
-  color: #00d0b4;
-  font-size: ${wp('8%')}px;
-  font-family: Roboto-Medium;
+  color: #fff;
+  font-size: ${wp('6%')}px;
+  font-family: Roboto-Bold;
 `;
 
 export const TxtDescricao = styled.Text`
@@ -35,6 +49,6 @@ export const TxtDescricao = styled.Text`
 `;
 
 export const Progressbar = styled.ProgressBarAndroid`
-  width: 200px;
+  width: 80%;
   margin-bottom: 30px;
 `;

@@ -52,7 +52,7 @@ const Transacoes = ({navigation}) => {
 
   return (
     <Container>
-      <StatusBar barStyle="light-content" backgroundColor={colors.colorStandardPrimary} />
+      <StatusBar barStyle="light-content" backgroundColor={colors.backgroundColorPrimary} />
       <Header />
       <HerderList>
         <TitleComponent>SUAS TRANSAÇÕES</TitleComponent>

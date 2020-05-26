@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import {Animated} from 'react-native';
+import colors from '../../styles/colors';
 
 export const Container = styled(Animated.View)`
   height: 100px;
@@ -18,7 +19,7 @@ export const TabItem = styled.TouchableOpacity.attrs({
 })`
   width: 100px;
   height: 100px;
-  background: #00d0b4;
+  background: ${colors.backgroundColorSecondary};
   border-radius: 3px;
   margin-left: 15px;
   padding: 10px;

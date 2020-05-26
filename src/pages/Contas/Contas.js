@@ -52,7 +52,10 @@ const Carteiras = ({navigation}) => {
 
   return (
     <Container>
-      <StatusBar barStyle="light-content" backgroundColor={colors.colorStandardPrimary} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={colors.backgroundColorPrimary}
+      />
       <Header title="Finax" />
       <HerderList>
         <TitleComponent>SUAS CONTAS</TitleComponent>
@@ -65,7 +68,17 @@ const Carteiras = ({navigation}) => {
             <Conta
               onPress={() => {
                 navigation.navigate('ContaForm', {
-                  account: item,
+                  account: {
+                    id: item.id,
+                    balance: item.balance,
+                    label: item.label,
+                    balance: item.balance,
+                    day: item.day,
+                    month: item.month,
+                    year: item.year,
+                    description: item.description,
+                    account: item.account,
+                  },
                 });
               }}>
               <Icon source={arrayAccounts[item.account].icon} />

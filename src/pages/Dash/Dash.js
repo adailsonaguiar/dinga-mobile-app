@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
 import Header from '../../components/Header/Header';
 import Tabs from '../../components/Tabs';
+import colors from '../../styles/colors';
 
 import {
   Container,
@@ -11,6 +12,8 @@ import {
   TxtSaldo,
   TxtDescricao,
   Progressbar,
+  ContainerSaldo,
+  Cifra
 } from './styles';
 
 export default Dash = ({navigation}) => {
@@ -21,13 +24,19 @@ export default Dash = ({navigation}) => {
   return (
     <Container>
       <Header title="Finax" />
-      <StatusBar barStyle="light-content" backgroundColor="#283B47" />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={colors.backgroundColorPrimary}
+      />
       <CompHead>
-        <TxtDescricao>Saldo Receitas</TxtDescricao>
-        <TxtSaldo>R$ 9.857,96</TxtSaldo>
+        <TxtDescricao>Saldo disponível</TxtDescricao>
+        <ContainerSaldo>
+          <Cifra>R$</Cifra>
+          <TxtSaldo>9.857,96</TxtSaldo>
+        </ContainerSaldo>
         <Progressbar
           styleAttr="Horizontal"
-          color="#E74C3C"
+          color={colors.greenApp}
           indeterminate={false}
           progress={0.5}
         />

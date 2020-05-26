@@ -31,8 +31,9 @@ import {
 
 import standard_icon from './../../assets/contas/standard_icon.png';
 
-export default function ContaForm({navigation}) {
-  const {state} = navigation;
+export default function ContaForm({route, navigation}) {
+  const {params} = route;
+  console.log('params', params.account);
   const [contas] = useState(accounts);
   const [description, setDescription] = useState('');
   const [balance, setBalance] = useState(0);
@@ -52,7 +53,7 @@ export default function ContaForm({navigation}) {
       setMonth(date.month);
       setYear(date.year);
     });
-    const params = state ? state.params : null;
+    const account = params ? params.account : null;
     const detectionAccountParams = () => {
       if (account) {
         setEdit(true);
@@ -61,10 +62,10 @@ export default function ContaForm({navigation}) {
       return false;
     };
     const getAccountEdit = () => {
-      setAccount(params.account.account);
-      setId(params.account.id);
-      setDescription(params.account.description);
-      setBalance(params.account.balance / 100);
+      setAccount(account.account);
+      setId(account.id);
+      setDescription(account.description);
+      setBalance(account.balance / 100);
     };
     if (detectionAccountParams()) {
       setTimeout(() => {
@@ -211,7 +212,7 @@ export default function ContaForm({navigation}) {
     <Container>
       <StatusBar
         barStyle="light-content"
-        backgroundColor={colors.colorStandardPrimary}
+        backgroundColor={colors.backgroundColorPrimary}
       />
       <HeaderForm>
         <TxtHeaderForm>
