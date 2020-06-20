@@ -27,9 +27,9 @@ export const BtnFechar = styled.TouchableOpacity`
   height: 35px;
   align-items: flex-end;
 `;
-export const Form = styled.View`
-  justify-content: flex-start;
-  flex: 7;
+export const Form = styled.ScrollView`
+  flex: 12;
+  padding-top:20px;
 `;
 export const InputContainer = styled.View`
   justify-content: center;
@@ -95,8 +95,7 @@ export const ContainerIcon = styled.View`
 export const ContainerFormFooter = styled.View`
   justify-content: center;
   align-items: center;
-  margin-bottom: 100px;
-  flex: 1;
+  margin-top: 30px;
 `;
 export const BtnRemove = styled.TouchableOpacity`
   background: transparent;

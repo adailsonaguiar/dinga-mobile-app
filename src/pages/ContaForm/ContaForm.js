@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StatusBar, ActivityIndicator, Alert} from 'react-native';
+import {StatusBar, ActivityIndicator, Alert, Keyboard} from 'react-native';
 import {TextInputMask} from 'react-native-masked-text';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import messageResponse from './../../utils/messageResponse';
@@ -44,6 +44,7 @@ export default function ContaForm({route, navigation}) {
   const [day, setday] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
+  const [keyboardExpanded, setKeyboardExpanded] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -71,6 +72,20 @@ export default function ContaForm({route, navigation}) {
         getAccountEdit();
       }, 500);
     }
+
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      _keyboardDidShow,
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      _keyboardDidHide,
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
   }, []);
 
   const setIconAccount = (code) => {
@@ -208,6 +223,14 @@ export default function ContaForm({route, navigation}) {
     }
   };
 
+  function _keyboardDidShow(e) {
+    // setKeyboardExpanded(true);
+  }
+
+  function _keyboardDidHide() {
+    setKeyboardExpanded(false);
+  }
+
   return (
     <Container>
       <StatusBar
@@ -225,10 +248,10 @@ export default function ContaForm({route, navigation}) {
           <Icon name="close" color="#fff" size={30} />
         </BtnFechar>
       </HeaderForm>
-      <ContainerIcon>
-        <ImgConta source={icon} />
-      </ContainerIcon>
       <Form>
+        <ContainerIcon>
+          <ImgConta source={icon} />
+        </ContainerIcon>
         <InputContainer>
           <Picker
             selectedValue={account}
@@ -269,16 +292,14 @@ export default function ContaForm({route, navigation}) {
             style={styles.input}
           />
         </InputContainer>
+        {isEdition && !keyboardExpanded && (
+          <ContainerFormFooter>
+            <BtnRemove onPress={() => askDelection()}>
+              <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
+            </BtnRemove>
+          </ContainerFormFooter>
+        )}
       </Form>
-      {isEdition ? (
-        <ContainerFormFooter>
-          <BtnRemove onPress={() => askDelection()}>
-            <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
-          </BtnRemove>
-        </ContainerFormFooter>
-      ) : (
-        <></>
-      )}
       <BtnNovaConta
         disabled={loading}
         activeOpacity={0.9}
