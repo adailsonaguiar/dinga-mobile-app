@@ -66,6 +66,7 @@ export default function ContaForm({route, navigation}) {
       setId(account.id);
       setDescription(account.description);
       setBalance(account.balance / 100);
+      setPropertyAccount(account.account);
     };
     if (detectionAccountParams()) {
       setTimeout(() => {
