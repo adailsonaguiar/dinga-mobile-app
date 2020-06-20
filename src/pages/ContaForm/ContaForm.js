@@ -8,7 +8,6 @@ import getRealm from './../../services/realm';
 import accounts from '../../utils/accounts';
 import {useDispatch} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
-import {getDate} from '../../utils/FunctionUtils';
 
 import {
   Container,
@@ -41,18 +40,10 @@ export default function ContaForm({route, navigation}) {
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState(0);
   const [isEdition, setEdit] = useState(false);
-  const [day, setday] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
   const [keyboardExpanded, setKeyboardExpanded] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getDate().then((date) => {
-      setday(date.day);
-      setMonth(date.month);
-      setYear(date.year);
-    });
     const account = params ? params.account : null;
     const detectionAccountParams = () => {
       if (account) {
@@ -130,7 +121,7 @@ export default function ContaForm({route, navigation}) {
   };
 
   const handleLoadAccounts = () => {
-    dispatch(loadAccounts(month, year));
+    dispatch(loadAccounts());
   };
 
   const saveAccount = async (account) => {

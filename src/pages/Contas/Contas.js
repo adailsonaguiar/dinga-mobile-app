@@ -5,6 +5,7 @@ import accountsUtil from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
+import moment from 'moment';
 
 import {
   Container,
@@ -89,7 +90,7 @@ const Carteiras = ({navigation}) => {
               <ColRight>
                 <Saldo>R${`${formatMoney(item.balance)}`}</Saldo>
                 <Atualizado>
-                  Atualizado: {`${item.day}/${item.month}/${item.year}`}
+                  Atualizado: {`${moment(item.date).format('DD/MM/YYYY')}`}
                 </Atualizado>
               </ColRight>
             </Conta>
