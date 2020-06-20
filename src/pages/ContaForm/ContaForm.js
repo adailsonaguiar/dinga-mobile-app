@@ -7,7 +7,7 @@ import colors from '../../styles/colors';
 import getRealm from './../../services/realm';
 import accounts from '../../utils/accounts';
 import {useDispatch} from 'react-redux';
-import {loadAccounts} from '../../store/accounts/actions';
+import {loadAccounts, saveAccount} from '../../store/accounts/actions';
 
 import {
   Container,
@@ -112,34 +112,8 @@ export default function ContaForm({route, navigation}) {
     return balance * 100;
   };
 
-  const resetForm = () => {
-    setId(-1);
-    setDescription('');
-    setBalance('');
-    setAccount('');
-    setIcon('');
-  };
-
   const handleLoadAccounts = () => {
     dispatch(loadAccounts());
-  };
-
-  const saveAccount = async (account) => {
-    setLoading(true);
-    const realm = await getRealm();
-    try {
-      realm.write(() => {
-        realm.create('contas', account, true);
-        setLoading(false);
-        resetForm();
-        handleLoadAccounts();
-        navigation.goBack();
-      });
-    } catch (e) {
-      setLoading(false);
-      messageResponse.error(e);
-      return e;
-    }
   };
 
   const validateForm = () => {
@@ -171,7 +145,8 @@ export default function ContaForm({route, navigation}) {
         balance: valueBalance,
         account,
       };
-      saveAccount(data);
+      navigation.goBack();
+      dispatch(saveAccount(data));
     }
   };
 
