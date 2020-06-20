@@ -3,9 +3,7 @@ export default ContasSchema = {
   primaryKey: 'id',
   properties: {
     id: {type: 'int', indexed: true},
-    day: 'string',
-    month: 'string',
-    year: 'string',
+    date: 'date',
     description: 'string',
     balance: 'float',
     account: 'string',

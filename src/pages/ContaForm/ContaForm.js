@@ -175,9 +175,7 @@ export default function ContaForm({route, navigation}) {
     if (validateForm()) {
       const data = {
         id: idAccount,
-        day,
-        month,
-        year,
+        date: new Date(),
         description,
         balance: valueBalance,
         account,
