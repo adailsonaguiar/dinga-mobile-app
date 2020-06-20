@@ -33,7 +33,6 @@ import standard_icon from './../../assets/contas/standard_icon.png';
 
 export default function ContaForm({route, navigation}) {
   const {params} = route;
-  console.log('params', params.account);
   const [contas] = useState(accounts);
   const [description, setDescription] = useState('');
   const [balance, setBalance] = useState(0);
@@ -197,7 +196,8 @@ export default function ContaForm({route, navigation}) {
     const realm = await getRealm();
     try {
       realm.write(() => {
-        realm.delete(realm.objectForPrimaryKey('contas', id));
+        const conta = realm.objectForPrimaryKey('contas', id);
+        realm.delete(conta);
         setLoading(false);
         handleLoadAccounts();
         navigation.goBack();
