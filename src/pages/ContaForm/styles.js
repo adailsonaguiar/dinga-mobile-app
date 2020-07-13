@@ -29,7 +29,7 @@ export const BtnFechar = styled.TouchableOpacity`
 `;
 export const Form = styled.ScrollView`
   flex: 12;
-  padding-top:20px;
+  padding-top: 20px;
 `;
 export const InputContainer = styled.View`
   justify-content: center;

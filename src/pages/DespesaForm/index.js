@@ -48,13 +48,13 @@ export default function DespesaForm({navigation}) {
   const [year, setYear] = useState('');
   const dispatch = useDispatch();
   const [arrayAccounts] = useState(accountsArr);
-  const accounts = useSelector(state => state.accounts.accounts);
+  const accounts = useSelector((state) => state.accounts.accounts);
 
   useEffect(() => {
-    Object.keys(accounts).map(value =>
+    Object.keys(accounts).map((value) =>
       console.log(arrayAccounts[accounts[value].account].label),
     );
-    getDate().then(date => {
+    getDate().then((date) => {
       setday(date.day);
       setMonth(date.month);
       setYear(date.year);
@@ -79,17 +79,17 @@ export default function DespesaForm({navigation}) {
     }
   }, []);
 
-  const setIconAccount = code => {
+  const setIconAccount = (code) => {
     setIcon(contas[code].icon);
   };
 
-  const setPropertyAccount = code => {
+  const setPropertyAccount = (code) => {
     setAccount(code);
     setDescription(contas[code].description);
     setIconAccount(code);
   };
 
-  const getId = async schema => {
+  const getId = async (schema) => {
     try {
       const realm = await getRealm();
       const maxId = realm.objects(schema).max('id') + 1;
@@ -102,12 +102,9 @@ export default function DespesaForm({navigation}) {
     }
   };
 
-  const formatBalance = balance => {
-    if (typeof balance == 'string') {
-      const removedChar = balance
-        .substr(2)
-        .replace('.', '')
-        .replace(',', '.');
+  const formatBalance = (balance) => {
+    if (typeof balance === 'string') {
+      const removedChar = balance.substr(2).replace('.', '').replace(',', '.');
       const patternParse = parseFloat(removedChar) * 100;
       return patternParse;
     }
@@ -126,7 +123,7 @@ export default function DespesaForm({navigation}) {
     dispatch(loadAccounts(month, year));
   };
 
-  const saveAccount = async account => {
+  const saveAccount = async (account) => {
     setLoading(true);
     const realm = await getRealm();
     try {
@@ -218,7 +215,10 @@ export default function DespesaForm({navigation}) {
 
   return (
     <Container>
-      <StatusBar barStyle="light-content" backgroundColor={colors.backgroundColorPrimary} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={colors.backgroundColorPrimary}
+      />
       <HeaderForm>
         <TxtHeaderForm>
           {isEdition ? 'ATUALIZAR DESPESA' : 'NOVA DESPESA'}
@@ -234,18 +234,18 @@ export default function DespesaForm({navigation}) {
         <Input
           placeholder="Descrição"
           value={description}
-          onChangeText={description => {
+          onChangeText={(description) => {
             setDescription(description);
           }}
         />
         <InputContainer>
           <Picker
             selectedValue={category}
-            onValueChange={selected => {
+            onValueChange={(selected) => {
               setCategory(selected);
             }}
             style={styles.input}>
-            {categories.map(category => (
+            {categories.map((category) => (
               <Picker.Item
                 key={category}
                 label={category.label}
@@ -262,7 +262,7 @@ export default function DespesaForm({navigation}) {
             options={{
               format: 'DD/MM/YYYY',
             }}
-            onChangeText={maskedText => {
+            onChangeText={(maskedText) => {
               setDate(maskedText);
             }}
             style={styles.input}
@@ -271,11 +271,11 @@ export default function DespesaForm({navigation}) {
         <InputContainer>
           <Picker
             selectedValue={idAccount}
-            onValueChange={selected => {
+            onValueChange={(selected) => {
               setIdAccount(selected);
             }}
             style={styles.input}>
-            {Object.keys(accounts).map(value => (
+            {Object.keys(accounts).map((value) => (
               <Picker.Item
                 key={category}
                 label={arrayAccounts[accounts[value].account].label}
@@ -296,7 +296,7 @@ export default function DespesaForm({navigation}) {
               suffixUnit: '',
             }}
             value={balance}
-            onChangeText={balance => {
+            onChangeText={(balance) => {
               setBalance(balance);
             }}
             style={styles.input}

@@ -43,26 +43,17 @@ export default function ContaForm({route, navigation}) {
   const [keyboardExpanded, setKeyboardExpanded] = useState(false);
   const dispatch = useDispatch();
 
+  const getAccountEdit = (accountParam) => {
+    setId(accountParam.id);
+    setBalance(accountParam.balance / 100);
+    setPropertyAccount(accountParam.account);
+  };
+
   useEffect(() => {
-    const account = params ? params.account : null;
-    const detectionAccountParams = () => {
-      if (account) {
-        setEdit(true);
-        return true;
-      }
-      return false;
-    };
-    const getAccountEdit = () => {
-      setAccount(account.account);
-      setId(account.id);
-      setDescription(account.description);
-      setBalance(account.balance / 100);
-      setPropertyAccount(account.account);
-    };
-    if (detectionAccountParams()) {
-      setTimeout(() => {
-        getAccountEdit();
-      }, 500);
+    const accountParam = params ? params.account : null;
+    if (accountParam) {
+      setEdit(true);
+      getAccountEdit(accountParam);
     }
 
     const keyboardDidShowListener = Keyboard.addListener(
@@ -78,16 +69,13 @@ export default function ContaForm({route, navigation}) {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const setIconAccount = (code) => {
-    setIcon(contas[code].icon);
-  };
 
   const setPropertyAccount = (code) => {
     setAccount(code);
     setDescription(contas[code].description);
-    setIconAccount(code);
+    setIcon(contas[code].icon);
   };
 
   const getId = async (schema) => {
@@ -103,13 +91,16 @@ export default function ContaForm({route, navigation}) {
     }
   };
 
-  const formatBalance = (balance) => {
-    if (typeof balance == 'string') {
-      const removedChar = balance.substr(2).replace('.', '').replace(',', '.');
+  const formatBalance = (balanceParam) => {
+    if (typeof balanceParam === 'string') {
+      const removedChar = balanceParam
+        .substr(2)
+        .replace('.', '')
+        .replace(',', '.');
       const patternParse = parseFloat(removedChar) * 100;
       return patternParse;
     }
-    return balance * 100;
+    return balanceParam * 100;
   };
 
   const handleLoadAccounts = () => {
@@ -117,11 +108,11 @@ export default function ContaForm({route, navigation}) {
   };
 
   const validateForm = () => {
-    if (description.length == 0) {
+    if (description.length === 0) {
       Alert.alert('Atenção', 'Digite uma descrição!');
       return false;
     }
-    if (balance.length == 0) {
+    if (balance.length === 0) {
       Alert.alert('Atenção', 'Preencha o saldo da conta!');
       return false;
     }
@@ -221,9 +212,12 @@ export default function ContaForm({route, navigation}) {
           <Picker
             selectedValue={account}
             onValueChange={(selected) => {
-              setPropertyAccount(selected);
+              if (selected) {
+                setPropertyAccount(selected);
+              }
             }}
             style={styles.input}>
+            <Picker.Item label="Selecione" value={false} />
             <Picker.Item label="Carteira" value="000" />
             <Picker.Item label="Banco do Brasil - 001" value="001" />
             <Picker.Item label="Caixa Econômica - 104" value="104" />
@@ -236,8 +230,8 @@ export default function ContaForm({route, navigation}) {
         <Input
           placeholder="Descrição"
           value={description}
-          onChangeText={(description) => {
-            setDescription(description);
+          onChangeText={(value) => {
+            setDescription(value);
           }}
         />
         <InputContainer>
@@ -251,8 +245,8 @@ export default function ContaForm({route, navigation}) {
               suffixUnit: '',
             }}
             value={balance}
-            onChangeText={(balance) => {
-              setBalance(balance);
+            onChangeText={(value) => {
+              setBalance(value);
             }}
             style={styles.input}
           />

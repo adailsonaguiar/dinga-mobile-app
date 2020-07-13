@@ -13,7 +13,7 @@ import {
   TxtDescricao,
   Progressbar,
   ContainerSaldo,
-  Cifra
+  Cifra,
 } from './styles';
 
 export default Dash = ({navigation}) => {

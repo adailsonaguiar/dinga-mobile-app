@@ -77,10 +77,7 @@ const Carteiras = ({navigation}) => {
                     id: item.id,
                     balance: item.balance,
                     label: item.label,
-                    balance: item.balance,
-                    day: item.day,
-                    month: item.month,
-                    year: item.year,
+                    date: item.date,
                     description: item.description,
                     account: item.account,
                   },
@@ -103,7 +100,9 @@ const Carteiras = ({navigation}) => {
         />
       </Lista>
       <Footer>
-        <SaldoTotal>Saldo das contas: R$ {totalValue}</SaldoTotal>
+        <SaldoTotal>
+          {totalValue !== 0 ? `Saldo das contas: R$ ${totalValue}` : ''}
+        </SaldoTotal>
         <BtnNovaConta
           onPress={() => {
             navigation.navigate('ContaForm', {});

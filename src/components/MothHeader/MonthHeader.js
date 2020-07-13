@@ -19,8 +19,6 @@ export default function MothHeader() {
     setYear(date.getFullYear());
   };
 
-  const handleLoadAccounts = () => {};
-
   const nextMonth = () => {
     if (month === 11) {
       setMonth(0);

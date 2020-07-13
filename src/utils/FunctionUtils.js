@@ -11,7 +11,7 @@ export const getDate = () => {
   });
 };
 
-export const formatMoney = value => {
+export const formatMoney = (value) => {
   let amount = value / 100;
   let decimalCount = 2;
   let decimal = ',';
