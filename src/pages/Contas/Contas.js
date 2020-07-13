@@ -43,6 +43,10 @@ const Carteiras = ({navigation}) => {
     sumTotalValue();
   }, []);
 
+  useEffect(() => {
+    sumTotalValue();
+  }, [accounts]);
+
   const sumTotalValue = () => {
     let sumValue = 0;
     accounts.forEach((account) => {
