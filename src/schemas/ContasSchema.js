@@ -1,4 +1,4 @@
-export default ContasSchema = {
+const ContasSchema = {
   name: 'contas',
   primaryKey: 'id',
   properties: {
@@ -9,3 +9,5 @@ export default ContasSchema = {
     account: 'string',
   },
 };
+
+export default ContasSchema;
