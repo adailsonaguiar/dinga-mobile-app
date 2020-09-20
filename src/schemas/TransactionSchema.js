@@ -1,4 +1,4 @@
-export default TransactionSchema = {
+const TransactionSchema = {
   name: 'transaction',
   primaryKey: 'id',
   properties: {
@@ -12,3 +12,10 @@ export default TransactionSchema = {
     category: 'int',
   },
 };
+
+export const transactionType = {
+  TRANSACTION_IN: 'TRANSACTION_IN',
+  TRANSACTION_OUT: 'TRANSACTION_OUT',
+};
+
+export default TransactionSchema;

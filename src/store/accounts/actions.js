@@ -6,6 +6,8 @@ import {
 } from './actionTypes';
 import messageResponse from '../../utils/messageResponse';
 
+import {transactionType} from '../../schemas/TransactionSchema';
+
 export const loadAccounts = (month, year) => {
   return (dispatch) => {
     dispatch({type: LOAD_ACCOUNTS});
@@ -38,6 +40,19 @@ export const saveAccount = (account) => {
       try {
         realm.write(() => {
           realm.create('contas', account, true);
+          realm.create(
+            'transaction',
+            {
+              ...account,
+              description: 'Entrada de valor',
+              value: 'balance',
+              type: transactionType.TRANSACTION_IN,
+              accountId: account.id,
+              status: 1,
+              category: 1,
+            },
+            true,
+          );
         });
         dispatch(loadAccounts());
       } catch (e) {
