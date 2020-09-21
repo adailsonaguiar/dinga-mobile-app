@@ -3,6 +3,9 @@ import {
   LOAD_ACCOUNTS_SUCCESS,
   LOAD_ACCOUNTS,
   LOAD_ACCOUNTS_FAILURE,
+  LOAD_TRANSACTIONS,
+  LOAD_TRANSACTIONS_SUCCESS,
+  LOAD_TRANSACTIONS_FAILURE,
 } from './actionTypes';
 import messageResponse from '../../utils/messageResponse';
 
@@ -40,18 +43,16 @@ export const saveAccount = (account) => {
       try {
         realm.write(() => {
           realm.create('contas', account, true);
-          realm.create(
-            'transaction',
-            {
+          dispatch(
+            saveTransactions({
               ...account,
-              description: 'Entrada de valor',
-              value: 'balance',
+              description: 'Criação da conta',
+              value: account.balance,
               type: transactionType.TRANSACTION_IN,
-              accountId: account.id,
+              accountId: account.account,
               status: 1,
               category: 1,
-            },
-            true,
+            }),
           );
         });
         dispatch(loadAccounts());
@@ -60,5 +61,36 @@ export const saveAccount = (account) => {
         return e;
       }
     });
+  };
+};
+
+export const saveTransactions = (transaction) => {
+  return (dispatch) => {
+    getRealm().then((realm) => {
+      try {
+        realm.write(() => {
+          realm.create('transaction', transaction, true);
+        });
+        dispatch(loadTransactions());
+      } catch (e) {
+        messageResponse.error(e);
+        return e;
+      }
+    });
+  };
+};
+
+export const loadTransactions = ({month}) => {
+  return (dispatch) => {
+    dispatch({type: LOAD_TRANSACTIONS});
+    getRealm()
+      .then((date) => {
+        const data = date.objects('transaction').sorted('id', 1);
+        dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: data});
+      })
+      .catch((error) => {
+        dispatch({type: LOAD_TRANSACTIONS_FAILURE});
+        console.error(error);
+      });
   };
 };

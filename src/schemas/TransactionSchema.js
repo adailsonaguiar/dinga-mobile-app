@@ -4,10 +4,10 @@ const TransactionSchema = {
   properties: {
     id: {type: 'int', indexed: true},
     description: 'string',
-    value: 'string',
+    value: 'float',
     date: 'date',
     type: 'string',
-    accountId: 'int',
+    accountId: 'string',
     status: 'int',
     category: 'int',
   },
