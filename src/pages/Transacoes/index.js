@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {StatusBar, FlatList} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import moment from 'moment';
+
 import Header from '../../components/Header/Header';
 import accountsUtil from '../../utils/accounts';
-import {useDispatch, useSelector} from 'react-redux';
-import {loadAccounts} from '../../store/accounts/actions';
+import {loadTransactions} from '../../store/accounts/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
 import colors from '../../styles/colors';
 
@@ -23,8 +25,6 @@ import {
   Lista,
   Footer,
   SaldoTotal,
-  BtnNovaConta,
-  TxtNovaConta,
 } from './styles';
 
 const Transacoes = ({navigation}) => {
@@ -32,23 +32,32 @@ const Transacoes = ({navigation}) => {
   const [currentDate, setCurrentDate] = useState('');
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
-  const accounts = useSelector((state) => state.accounts.accounts);
+  const transactions = useSelector((state) => state.accounts.transactions);
 
   useEffect(() => {
     getDate().then((date) => {
       setCurrentDate(`${date.day}/${date.month}/${date.year}`);
-      dispatch(loadAccounts(date.month, date.year));
+      dispatch(loadTransactions(date.month, date.year));
     });
     sumTotalValue();
   }, []);
 
   const sumTotalValue = () => {
     let sumValue = 0;
-    accounts.forEach((account) => {
+    transactions.forEach((account) => {
       sumValue += account.balance;
     });
     setTotalValue(formatMoney(sumValue));
   };
+
+  function getTransactionStatus(status) {
+    const statusList = {
+      0: 'PENDENTE',
+      1: 'CONFIRMADO',
+      2: '',
+    };
+    return statusList[status];
+  }
 
   return (
     <Container>
@@ -63,7 +72,7 @@ const Transacoes = ({navigation}) => {
       </HerderList>
       <Lista>
         <FlatList
-          data={accounts}
+          data={transactions}
           renderItem={({item}) => (
             <Conta
               onPress={() => {
@@ -71,15 +80,18 @@ const Transacoes = ({navigation}) => {
                   account: item,
                 });
               }}>
-              <Icon source={arrayAccounts[item.account].icon} />
+              {/* <Icon source={arrayAccounts[item.account].icon} /> */}
               <ColLeft>
-                <TitleConta>{arrayAccounts[item.account].label}</TitleConta>
-                <CategoryConta>{item.description}</CategoryConta>
+                <TitleConta>{item.description}</TitleConta>
+                <CategoryConta>
+                  {arrayAccounts[item.accountId].label}
+                </CategoryConta>
               </ColLeft>
               <ColRight>
-                <Saldo>R${`${formatMoney(item.balance)}`}</Saldo>
+                <Saldo>R${`${formatMoney(item.value)}`}</Saldo>
                 <Atualizado>
-                  Atualizado: {`${item.day}/${item.month}/${item.year}`}
+                  {moment(item.date).format('DD/MM')}{' '}
+                  {getTransactionStatus(item.status)}
                 </Atualizado>
               </ColRight>
             </Conta>
