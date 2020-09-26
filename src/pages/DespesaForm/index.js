@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {StatusBar, ActivityIndicator, Alert} from 'react-native';
+import React, {useState} from 'react';
+import {StatusBar, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import messageResponse from './../../utils/messageResponse';
 import colors from '../../styles/colors';
 import getRealm from './../../services/realm';
 import {useDispatch, useSelector} from 'react-redux';
-import {getDate} from '../../utils/FunctionUtils';
 import accountsArr from '../../utils/accounts';
 import categories from '../../utils/categoriesTransactions';
+import Input from '../../components/Input';
 
 import {
   Container,
@@ -16,7 +16,7 @@ import {
   BtnFechar,
   Form,
   InputContainer,
-  Input,
+  // Input,
   BtnNovaConta,
   LabelBtn,
   styles,
@@ -27,9 +27,11 @@ import {
   LabelBtnRemove,
   ContainerFormFooter,
   InputMask,
+  ButtonWrapper,
 } from './styles';
 
 import standard_icon from './../../assets/contas/standard_icon.png';
+import Button from '../../components/Button';
 
 export default function DespesaForm({navigation}) {
   const {state} = navigation;
@@ -50,34 +52,34 @@ export default function DespesaForm({navigation}) {
   const [arrayAccounts] = useState(accountsArr);
   const accounts = useSelector((state) => state.accounts.accounts);
 
-  useEffect(() => {
-    Object.keys(accounts).map((value) =>
-      console.log(arrayAccounts[accounts[value].account].label),
-    );
-    getDate().then((date) => {
-      setday(date.day);
-      setMonth(date.month);
-      setYear(date.year);
-    });
-    const detectionAccountParams = () => {
-      if (state.params.account) {
-        setEdit(true);
-        return true;
-      }
-      return false;
-    };
-    const getAccountEdit = () => {
-      setAccount(state.params.account.account);
-      setId(state.params.account.id);
-      setDescription(state.params.account.description);
-      setBalance(state.params.account.balance / 100);
-    };
-    if (detectionAccountParams()) {
-      setTimeout(() => {
-        getAccountEdit();
-      }, 500);
-    }
-  }, []);
+  // useEffect(() => {
+  //   Object.keys(accounts).map((value) =>
+  //     console.log(arrayAccounts[accounts[value].account].label),
+  //   );
+  //   getDate().then((date) => {
+  //     setday(date.day);
+  //     setMonth(date.month);
+  //     setYear(date.year);
+  //   });
+  //   const detectionAccountParams = () => {
+  //     if (state.params.account) {
+  //       setEdit(true);
+  //       return true;
+  //     }
+  //     return false;
+  //   };
+  //   const getAccountEdit = () => {
+  //     setAccount(state.params.account.account);
+  //     setId(state.params.account.id);
+  //     setDescription(state.params.account.description);
+  //     setBalance(state.params.account.balance / 100);
+  //   };
+  //   if (detectionAccountParams()) {
+  //     setTimeout(() => {
+  //       getAccountEdit();
+  //     }, 500);
+  //   }
+  // }, []);
 
   const setIconAccount = (code) => {
     setIcon(contas[code].icon);
@@ -230,15 +232,23 @@ export default function DespesaForm({navigation}) {
           <Icon name="close" color="#fff" size={30} />
         </BtnFechar>
       </HeaderForm>
-      <Form>
+      <Form contentContainerStyle={{paddingBottom: 40}}>
         <Input
-          placeholder="Descrição"
+          label="Descrição"
           value={description}
           onChangeText={(description) => {
             setDescription(description);
           }}
         />
-        <InputContainer>
+        <Input
+          label="Categoria"
+          value={description}
+          onChangeText={(description) => {
+            setDescription(description);
+          }}
+        />
+
+        {/* <InputContainer>
           <Picker
             selectedValue={category}
             onValueChange={(selected) => {
@@ -253,8 +263,8 @@ export default function DespesaForm({navigation}) {
               />
             ))}
           </Picker>
-        </InputContainer>
-        <InputContainer>
+        </InputContainer> */}
+        {/* <InputContainer>
           <InputMask
             type={'datetime'}
             placeholder="Digite uma data"
@@ -266,9 +276,10 @@ export default function DespesaForm({navigation}) {
               setDate(maskedText);
             }}
             style={styles.input}
-          />
-        </InputContainer>
-        <InputContainer>
+          /> */}
+        {/* </InputContainer> */}
+        <Input label="Data" />
+        {/* <InputContainer>
           <Picker
             selectedValue={idAccount}
             onValueChange={(selected) => {
@@ -283,8 +294,9 @@ export default function DespesaForm({navigation}) {
               />
             ))}
           </Picker>
-        </InputContainer>
-        <InputContainer>
+        </InputContainer> */}
+        <Input label="Conta" />
+        {/* <InputContainer>
           <InputMask
             type={'money'}
             placeholder="Digite o valor"
@@ -301,27 +313,35 @@ export default function DespesaForm({navigation}) {
             }}
             style={styles.input}
           />
-        </InputContainer>
-      </Form>
-      {isEdition ? (
-        <ContainerFormFooter>
-          <BtnRemove onPress={() => askDelection()}>
-            <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
-          </BtnRemove>
-        </ContainerFormFooter>
-      ) : (
-        <></>
-      )}
-      <BtnNovaConta
-        disabled={loading}
-        activeOpacity={0.9}
-        onPress={() => setObject()}>
-        {loading ? (
-          <ActivityIndicator size="large" color="#fff" />
+        </InputContainer> */}
+        <Input label="Valor" />
+        {isEdition ? (
+          <ContainerFormFooter>
+            <BtnRemove onPress={() => askDelection()}>
+              <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
+            </BtnRemove>
+          </ContainerFormFooter>
         ) : (
-          <LabelBtn>SALVAR</LabelBtn>
+          <></>
         )}
-      </BtnNovaConta>
+        {/* <BtnNovaConta
+          disabled={loading}
+          activeOpacity={0.9}
+          onPress={() => setObject()}>
+          {loading ? (
+            <ActivityIndicator size="large" color="#fff" />
+          ) : (
+            <LabelBtn>SALVAR</LabelBtn>
+          )}
+        </BtnNovaConta> */}
+        <ButtonWrapper>
+          <Button
+            label="Salvar"
+            background={colors.colorDanger}
+            onPress={() => alert('tese')}
+          />
+        </ButtonWrapper>
+      </Form>
     </Container>
   );
 }
