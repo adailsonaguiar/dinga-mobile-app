@@ -72,7 +72,7 @@ export const Input = styled.TextInput.attrs({
   font-size: 17px;
 `;
 export const BtnNovaConta = styled.TouchableOpacity`
-  background: #03dac5;
+  background: ${colors.greenApp};
   height: 61px;
   align-items: center;
   justify-content: center;

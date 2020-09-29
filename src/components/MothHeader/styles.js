@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import colors from '../../styles/colors';
 
 export const Container = styled.View`
   flex-direction: row;
@@ -9,9 +10,8 @@ export const Container = styled.View`
 `;
 
 export const Month = styled.Text`
-  color: #fff;
   font-weight: bold;
-  color: #03dac5;
+  color: ${colors.greenApp};
 `;
 
 export const CustomIcon = styled(Icon)``;

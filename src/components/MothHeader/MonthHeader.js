@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
+import colors from '../../styles/colors';
 import {setTwoDigits} from '../../utils/FunctionUtils';
 import months from '../../utils/months';
 import {Container, Month, CustomIcon, ButtonMonth} from './styles';
@@ -43,11 +44,19 @@ export default function MothHeader() {
   return (
     <Container>
       <ButtonMonth onPress={previousMonth}>
-        <CustomIcon name="keyboard-arrow-left" color="#03DAC5" size={30} />
+        <CustomIcon
+          name="keyboard-arrow-left"
+          color={colors.greenApp}
+          size={30}
+        />
       </ButtonMonth>
       <Month>{`${months[month] ? months[month] : ''}/${year}`}</Month>
       <ButtonMonth onPress={nextMonth}>
-        <CustomIcon name="keyboard-arrow-right" color="#03DAC5" size={30} />
+        <CustomIcon
+          name="keyboard-arrow-right"
+          color={colors.greenApp}
+          size={30}
+        />
       </ButtonMonth>
     </Container>
   );

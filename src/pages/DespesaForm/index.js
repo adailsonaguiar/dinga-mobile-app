@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {StatusBar, ActivityIndicator, Alert} from 'react-native';
+import {StatusBar, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import messageResponse from './../../utils/messageResponse';
 import colors from '../../styles/colors';
 import getRealm from './../../services/realm';
 import {useDispatch, useSelector} from 'react-redux';
-import {getDate} from '../../utils/FunctionUtils';
 import accountsArr from '../../utils/accounts';
-import categories from '../../utils/categoriesTransactions';
+import Input from '../../components/Input';
 
 import {
   Container,
@@ -15,21 +14,15 @@ import {
   HeaderForm,
   BtnFechar,
   Form,
-  InputContainer,
-  Input,
-  BtnNovaConta,
-  LabelBtn,
-  styles,
-  Picker,
-  ImgConta,
-  ContainerIcon,
   BtnRemove,
   LabelBtnRemove,
   ContainerFormFooter,
-  InputMask,
+  ButtonWrapper,
 } from './styles';
 
 import standard_icon from './../../assets/contas/standard_icon.png';
+import Button from '../../components/Button';
+import Select from '../../components/Select/Index';
 
 export default function DespesaForm({navigation}) {
   const {state} = navigation;
@@ -43,41 +36,47 @@ export default function DespesaForm({navigation}) {
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState(0);
   const [isEdition, setEdit] = useState(false);
-  const [day, setday] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
   const dispatch = useDispatch();
-  const [arrayAccounts] = useState(accountsArr);
-  const accounts = useSelector((state) => state.accounts.accounts);
+  const accountsSaved = useSelector((state) => state.accounts.accounts);
+  const [arraySelect, setArraySelect] = useState([]);
+
+  // console.log(accounts);
 
   useEffect(() => {
-    Object.keys(accounts).map((value) =>
-      console.log(arrayAccounts[accounts[value].account].label),
-    );
-    getDate().then((date) => {
-      setday(date.day);
-      setMonth(date.month);
-      setYear(date.year);
-    });
-    const detectionAccountParams = () => {
-      if (state.params.account) {
-        setEdit(true);
-        return true;
-      }
-      return false;
-    };
-    const getAccountEdit = () => {
-      setAccount(state.params.account.account);
-      setId(state.params.account.id);
-      setDescription(state.params.account.description);
-      setBalance(state.params.account.balance / 100);
-    };
-    if (detectionAccountParams()) {
-      setTimeout(() => {
-        getAccountEdit();
-      }, 500);
-    }
+    const accounts = accountsSaved.map((account) => ({
+      label: accountsArr()[account.account].label,
+    }));
+    setArraySelect(accounts);
   }, []);
+
+  // useEffect(() => {
+  //   Object.keys(accounts).map((value) =>
+  //     console.log(arrayAccounts[accounts[value].account].label),
+  //   );
+  //   getDate().then((date) => {
+  //     setday(date.day);
+  //     setMonth(date.month);
+  //     setYear(date.year);
+  //   });
+  //   const detectionAccountParams = () => {
+  //     if (state.params.account) {
+  //       setEdit(true);
+  //       return true;
+  //     }
+  //     return false;
+  //   };
+  //   const getAccountEdit = () => {
+  //     setAccount(state.params.account.account);
+  //     setId(state.params.account.id);
+  //     setDescription(state.params.account.description);
+  //     setBalance(state.params.account.balance / 100);
+  //   };
+  //   if (detectionAccountParams()) {
+  //     setTimeout(() => {
+  //       getAccountEdit();
+  //     }, 500);
+  //   }
+  // }, []);
 
   const setIconAccount = (code) => {
     setIcon(contas[code].icon);
@@ -230,45 +229,53 @@ export default function DespesaForm({navigation}) {
           <Icon name="close" color="#fff" size={30} />
         </BtnFechar>
       </HeaderForm>
-      <Form>
+      <Form contentContainerStyle={{paddingBottom: 40}}>
         <Input
-          placeholder="Descrição"
+          label="Descrição"
           value={description}
           onChangeText={(description) => {
             setDescription(description);
           }}
         />
-        <InputContainer>
-          <Picker
-            selectedValue={category}
-            onValueChange={(selected) => {
-              setCategory(selected);
-            }}
-            style={styles.input}>
-            {categories.map((category) => (
-              <Picker.Item
-                key={category}
-                label={category.label}
-                value={category.label}
-              />
-            ))}
-          </Picker>
-        </InputContainer>
-        <InputContainer>
-          <InputMask
-            type={'datetime'}
-            placeholder="Digite uma data"
-            value={date}
-            options={{
-              format: 'DD/MM/YYYY',
-            }}
-            onChangeText={(maskedText) => {
-              setDate(maskedText);
-            }}
-            style={styles.input}
-          />
-        </InputContainer>
-        <InputContainer>
+        <Select
+          placeholder="Selecione uma categoria"
+          label="Categoria"
+          options={[
+            {
+              color: '#2660A4',
+              label: 'Essencial',
+              value: 1,
+            },
+            {
+              color: '#FF6B35',
+              label: 'Investimentos',
+              value: 2,
+            },
+            {
+              color: '#FFBC42',
+              label: 'Educação',
+              value: 3,
+            },
+            {
+              color: '#AD343E',
+              label: 'Extra',
+              value: 4,
+            },
+          ]}
+          onValueChange={(obj) => setCategory(obj.value)}
+        />
+        <Input
+          label="Data"
+          type={'datetime'}
+          options={{
+            format: 'DD/MM/YYYY',
+          }}
+          value={date}
+          onChangeText={(maskedText) => {
+            setDate(maskedText);
+          }}
+        />
+        {/* <InputContainer>
           <Picker
             selectedValue={idAccount}
             onValueChange={(selected) => {
@@ -283,45 +290,47 @@ export default function DespesaForm({navigation}) {
               />
             ))}
           </Picker>
-        </InputContainer>
-        <InputContainer>
-          <InputMask
-            type={'money'}
-            placeholder="Digite o valor"
-            options={{
-              precision: 2,
-              separator: ',',
-              delimiter: '.',
-              unit: 'R$',
-              suffixUnit: '',
-            }}
-            value={balance}
-            onChangeText={(balance) => {
-              setBalance(balance);
-            }}
-            style={styles.input}
-          />
-        </InputContainer>
-      </Form>
-      {isEdition ? (
-        <ContainerFormFooter>
-          <BtnRemove onPress={() => askDelection()}>
-            <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
-          </BtnRemove>
-        </ContainerFormFooter>
-      ) : (
-        <></>
-      )}
-      <BtnNovaConta
-        disabled={loading}
-        activeOpacity={0.9}
-        onPress={() => setObject()}>
-        {loading ? (
-          <ActivityIndicator size="large" color="#fff" />
-        ) : (
-          <LabelBtn>SALVAR</LabelBtn>
+        </InputContainer> */}
+
+        <Select
+          placeholder="Selecione uma conta"
+          label="Contas"
+          options={arraySelect}
+          onValueChange={(selected) => {
+            setIdAccount(selected);
+          }}
+        />
+        <Input
+          label="Valor"
+          type={'money'}
+          options={{
+            precision: 2,
+            separator: ',',
+            delimiter: '.',
+            unit: 'R$',
+            suffixUnit: '',
+          }}
+          value={balance}
+          onChangeText={(balance) => {
+            setBalance(balance);
+          }}
+        />
+        {isEdition && (
+          <ContainerFormFooter>
+            <BtnRemove onPress={() => askDelection()}>
+              <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
+            </BtnRemove>
+          </ContainerFormFooter>
         )}
-      </BtnNovaConta>
+        <ButtonWrapper>
+          <Button
+            label="Salvar"
+            background={colors.colorDanger}
+            onPress={() => setObject()}
+            loading={loading}
+          />
+        </ButtonWrapper>
+      </Form>
     </Container>
   );
 }
