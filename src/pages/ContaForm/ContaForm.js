@@ -8,6 +8,7 @@ import getRealm from './../../services/realm';
 import accounts from '../../utils/accounts';
 import {useDispatch} from 'react-redux';
 import {loadAccounts, saveAccount} from '../../store/accounts/actions';
+import {getId} from '../../services/dbFunctions';
 
 import {
   Container,
@@ -76,19 +77,6 @@ export default function ContaForm({route, navigation}) {
     setAccount(code);
     setDescription(contas[code].description);
     setIcon(contas[code].icon);
-  };
-
-  const getId = async (schema) => {
-    try {
-      const realm = await getRealm();
-      const maxId = realm.objects(schema).max('id') + 1;
-      if (isNaN(maxId)) {
-        return 0;
-      }
-      return maxId;
-    } catch (e) {
-      messageResponse.error(e);
-    }
   };
 
   const formatBalance = (balanceParam) => {
