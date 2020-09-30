@@ -29,7 +29,8 @@ export const BtnFechar = styled.TouchableOpacity`
 `;
 export const Form = styled.ScrollView`
   flex: 7;
-  padding: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
 `;
 
 export const Picker = styled.Picker`
