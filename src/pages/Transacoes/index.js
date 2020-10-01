@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import Header from '../../components/Header/Header';
 import accountsUtil from '../../utils/accounts';
-import {loadTransactions} from '../../store/accounts/actions';
+import {loadTransactions} from '../../store/transactions/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
 import colors from '../../styles/colors';
 

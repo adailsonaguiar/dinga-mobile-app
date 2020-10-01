@@ -54,3 +54,32 @@ export const saveAccount = (account) => {
     }
   };
 };
+
+export const loadTransactions = ({month}) => {
+  return async (dispatch) => {
+    try {
+      dispatch({type: LOAD_TRANSACTIONS});
+      const data = await loadData('transaction');
+      dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: LOAD_TRANSACTIONS_FAILURE});
+      console.error(error);
+    }
+  };
+};
+
+export const saveTransactions = (transaction) => {
+  return async (dispatch) => {
+    try {
+      const newId = await getId('transaction');
+      transaction.id = newId;
+      transaction.date = new Date(transaction.date);
+      await writeData('transaction', transaction);
+
+      dispatch(loadTransactions());
+    } catch (e) {
+      messageResponse.error(e);
+      return e;
+    }
+  };
+};
