@@ -9,7 +9,6 @@ export const Container = styled.View`
 export const HeaderForm = styled.View`
   flex: 1;
   background: ${colors.backgroundColorPrimary};
-  flex: 1;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;

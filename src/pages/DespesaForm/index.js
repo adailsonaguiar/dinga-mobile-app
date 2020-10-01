@@ -24,6 +24,7 @@ import {
 } from './styles';
 import {getId} from '../../services/realm';
 import {saveTransactions} from '../../store/transactions/actions';
+import {transactionType} from '../../schemas/TransactionSchema';
 
 const DespesaForm = ({navigation}) => {
   const INITIAL_VALUES = {
@@ -32,11 +33,13 @@ const DespesaForm = ({navigation}) => {
     date: '',
     description: '',
     accountId: '',
+    type: transactionType.TRANSACTION_IN,
+    status: 0,
   };
   const dispatch = useDispatch();
   const accountsSaved = useSelector((state) => state.accounts.accounts);
+  const loading = useSelector((state) => state.transactions.loading);
   const [arraySelect, setArraySelect] = useState([]);
-  const [loading, setLoading] = useState(false);
   const refs = {};
 
   useEffect(() => {
@@ -51,11 +54,9 @@ const DespesaForm = ({navigation}) => {
     setArraySelect(accounts);
   }, []);
 
-  async function onSubmit(values) {
-    setLoading(true);
+  function onSubmit(values) {
     values.value = refs.value.getRawValue();
-    await dispatch(saveTransactions(values));
-    setLoading(false);
+    dispatch(saveTransactions(values));
   }
 
   return (
@@ -76,11 +77,10 @@ const DespesaForm = ({navigation}) => {
       <Formik
         initialValues={INITIAL_VALUES}
         onSubmit={(values) => onSubmit(values)}>
-        {({setFieldValue, handleSubmit, values, isSubmitting}) => (
+        {({setFieldValue, handleSubmit, values}) => (
           <Form contentContainerStyle={{paddingBottom: 40}}>
             <Input
               label="Descrição"
-              value={values.description}
               onChangeText={(text) => setFieldValue('description', text)}
             />
             <Select
@@ -116,7 +116,6 @@ const DespesaForm = ({navigation}) => {
               options={{
                 format: 'DD/MM/YYYY',
               }}
-              value={values.date}
               onChangeText={(maskedText) => setFieldValue('date', maskedText)}
             />
             <Select
@@ -137,7 +136,6 @@ const DespesaForm = ({navigation}) => {
                 unit: 'R$',
                 suffixUnit: '',
               }}
-              value={values.value}
               onChangeText={(maskedText) => {
                 setFieldValue('value', maskedText);
               }}

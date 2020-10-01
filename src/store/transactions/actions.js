@@ -7,7 +7,7 @@ import {
   SAVE_TRANSACTION_SUCCESS,
   SAVE_TRANSACTION_FAILURE,
 } from './actionTypes';
-import messageResponse from '../../utils/messageResponse';
+import {error} from '../../utils/messageResponse';
 
 const loadTransactionsSuccess = (dispatch, accounts) => {
   dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: accounts});
@@ -25,7 +25,7 @@ export const loadTransactions = ({month}) => {
       loadTransactionsSuccess(dispatch, data);
     } catch (error) {
       loadTransactionsFailure();
-      console.error(error);
+      error(error);
     }
   };
 };
@@ -44,12 +44,12 @@ export const saveTransactions = (transaction) => {
       dispatch({type: SAVE_TRANSACTION_REQUEST});
       const newId = await getId('transaction');
       transaction.id = newId;
-      transaction.date = new Date(transaction.date);
+      transaction.date = new Date();
       await writeData('transaction', transaction);
-      dispatch(loadTransactions());
+      // console.info(transaction);
       saveTransactionsSuccess(dispatch);
     } catch (e) {
-      messageResponse.error(e);
+      error(e);
       saveTransactionsFailure(dispatch);
     }
   };

@@ -10,6 +10,7 @@ import {
 import messageResponse from '../../utils/messageResponse';
 
 import {transactionType} from '../../schemas/TransactionSchema';
+import {saveTransactions} from '../transactions/actions';
 
 export const loadAccounts = (month, year) => {
   return async (dispatch) => {
@@ -34,20 +35,21 @@ const loadAccountsFailure = (dispatch) => {
 export const saveAccount = (account) => {
   return (dispatch) => {
     try {
-      writeData('contas', account);
+      console.log(account);
+      // writeData('contas', account);
       dispatch(
         saveTransactions({
           ...account,
           description: 'Criação da conta',
           value: account.balance,
           type: transactionType.TRANSACTION_IN,
-          accountId: account.account,
+          accountId: 0,
           status: 1,
           category: 1,
         }),
       );
 
-      dispatch(loadAccounts());
+      // dispatch(loadAccounts());
     } catch (e) {
       messageResponse.error(e);
       return e;

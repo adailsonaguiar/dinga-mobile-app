@@ -5,6 +5,9 @@ import {
   LOAD_TRANSACTIONS,
   LOAD_TRANSACTIONS_SUCCESS,
   LOAD_TRANSACTIONS_FAILURE,
+  SAVE_TRANSACTION_REQUEST,
+  SAVE_TRANSACTION_SUCCESS,
+  SAVE_TRANSACTION_FAILURE,
 } from './actionTypes';
 
 const INITIAL_STATE = {
@@ -15,17 +18,17 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case LOAD_ACCOUNTS:
-      return {...state, loading: true};
-    case LOAD_ACCOUNTS_SUCCESS:
-      return {...state, accounts: action.payload, loading: false};
-    case LOAD_ACCOUNTS_FAILURE:
-      return {...state, loading: false};
     case LOAD_TRANSACTIONS:
       return {...state, loading: true};
     case LOAD_TRANSACTIONS_SUCCESS:
       return {...state, transactions: action.payload, loading: false};
     case LOAD_TRANSACTIONS_FAILURE:
+      return {...state, loading: false};
+    case SAVE_TRANSACTION_REQUEST:
+      return {...state, loading: true};
+    case SAVE_TRANSACTION_SUCCESS:
+      return {...state, transactions: action.payload, loading: false};
+    case SAVE_TRANSACTION_FAILURE:
       return {...state, loading: false};
     default:
   }

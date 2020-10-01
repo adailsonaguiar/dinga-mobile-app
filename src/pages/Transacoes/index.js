@@ -34,6 +34,8 @@ const Transacoes = ({navigation}) => {
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.accounts.transactions);
 
+  console.info(transactions);
+
   useEffect(() => {
     getDate().then((date) => {
       setCurrentDate(`${date.day}/${date.month}/${date.year}`);
