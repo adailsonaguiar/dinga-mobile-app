@@ -4,11 +4,10 @@ import {TextInputMask} from 'react-native-masked-text';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import messageResponse from './../../utils/messageResponse';
 import colors from '../../styles/colors';
-import getRealm from './../../services/realm';
+import getRealm, {getId} from './../../services/realm';
 import accounts from '../../utils/accounts';
 import {useDispatch} from 'react-redux';
 import {loadAccounts, saveAccount} from '../../store/accounts/actions';
-import {getId} from '../../services/dbFunctions';
 
 import {
   Container,

@@ -8,6 +8,14 @@ import Contas from './pages/Contas/Contas';
 import ContaForm from './pages/ContaForm/ContaForm';
 import DespesaForm from './pages/DespesaForm';
 
+export const pages = {
+  dash: 'Dash',
+  contas: 'Contas',
+  contaForm: 'ContaForm',
+  transacoes: 'Transacoes',
+  despesaForm: 'DespesaForm',
+};
+
 const Stack = createStackNavigator();
 
 export default () => {
@@ -17,28 +25,12 @@ export default () => {
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="Dash" component={Dash} />
-        <Stack.Screen name="Contas" component={Contas} />
-        <Stack.Screen name="ContaForm" component={ContaForm} />
-        <Stack.Screen name="Transacoes" component={Transacoes} />
-        <Stack.Screen name="DespesaForm" component={DespesaForm} />
+        <Stack.Screen name={pages.dash} component={Dash} />
+        <Stack.Screen name={pages.contas} component={Contas} />
+        <Stack.Screen name={pages.contaForm} component={ContaForm} />
+        <Stack.Screen name={pages.transacoes} component={Transacoes} />
+        <Stack.Screen name={pages.despesaForm} component={DespesaForm} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
-
-/**
- *   {
-      Dash: {
-        screen: Dash,
-      },
-      Contas: {
-        screen: Contas,
-      },
-      ContaForm: {
-        screen: ContaForm,
-      },
-      Transacoes: {screen: Transacoes},
-      DespesaForm: {screen: DespesaForm},
-    },
- */
