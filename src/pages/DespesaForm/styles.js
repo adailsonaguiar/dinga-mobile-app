@@ -15,7 +15,6 @@ export const HeaderForm = styled.View`
   align-items: center;
   margin-left: 20px;
   margin-right: 20px;
-  margin-top: 30px;
 `;
 export const TxtHeaderForm = styled.Text`
   color: ${colors.fontLight};

@@ -7,7 +7,7 @@ const Button = ({label, loading, ...rest}, ref) => {
   return (
     <S.Button {...rest} disabled={loading} activeOpacity={0.9}>
       {loading ? (
-        <ActivityIndicator size="large" color="#fff" />
+        <ActivityIndicator size="small" color="#fff" />
       ) : (
         <S.Label>{label}</S.Label>
       )}
