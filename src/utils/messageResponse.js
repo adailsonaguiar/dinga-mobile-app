@@ -1,7 +1,9 @@
 import {Alert} from 'react-native';
 
-const error = (erro) => {
+export const error = (erro) => {
   Alert.alert('Erro', `Ocorreu um erro, tente novamente. ${erro}`);
 };
 
-module.exports = {error};
+export const alertGeral = (message) => {
+  Alert.alert(message);
+};

@@ -1,14 +1,17 @@
 import React, {useState, useEffect} from 'react';
-import {StatusBar, Alert} from 'react-native';
+import {StatusBar} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import messageResponse from './../../utils/messageResponse';
-import colors from '../../styles/colors';
-import getRealm from './../../services/realm';
 import {useDispatch, useSelector} from 'react-redux';
+import {withFormik} from 'formik';
+import getRealm, {getId} from './../../services/realm';
 import accountsArr from '../../utils/accounts';
 import Input from '../../components/Input';
-import {getId} from '../../services/dbFunctions';
+import Button from '../../components/Button';
+import Select from '../../components/Select/Index';
+import {pages} from '../../routes';
+import {alertGeral} from '../../utils/messageResponse';
 
+import colors from '../../styles/colors';
 import {
   Container,
   TxtHeaderForm,
@@ -21,23 +24,25 @@ import {
   ButtonWrapper,
 } from './styles';
 
-import Button from '../../components/Button';
-import Select from '../../components/Select/Index';
-
-export default function DespesaForm({navigation}) {
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [date, setDate] = useState('');
-  const [idAccount, setIdAccount] = useState('');
-  const [balance, setBalance] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [isEdition, setEdit] = useState(false);
+const DespesaForm = ({
+  navigation,
+  setFieldValue,
+  handleSubmit,
+  values,
+  isEdition,
+  isSubmitting,
+}) => {
   const accountsSaved = useSelector((state) => state.accounts.accounts);
   const [arraySelect, setArraySelect] = useState([]);
 
   useEffect(() => {
+    if (!accountsSaved.length) {
+      alertGeral('Você precisa cadastrar uma conta primeiro!');
+      navigation.navigate(pages.contaForm);
+    }
     const accounts = accountsSaved.map((account) => ({
       label: accountsArr()[account.account].label,
+      id: account.id,
     }));
     setArraySelect(accounts);
   }, []);
@@ -62,10 +67,8 @@ export default function DespesaForm({navigation}) {
       <Form contentContainerStyle={{paddingBottom: 40}}>
         <Input
           label="Descrição"
-          value={description}
-          onChangeText={(text) => {
-            setDescription(text);
-          }}
+          value={values.description}
+          onChangeText={(text) => setFieldValue('description', text)}
         />
         <Select
           placeholder="Selecione uma categoria"
@@ -92,7 +95,7 @@ export default function DespesaForm({navigation}) {
               value: 4,
             },
           ]}
-          onValueChange={(obj) => setCategory(obj.value)}
+          onValueChange={(obj) => setFieldValue('category', obj.value)}
         />
         <Input
           label="Data"
@@ -100,18 +103,14 @@ export default function DespesaForm({navigation}) {
           options={{
             format: 'DD/MM/YYYY',
           }}
-          value={date}
-          onChangeText={(maskedText) => {
-            setDate(maskedText);
-          }}
+          value={values.date}
+          onChangeText={(maskedText) => setFieldValue('date', maskedText)}
         />
         <Select
           placeholder="Selecione uma conta"
           label="Contas"
           options={arraySelect}
-          onValueChange={(selected) => {
-            setIdAccount(selected);
-          }}
+          onValueChange={(selected) => setFieldValue('accountId', selected.id)}
         />
         <Input
           label="Valor"
@@ -123,10 +122,8 @@ export default function DespesaForm({navigation}) {
             unit: 'R$',
             suffixUnit: '',
           }}
-          value={balance}
-          onChangeText={(value) => {
-            setBalance(value);
-          }}
+          value={values.value}
+          onChangeText={(value) => setFieldValue('value', value)}
         />
         {isEdition && (
           <ContainerFormFooter>
@@ -139,11 +136,25 @@ export default function DespesaForm({navigation}) {
           <Button
             label="Salvar"
             background={colors.colorDanger}
-            onPress={() => {}}
-            loading={loading}
+            onPress={handleSubmit}
+            loading={isSubmitting}
           />
         </ButtonWrapper>
       </Form>
     </Container>
   );
-}
+};
+
+export default withFormik({
+  mapPropsToValues: () => ({
+    category: '',
+    value: '',
+    date: '',
+    description: '',
+    accountId: '',
+  }),
+
+  handleSubmit: (values) => {
+    console.log(values);
+  },
+})(DespesaForm);
