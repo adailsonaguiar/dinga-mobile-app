@@ -19,13 +19,12 @@ export const Title = styled.Text`
 `;
 
 export const HeaderForm = styled.View`
-  /* flex: 1; */
-  /* height: 50px; */
   width: 100%;
   background: ${colors.backgroundColorPrimary};
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 30px;
+  padding-bottom: 15px;
 `;
 
 export const RowWrapper = styled.View`
@@ -54,4 +53,11 @@ export const Line = styled.View`
     margin-top: 17px;
     background-color: ${lineColor ? lineColor : colors.greenApp};
   `}
+`;
+
+export const Subtitle = styled.Text`
+  font-size: 16px;
+  color: ${colors.fontLight};
+  font-family: ${fontMedium};
+  margin-top: 5px;
 `;

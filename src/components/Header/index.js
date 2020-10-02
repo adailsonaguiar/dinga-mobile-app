@@ -9,6 +9,7 @@ const Header = ({
   lineColor,
   showClose = false,
   showMonthHeader = false,
+  children,
 }) => {
   return (
     <>
@@ -26,6 +27,7 @@ const Header = ({
           )}
         </S.RowWrapper>
         <S.Line lineColor={lineColor} />
+        {children && <S.Subtitle>{children}</S.Subtitle>}
       </S.HeaderForm>
     </>
   );

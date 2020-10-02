@@ -9,8 +9,7 @@ export const Container = styled.View`
 `;
 
 export const Form = styled.ScrollView`
-  flex: 12;
-  padding-top: 20px;
+  flex: 1;
   padding-left: 20px;
   padding-right: 20px;
 `;

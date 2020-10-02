@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import Button from '../../components/Button';
 import colors from '../../styles/colors';
 import {fontMedium} from '../../styles/fonts';
 
@@ -6,25 +7,7 @@ export const Container = styled.View`
   flex: 1;
   background: ${colors.backgroundColorPrimary};
 `;
-export const HeaderForm = styled.View`
-  flex: 1;
-  background: ${colors.backgroundColorPrimary};
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-left: 20px;
-  margin-right: 20px;
-`;
-export const TxtHeaderForm = styled.Text`
-  color: ${colors.fontLight};
-  font-size: 30px;
-  font-family: ${fontMedium};
-`;
-export const BtnFechar = styled.TouchableOpacity`
-  width: 35px;
-  height: 35px;
-  align-items: flex-end;
-`;
+
 export const Form = styled.ScrollView`
   flex: 7;
   padding-left: 20px;
@@ -54,6 +37,6 @@ export const BtnRemove = styled.TouchableOpacity`
   justify-content: center;
 `;
 
-export const ButtonWrapper = styled.View`
+export const ButtonSave = styled(Button)`
   margin-top: 20px;
 `;

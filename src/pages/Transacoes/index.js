@@ -63,7 +63,7 @@ const Transacoes = ({navigation}) => {
 
   return (
     <>
-      <Header title="Transações" />
+      <Header title="Transações" showMonthHeader />
       <Container>
         <StatusBar
           barStyle="light-content"
