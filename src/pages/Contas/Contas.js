@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {StatusBar, FlatList} from 'react-native';
-import Header from '../../components/Header/Header';
 import accountsUtil from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
@@ -61,7 +60,6 @@ const Carteiras = ({navigation}) => {
         barStyle="light-content"
         backgroundColor={colors.backgroundColorPrimary}
       />
-      <Header title="Finax" />
       <HerderList>
         <TitleComponent>SUAS CONTAS</TitleComponent>
         <TxtDate>{currentDate}</TxtDate>

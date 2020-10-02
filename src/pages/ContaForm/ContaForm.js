@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {StatusBar, Alert} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import messageResponse from './../../utils/messageResponse';
 import colors from '../../styles/colors';
 import getRealm, {getId} from './../../services/realm';
@@ -10,9 +9,6 @@ import {loadAccounts, saveAccount} from '../../store/accounts/actions';
 
 import {
   Container,
-  TxtHeaderForm,
-  HeaderForm,
-  BtnFechar,
   Form,
   ImgConta,
   ContainerIcon,
@@ -26,6 +22,7 @@ import Select from '../../components/Select/Index';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import {Formik} from 'formik';
+import Header from '../../components/Header';
 
 export default function ContaForm({route, navigation, idAccount = ''}) {
   const {params} = route;
@@ -139,25 +136,13 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
         barStyle="light-content"
         backgroundColor={colors.backgroundColorPrimary}
       />
-      <HeaderForm>
-        <TxtHeaderForm>
-          {idAccount.length ? 'ATUALIZAR CONTA' : 'NOVA CONTA'}
-        </TxtHeaderForm>
-        <BtnFechar
-          onPress={async () => {
-            navigation.goBack();
-          }}>
-          <Icon name="close" color="#fff" size={30} />
-        </BtnFechar>
-      </HeaderForm>
+      <Header title={idAccount.length ? 'Atualizar conta' : 'Nova conta'} />
+
       <Formik
         initialValues={INITIAL_VALUES}
         onSubmit={(values) => onSubmit(values)}>
         {({setFieldValue, handleSubmit, values}) => (
           <Form contentContainerStyle={{paddingBottom: 10}}>
-            <ContainerIcon>
-              <ImgConta source={icon} />
-            </ContainerIcon>
             <Select
               placeholder="Selecione uma conta"
               label="Conta"
@@ -193,8 +178,7 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
               }
             />
             <Input
-              label="Descrição"
-              placeholder="Corte de cabelo"
+              label="Tipo da conta"
               onChangeText={(text) => setFieldValue('description', text)}
             />
             <Input

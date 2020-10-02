@@ -3,7 +3,6 @@ import {StatusBar, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 
-import Header from '../../components/Header/Header';
 import accountsUtil from '../../utils/accounts';
 import {loadTransactions} from '../../store/transactions/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
@@ -67,7 +66,6 @@ const Transacoes = ({navigation}) => {
         barStyle="light-content"
         backgroundColor={colors.backgroundColorPrimary}
       />
-      <Header />
       <HerderList>
         <TitleComponent>SUAS TRANSAÇÕES</TitleComponent>
         <TxtDate>{currentDate}</TxtDate>

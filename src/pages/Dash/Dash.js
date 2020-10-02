@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
-import Header from '../../components/Header/Header';
 import Tabs from '../../components/Tabs';
 import colors from '../../styles/colors';
 
@@ -23,7 +22,6 @@ export default Dash = ({navigation}) => {
   });
   return (
     <Container>
-      <Header title="Finax" />
       <StatusBar
         barStyle="light-content"
         backgroundColor={colors.backgroundColorPrimary}

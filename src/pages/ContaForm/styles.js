@@ -7,32 +7,9 @@ export const Container = styled.View`
   background: ${colors.backgroundColorPrimary};
 `;
 
-export const HeaderForm = styled.View`
-  flex: 1;
-  background: ${colors.backgroundColorPrimary};
-  flex: 1;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-top: 30px;
-`;
-
-export const TxtHeaderForm = styled.Text`
-  color: ${colors.fontLight};
-  font-size: 30px;
-  font-family: ${fontMedium};
-`;
-
-export const BtnFechar = styled.TouchableOpacity`
-  width: 35px;
-  height: 35px;
-  align-items: flex-end;
-`;
-
 export const Form = styled.ScrollView`
   flex: 12;
+  padding-top: 20px;
   padding-left: 20px;
   padding-right: 20px;
 `;
