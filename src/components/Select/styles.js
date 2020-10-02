@@ -39,9 +39,25 @@ export const FieldWrapper = styled.View`
 `;
 
 export const Placeholder = styled.Text`
-  color: ${colors.fontLight};
-  font-family: ${fontMedium};
-  font-size: 16px;
+  ${({lineLeft}) => css`
+    color: ${colors.fontLight};
+    font-family: ${fontMedium};
+    font-size: 16px;
+    margin-left: ${lineLeft ? '10px' : '0'};
+  `}
+`;
+
+export const LabelWrapper = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const LineLeft = styled.View`
+  ${({lineLeftColor}) => css`
+    width: 5px;
+    height: 37px;
+    background-color: ${lineLeftColor};
+  `}
 `;
 
 export const Label = styled.Text`

@@ -1,11 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {StatusBar, Alert} from 'react-native';
-import messageResponse from './../../utils/messageResponse';
 import colors from '../../styles/colors';
-import getRealm from './../../services/realm';
-import accounts from '../../utils/accounts';
+import {accounts} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
-import {loadAccounts, saveAccount} from '../../store/accounts/actions';
+import {saveAccount} from '../../store/accounts/actions';
 
 import {
   Container,
@@ -20,10 +18,10 @@ import Select from '../../components/Select/Index';
 import Input from '../../components/Input';
 import {Formik} from 'formik';
 import Header from '../../components/Header';
+import {getId} from '../../services/realm';
 
 export default function ContaForm({route, navigation, idAccount = ''}) {
   const {params} = route;
-  const contas = accounts;
   const dispatch = useDispatch();
 
   const INITIAL_VALUES = {
@@ -36,30 +34,9 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
   const loading = useSelector((state) => state.accounts.loading);
   const refs = {};
 
-  // const getAccountEdit = (accountParam) => {
-  //   setId(accountParam.id);
-  //   setBalance(accountParam.balance / 100);
-  //   setPropertyAccount(accountParam.account);
+  // const handleLoadAccounts = () => {
+  //   dispatch(loadAccounts());
   // };
-
-  useEffect(() => {
-    const accountParam = params ? params.account : null;
-    // if (accountParam) {
-    //   setEdit(true);
-    //   getAccountEdit(accountParam);
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // const setPropertyAccount = (code) => {
-  //   setAccount(code);
-  //   setDescription(contas[code].description);
-  //   setIcon(contas[code].icon);
-  // };
-
-  const handleLoadAccounts = () => {
-    dispatch(loadAccounts());
-  };
 
   const validateForm = (values) => {
     if (!values.description.length) {
@@ -73,57 +50,58 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
     return true;
   };
 
-  const askDelection = async () => {
-    Alert.alert(
-      'Atenção',
-      'Deseja realmente deletar essa conta?',
-      [
-        {
-          text: 'Cancelar',
-          onPress: () => {},
-          style: {backgroundColor: 'red'},
-        },
-        {
-          text: 'Sim',
-          onPress: () => {
-            deleteAccount();
-          },
-        },
-      ],
-      {cancelable: false},
-    );
-  };
+  // const askDelection = async () => {
+  //   Alert.alert(
+  //     'Atenção',
+  //     'Deseja realmente deletar essa conta?',
+  //     [
+  //       {
+  //         text: 'Cancelar',
+  //         onPress: () => {},
+  //         style: {backgroundColor: 'red'},
+  //       },
+  //       {
+  //         text: 'Sim',
+  //         onPress: () => {
+  //           deleteAccount();
+  //         },
+  //       },
+  //     ],
+  //     {cancelable: false},
+  //   );
+  // };
 
-  const deleteAccount = async () => {
-    setLoading(true);
-    const realm = await getRealm();
-    try {
-      realm.write(() => {
-        const conta = realm.objectForPrimaryKey('contas', id);
-        realm.delete(conta);
-        setLoading(false);
-        handleLoadAccounts();
-        navigation.goBack();
-      });
-    } catch (e) {
-      setLoading(false);
-      messageResponse.error(e);
-    }
-  };
+  // const deleteAccount = async () => {
+  //   setLoading(true);
+  //   const realm = await getRealm();
+  //   try {
+  //     realm.write(() => {
+  //       const conta = realm.objectForPrimaryKey('contas', id);
+  //       realm.delete(conta);
+  //       setLoading(false);
+  //       handleLoadAccounts();
+  //       navigation.goBack();
+  //     });
+  //   } catch (e) {
+  //     setLoading(false);
+  //     messageResponse.error(e);
+  //   }
+  // };
 
   async function onSubmit(values) {
-    if (validateForm(values)) {
-      // if (!idAccount.length) {
-      //   const idMaxAccount = await getId('contas');
-      //   values.id = idMaxAccount;
-      // }
-      values.id = 0;
-      if (typeof values.balance === 'string')
-        values.balance = refs.balance.getRawValue();
-      values.date = new Date();
-      // navigation.goBack();
-      dispatch(saveAccount(values));
-    }
+    console.log(values);
+    // if (validateForm(values)) {
+    //   if (!idAccount.length) {
+    //     const idMaxAccount = await getId('contas');
+    //     values.id = idMaxAccount;
+    //   }
+    //   values.id = 0;
+    //   if (typeof values.balance === 'string')
+    //     values.balance = refs.balance.getRawValue();
+    //   values.date = new Date();
+    //   // navigation.goBack();
+    //   dispatch(saveAccount(values));
+    // }
   }
 
   return (
@@ -142,36 +120,9 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
             <Select
               placeholder="Selecione uma conta"
               label="Conta"
-              options={[
-                {
-                  color: '#2660A4',
-                  label: 'Carteira',
-                  value: '000',
-                },
-                {
-                  color: '#FF6B35',
-                  label: 'Caixa Econômica - 104',
-                  value: '104',
-                },
-                {
-                  color: '#FFBC42',
-                  label: 'Nuconta - 260',
-                  value: '260',
-                },
-                {
-                  color: '#AD343E',
-                  label: 'Bradesco - 204',
-                  value: '204',
-                },
-                {
-                  label: 'Santander - 033',
-                  value: '033',
-                },
-                {label: 'Itaú - 341', value: '341'},
-              ]}
-              onValueChange={(selected) =>
-                setFieldValue('account', selected.value)
-              }
+              options={accounts}
+              lineLeftColor={values.account.color}
+              onValueChange={(selected) => setFieldValue('account', selected)}
             />
             <Input
               label="Tipo da conta"

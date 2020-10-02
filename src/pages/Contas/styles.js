@@ -66,7 +66,6 @@ export const Atualizado = styled.Text`
 
 export const Footer = styled.View`
   background: ${colors.backgroundColorPrimary};
-  /* height: 61px; */
   align-items: center;
   padding-left: 20px;
   padding-right: 20px;
