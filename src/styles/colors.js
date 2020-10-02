@@ -6,4 +6,5 @@ export default {
   colorStroke: '#233D4E',
   colorDanger: '#C93A2C',
   darker: '#15252F',
+  graphite: '#2d536c',
 };

@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import Button from '../../components/Button';
 import colors from '../../styles/colors';
 import {fontMedium} from '../../styles/fonts';
 
@@ -24,19 +25,6 @@ export const InputContainer = styled.View`
   margin-right: 30px;
 `;
 
-export const ImgConta = styled.Image`
-  width: 80px;
-  height: 80px;
-`;
-
-export const ContainerIcon = styled.View`
-  flex: 3;
-  justify-content: flex-end;
-  align-items: center;
-  padding-bottom: 10px;
-  padding-top: 10px;
-`;
-
 export const ContainerFormFooter = styled.View`
   justify-content: center;
   align-items: center;
@@ -59,4 +47,8 @@ export const LabelBtnRemove = styled.Text`
   font-family: ${fontMedium};
   font-size: 11px;
   color: #95a5a6;
+`;
+
+export const ButtonSave = styled(Button)`
+  margin-top: 10px;
 `;

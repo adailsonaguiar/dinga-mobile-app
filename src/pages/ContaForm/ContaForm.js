@@ -10,24 +10,21 @@ import {loadAccounts, saveAccount} from '../../store/accounts/actions';
 import {
   Container,
   Form,
-  ImgConta,
-  ContainerIcon,
   BtnRemove,
   LabelBtnRemove,
   ContainerFormFooter,
+  ButtonSave,
 } from './styles';
 
 import standard_icon from './../../assets/contas/standard_icon.png';
 import Select from '../../components/Select/Index';
 import Input from '../../components/Input';
-import Button from '../../components/Button';
 import {Formik} from 'formik';
 import Header from '../../components/Header';
 
 export default function ContaForm({route, navigation, idAccount = ''}) {
   const {params} = route;
   const contas = accounts;
-  const [icon, setIcon] = useState(standard_icon);
   const dispatch = useDispatch();
 
   const INITIAL_VALUES = {
@@ -205,7 +202,7 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
                 </BtnRemove>
               </ContainerFormFooter>
             )} */}
-            <Button
+            <ButtonSave
               label="Salvar"
               background={colors.greenApp}
               onPress={handleSubmit}
