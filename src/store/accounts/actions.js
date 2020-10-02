@@ -33,23 +33,9 @@ const loadAccountsFailure = (dispatch) => {
 };
 
 export const saveAccount = (account) => {
-  return (dispatch) => {
+  return () => {
     try {
-      console.log(account);
-      // writeData('contas', account);
-      dispatch(
-        saveTransactions({
-          ...account,
-          description: 'Criação da conta',
-          value: account.balance,
-          type: transactionType.TRANSACTION_IN,
-          accountId: 0,
-          status: 1,
-          category: 1,
-        }),
-      );
-
-      // dispatch(loadAccounts());
+      writeData('contas', account);
     } catch (e) {
       messageResponse.error(e);
       return e;

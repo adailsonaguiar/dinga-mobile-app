@@ -4,6 +4,6 @@ export const error = (erro) => {
   Alert.alert('Erro', `Ocorreu um erro, tente novamente. ${erro}`);
 };
 
-export const alertGeral = (message) => {
-  Alert.alert(message);
+export const alertGeral = (title, message) => {
+  Alert.alert(title, message);
 };

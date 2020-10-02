@@ -1,5 +1,5 @@
 import React from 'react';
-import {StatusBar, Alert} from 'react-native';
+import {StatusBar} from 'react-native';
 import colors from '../../styles/colors';
 import {accounts} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
@@ -19,6 +19,7 @@ import Input from '../../components/Input';
 import {Formik} from 'formik';
 import Header from '../../components/Header';
 import {getId} from '../../services/realm';
+import {alertGeral} from '../../utils/messageResponse';
 
 export default function ContaForm({route, navigation, idAccount = ''}) {
   const {params} = route;
@@ -27,7 +28,7 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
   const INITIAL_VALUES = {
     id: idAccount,
     date: new Date(),
-    description: '',
+    accountType: '',
     balance: 0,
     account: '',
   };
@@ -39,12 +40,12 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
   // };
 
   const validateForm = (values) => {
-    if (!values.description.length) {
-      Alert.alert('Atenção', 'Digite uma descrição!');
+    if (!values.accountType.length) {
+      alertGeral('Atenção', 'Digite uma descrição!');
       return false;
     }
     if (!values.balance) {
-      Alert.alert('Atenção', 'Preencha o saldo da conta!');
+      alertGeral('Atenção', 'Preencha o saldo da conta!');
       return false;
     }
     return true;
@@ -89,19 +90,22 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
   // };
 
   async function onSubmit(values) {
-    console.log(values);
-    // if (validateForm(values)) {
-    //   if (!idAccount.length) {
-    //     const idMaxAccount = await getId('contas');
-    //     values.id = idMaxAccount;
-    //   }
-    //   values.id = 0;
-    //   if (typeof values.balance === 'string')
-    //     values.balance = refs.balance.getRawValue();
-    //   values.date = new Date();
-    //   // navigation.goBack();
-    //   dispatch(saveAccount(values));
-    // }
+    if (validateForm(values)) {
+      const account = values.account.value;
+      let id = values.id;
+      let balance = values.balance;
+      if (!idAccount.length) {
+        const idMaxAccount = await getId('contas');
+        id = idMaxAccount;
+      }
+      if (typeof values.balance === 'string')
+        balance = refs.balance.getRawValue();
+      const date = new Date();
+      values = {...values, account, id, date, balance};
+      console.log(values);
+      // navigation.goBack();
+      dispatch(saveAccount(values));
+    }
   }
 
   return (
@@ -122,11 +126,17 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
               label="Conta"
               options={accounts}
               lineLeftColor={values.account.color}
-              onValueChange={(selected) => setFieldValue('account', selected)}
+              onValueChange={(selected) => {
+                setFieldValue('account', selected);
+                setFieldValue('accountType', selected.accountType);
+              }}
             />
             <Input
               label="Tipo da conta"
-              onChangeText={(text) => setFieldValue('description', text)}
+              value={values.accountType}
+              onChangeText={(text) => {
+                setFieldValue('accountType', text);
+              }}
             />
             <Input
               label="Valor"

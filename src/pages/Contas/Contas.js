@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {StatusBar, FlatList} from 'react-native';
-import accountsUtil from '../../utils/accounts';
+import {accounts as accountsUtil} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
@@ -29,7 +29,7 @@ import colors from '../../styles/colors';
 import Header from '../../components/Header';
 
 const Carteiras = ({navigation}) => {
-  const [arrayAccounts] = useState(accountsUtil);
+  // const arrayAccounts = accountsUtil;
   const [currentDate, setCurrentDate] = useState('');
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
@@ -80,10 +80,10 @@ const Carteiras = ({navigation}) => {
                     },
                   });
                 }}>
-                <Icon source={arrayAccounts[item.account].icon} />
+                {/* <Icon source={arrayAccounts[item.account].icon} /> */}
                 <ColLeft>
-                  <TitleConta>{arrayAccounts[item.account].label}</TitleConta>
-                  <CategoryConta>{item.description}</CategoryConta>
+                  <TitleConta>tedste</TitleConta>
+                  <CategoryConta>teste</CategoryConta>
                 </ColLeft>
                 <ColRight>
                   <Saldo>R${`${formatMoney(item.balance)}`}</Saldo>
