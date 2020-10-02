@@ -19,11 +19,13 @@ export const Title = styled.Text`
 `;
 
 export const HeaderForm = styled.View`
-  flex: 1;
-  /* background: ${colors.backgroundColorPrimary}; */
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-top: 30px;
+  /* flex: 1; */
+  /* height: 50px; */
+  width: 100%;
+  background: ${colors.backgroundColorPrimary};
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 30px;
 `;
 
 export const RowWrapper = styled.View`
@@ -49,6 +51,7 @@ export const Line = styled.View`
   ${({lineColor}) => css`
     width: 41px;
     height: 4px;
+    margin-top: 17px;
     background-color: ${lineColor ? lineColor : colors.greenApp};
   `}
 `;

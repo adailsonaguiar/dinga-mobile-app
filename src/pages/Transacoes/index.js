@@ -25,6 +25,7 @@ import {
   Footer,
   SaldoTotal,
 } from './styles';
+import Header from '../../components/Header';
 
 const Transacoes = ({navigation}) => {
   const [arrayAccounts] = useState(accountsUtil);
@@ -61,48 +62,47 @@ const Transacoes = ({navigation}) => {
   }
 
   return (
-    <Container>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={colors.backgroundColorPrimary}
-      />
-      <HerderList>
-        <TitleComponent>SUAS TRANSAÇÕES</TitleComponent>
-        <TxtDate>{currentDate}</TxtDate>
-      </HerderList>
-      <Lista>
-        <FlatList
-          data={transactions}
-          renderItem={({item}) => (
-            <Conta
-              onPress={() => {
-                navigation.navigate('ContaForm', {
-                  account: item,
-                });
-              }}>
-              {/* <Icon source={arrayAccounts[item.account].icon} /> */}
-              <ColLeft>
-                <TitleConta>{item.description}</TitleConta>
-                <CategoryConta>
-                  {arrayAccounts[item.accountId].label}
-                </CategoryConta>
-              </ColLeft>
-              <ColRight>
-                <Saldo>R${`${formatMoney(item.value)}`}</Saldo>
-                <Atualizado>
-                  {moment(item.date).format('DD/MM')}{' '}
-                  {getTransactionStatus(item.status)}
-                </Atualizado>
-              </ColRight>
-            </Conta>
-          )}
-          keyExtractor={(item) => item.id.toString()}
+    <>
+      <Header title="Transações" />
+      <Container>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor={colors.backgroundColorPrimary}
         />
-      </Lista>
-      <Footer>
-        <SaldoTotal>Saldo das contas: R$ {totalValue}</SaldoTotal>
-      </Footer>
-    </Container>
+        <Lista>
+          <FlatList
+            data={transactions}
+            renderItem={({item}) => (
+              <Conta
+                onPress={() => {
+                  navigation.navigate('ContaForm', {
+                    account: item,
+                  });
+                }}>
+                {/* <Icon source={arrayAccounts[item.account].icon} /> */}
+                <ColLeft>
+                  <TitleConta>{item.description}</TitleConta>
+                  <CategoryConta>
+                    {arrayAccounts[item.accountId].label}
+                  </CategoryConta>
+                </ColLeft>
+                <ColRight>
+                  <Saldo>R${`${formatMoney(item.value)}`}</Saldo>
+                  <Atualizado>
+                    {moment(item.date).format('DD/MM')}{' '}
+                    {getTransactionStatus(item.status)}
+                  </Atualizado>
+                </ColRight>
+              </Conta>
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </Lista>
+        <Footer>
+          <SaldoTotal>Saldo das contas: R$ {totalValue}</SaldoTotal>
+        </Footer>
+      </Container>
+    </>
   );
 };
 

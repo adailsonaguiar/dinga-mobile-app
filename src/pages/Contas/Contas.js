@@ -26,6 +26,7 @@ import {
   TxtNovaConta,
 } from './styles';
 import colors from '../../styles/colors';
+import Header from '../../components/Header';
 
 const Carteiras = ({navigation}) => {
   const [arrayAccounts] = useState(accountsUtil);
@@ -55,60 +56,59 @@ const Carteiras = ({navigation}) => {
   };
 
   return (
-    <Container>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={colors.backgroundColorPrimary}
-      />
-      <HerderList>
-        <TitleComponent>SUAS CONTAS</TitleComponent>
-        <TxtDate>{currentDate}</TxtDate>
-      </HerderList>
-      <Lista>
-        <FlatList
-          data={accounts}
-          renderItem={({item}) => (
-            <Conta
-              onPress={() => {
-                navigation.navigate('ContaForm', {
-                  account: {
-                    id: item.id,
-                    balance: item.balance,
-                    label: item.label,
-                    date: item.date,
-                    description: item.description,
-                    account: item.account,
-                  },
-                });
-              }}>
-              <Icon source={arrayAccounts[item.account].icon} />
-              <ColLeft>
-                <TitleConta>{arrayAccounts[item.account].label}</TitleConta>
-                <CategoryConta>{item.description}</CategoryConta>
-              </ColLeft>
-              <ColRight>
-                <Saldo>R${`${formatMoney(item.balance)}`}</Saldo>
-                <Atualizado>
-                  Atualizado: {`${moment(item.date).format('DD/MM/YYYY')}`}
-                </Atualizado>
-              </ColRight>
-            </Conta>
-          )}
-          keyExtractor={(item) => item.id.toString()}
+    <>
+      <Header title="Suas contas" />
+      <Container>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor={colors.backgroundColorPrimary}
         />
-      </Lista>
-      <Footer>
-        <SaldoTotal>
-          {totalValue !== 0 ? `Saldo das contas: R$ ${totalValue}` : ''}
-        </SaldoTotal>
-        <BtnNovaConta
-          onPress={() => {
-            navigation.navigate('ContaForm', {});
-          }}>
-          <TxtNovaConta>Adicionar Conta</TxtNovaConta>
-        </BtnNovaConta>
-      </Footer>
-    </Container>
+        <Lista>
+          <FlatList
+            data={accounts}
+            renderItem={({item}) => (
+              <Conta
+                onPress={() => {
+                  navigation.navigate('ContaForm', {
+                    account: {
+                      id: item.id,
+                      balance: item.balance,
+                      label: item.label,
+                      date: item.date,
+                      description: item.description,
+                      account: item.account,
+                    },
+                  });
+                }}>
+                <Icon source={arrayAccounts[item.account].icon} />
+                <ColLeft>
+                  <TitleConta>{arrayAccounts[item.account].label}</TitleConta>
+                  <CategoryConta>{item.description}</CategoryConta>
+                </ColLeft>
+                <ColRight>
+                  <Saldo>R${`${formatMoney(item.balance)}`}</Saldo>
+                  <Atualizado>
+                    Atualizado: {`${moment(item.date).format('DD/MM/YYYY')}`}
+                  </Atualizado>
+                </ColRight>
+              </Conta>
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </Lista>
+        <Footer>
+          <SaldoTotal>
+            {totalValue !== 0 ? `Saldo das contas: R$ ${totalValue}` : ''}
+          </SaldoTotal>
+          <BtnNovaConta
+            onPress={() => {
+              navigation.navigate('ContaForm', {});
+            }}>
+            <TxtNovaConta>Adicionar Conta</TxtNovaConta>
+          </BtnNovaConta>
+        </Footer>
+      </Container>
+    </>
   );
 };
 
