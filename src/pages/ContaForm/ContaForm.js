@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {StatusBar, Alert} from 'react-native';
 import messageResponse from './../../utils/messageResponse';
 import colors from '../../styles/colors';
-import getRealm, {getId} from './../../services/realm';
+import getRealm from './../../services/realm';
 import accounts from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts, saveAccount} from '../../store/accounts/actions';
@@ -16,7 +16,6 @@ import {
   ButtonSave,
 } from './styles';
 
-import standard_icon from './../../assets/contas/standard_icon.png';
 import Select from '../../components/Select/Index';
 import Input from '../../components/Input';
 import {Formik} from 'formik';
