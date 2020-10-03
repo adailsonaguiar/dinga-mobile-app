@@ -1,7 +1,4 @@
 import {
-  LOAD_ACCOUNTS,
-  LOAD_ACCOUNTS_SUCCESS,
-  LOAD_ACCOUNTS_FAILURE,
   LOAD_TRANSACTIONS,
   LOAD_TRANSACTIONS_SUCCESS,
   LOAD_TRANSACTIONS_FAILURE,
@@ -13,7 +10,7 @@ import {
 const INITIAL_STATE = {
   loading: false,
   accounts: [],
-  transactions: [],
+  list: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -21,7 +18,11 @@ export default (state = INITIAL_STATE, action) => {
     case LOAD_TRANSACTIONS:
       return {...state, loading: true};
     case LOAD_TRANSACTIONS_SUCCESS:
-      return {...state, transactions: action.payload, loading: false};
+      return {
+        ...state,
+        list: action.payload,
+        loading: false,
+      };
     case LOAD_TRANSACTIONS_FAILURE:
       return {...state, loading: false};
     case SAVE_TRANSACTION_REQUEST:

@@ -18,14 +18,14 @@ const Carteiras = ({navigation}) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      getDate().then((date) => {
-        dispatch(loadAccounts(date.month, date.year));
-      });
-      sumTotalValue();
+      dispatch(loadAccounts());
     });
-
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    sumTotalValue();
+  }, [accounts]);
 
   const sumTotalValue = () => {
     let sumValue = 0;
@@ -50,18 +50,14 @@ const Carteiras = ({navigation}) => {
               <S.Conta
                 onPress={() => {
                   navigation.navigate('ContaForm', {
-                    account: {...accountIndetify[item.account], item},
+                    account: {...accountIndetify[item.id], item},
                   });
                 }}>
-                <S.LineLeft
-                  lineLeftColor={accountIndetify[item.account]?.color}
-                />
+                <S.LineLeft lineLeftColor={accountIndetify[item.id]?.color} />
                 <S.ColLeft>
-                  <S.TitleConta>
-                    {accountIndetify[item.account]?.label}
-                  </S.TitleConta>
+                  <S.TitleConta>{accountIndetify[item.id]?.label}</S.TitleConta>
                   <S.CategoryConta>
-                    {accountIndetify[item.account]?.accountType}
+                    {accountIndetify[item.id]?.accountType}
                   </S.CategoryConta>
                 </S.ColLeft>
                 <S.ColRight>

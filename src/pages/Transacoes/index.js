@@ -3,18 +3,14 @@ import {StatusBar, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 
-import accountsUtil from '../../utils/accounts';
+import {getAccountIndentity} from '../../utils/accounts';
 import {loadTransactions} from '../../store/transactions/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
 import colors from '../../styles/colors';
 
 import {
   Container,
-  HerderList,
-  TitleComponent,
-  TxtDate,
   Conta,
-  Icon,
   TitleConta,
   CategoryConta,
   ColLeft,
@@ -26,19 +22,16 @@ import {
   SaldoTotal,
 } from './styles';
 import Header from '../../components/Header';
+import {pages} from '../../routes';
 
 const Transacoes = ({navigation}) => {
-  const [arrayAccounts] = useState(accountsUtil);
-  const [currentDate, setCurrentDate] = useState('');
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
-  const transactions = useSelector((state) => state.accounts.transactions);
-
-  console.info(transactions);
+  const transactions = useSelector((state) => state.transactions.list);
+  const accountIndetify = getAccountIndentity();
 
   useEffect(() => {
     getDate().then((date) => {
-      setCurrentDate(`${date.day}/${date.month}/${date.year}`);
       dispatch(loadTransactions(date.month, date.year));
     });
     sumTotalValue();
@@ -75,15 +68,12 @@ const Transacoes = ({navigation}) => {
             renderItem={({item}) => (
               <Conta
                 onPress={() => {
-                  navigation.navigate('ContaForm', {
-                    account: item,
-                  });
+                  navigation.navigate(pages.despesaForm, {});
                 }}>
-                {/* <Icon source={arrayAccounts[item.account].icon} /> */}
                 <ColLeft>
                   <TitleConta>{item.description}</TitleConta>
                   <CategoryConta>
-                    {arrayAccounts[item.accountId].label}
+                    {accountIndetify[item.accountId]?.label}
                   </CategoryConta>
                 </ColLeft>
                 <ColRight>

@@ -18,7 +18,6 @@ import Select from '../../components/Select/Index';
 import Input from '../../components/Input';
 import {Formik} from 'formik';
 import Header from '../../components/Header';
-import {getId} from '../../services/realm';
 import {alertGeral} from '../../utils/messageResponse';
 
 export default function ContaForm({route, navigation}) {
@@ -27,13 +26,13 @@ export default function ContaForm({route, navigation}) {
   } = route;
   const accountItem = account && account.item;
   const dispatch = useDispatch();
+  console.info(account);
 
   const INITIAL_VALUES = {
-    id: accountItem ? accountItem.id : '',
+    id: account ? account.item.id : '',
     date: accountItem ? accountItem.date : '',
     accountType: account ? account.accountType : '',
     balance: accountItem ? accountItem.balance / 100 : 0,
-    account: account ? account : undefined,
   };
   const loading = useSelector((state) => state.accounts.loading);
   const refs = {};
@@ -72,25 +71,24 @@ export default function ContaForm({route, navigation}) {
   };
 
   const handleDeleteAccount = (id) => {
+    console.log('aaaaa', id);
     dispatch(deleteAccount(id));
     navigation.goBack();
   };
 
   async function onSubmit(values) {
     if (validateForm(values)) {
-      const account = values.account.value;
-      let id = values.id;
       let balance = values.balance;
-      if (!account) {
-        const idMaxAccount = await getId('contas');
-        id = idMaxAccount;
-      }
+      // if (!account) {
+      //   const idMaxAccount = await getId('contas');
+      //   id = idMaxAccount;
+      // }
       if (typeof values.balance === 'string')
         balance = refs.balance.getRawValue() * 100;
       const date = new Date();
-      values = {...values, account, id, date, balance};
-      navigation.goBack();
+      values = {...values, date, balance};
       dispatch(saveAccount(values));
+      navigation.goBack();
     }
   }
 
@@ -115,9 +113,11 @@ export default function ContaForm({route, navigation}) {
               label="Conta"
               options={accounts}
               lineLeftColor
-              value={values.account}
+              enable={false}
+              value={account}
               onValueChange={(selected) => {
                 setFieldValue('account', selected);
+                setFieldValue('id', selected.value);
                 setFieldValue('accountType', selected.accountType);
               }}
             />
