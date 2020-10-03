@@ -60,7 +60,10 @@ const DespesaForm = ({navigation}) => {
 
   return (
     <>
-      <Header title="Nova" lineColor={colors.colorDanger} showClose>
+      <Header
+        title="Nova"
+        lineColor={colors.colorDanger}
+        navigation={navigation}>
         {'Despesa / investimento'}
       </Header>
       <Container>
