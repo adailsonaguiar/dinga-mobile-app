@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {StatusBar} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
-import accountsArr from '../../utils/accounts';
+import {getAccountIndentity} from '../../utils/accounts';
 import Input from '../../components/Input';
 import Select from '../../components/Select/Index';
 import {pages} from '../../routes';
@@ -39,17 +38,19 @@ const DespesaForm = ({navigation}) => {
   const loading = useSelector((state) => state.transactions.loading);
   const [arraySelect, setArraySelect] = useState([]);
   const refs = {};
+  const standardAccounts = getAccountIndentity();
 
   useEffect(() => {
     if (!accountsSaved.length) {
       alertGeral('Você precisa cadastrar uma conta primeiro!');
       navigation.navigate(pages.contaForm);
     }
-    const accounts = accountsSaved.map((account) => ({
-      label: accountsArr()[account.account].label,
-      id: account.id,
-    }));
-    setArraySelect(accounts);
+
+    const accountIndetify = accountsSaved.map(
+      (account) => standardAccounts[account.account],
+      // console.log(standardAccounts[account.account]);
+    );
+    setArraySelect(accountIndetify);
   }, []);
 
   function onSubmit(values) {
