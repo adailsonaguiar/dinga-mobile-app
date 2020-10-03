@@ -4,7 +4,7 @@ const ContasSchema = {
   properties: {
     id: {type: 'int', indexed: true},
     date: 'date',
-    description: 'string',
+    accountType: 'string',
     balance: 'float',
     account: 'string',
   },

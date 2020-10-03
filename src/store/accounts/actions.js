@@ -1,15 +1,10 @@
-import getRealm, {getId, loadData, writeData} from './../../services/realm';
+import {loadData, removeById, writeData} from './../../services/realm';
 import {
   LOAD_ACCOUNTS_SUCCESS,
   LOAD_ACCOUNTS,
   LOAD_ACCOUNTS_FAILURE,
-  LOAD_TRANSACTIONS,
-  LOAD_TRANSACTIONS_SUCCESS,
-  LOAD_TRANSACTIONS_FAILURE,
 } from './actionTypes';
 import messageResponse from '../../utils/messageResponse';
-
-import {transactionType} from '../../schemas/TransactionSchema';
 
 export const loadAccounts = (month, year) => {
   return async (dispatch) => {
@@ -18,6 +13,7 @@ export const loadAccounts = (month, year) => {
       const data = await loadData('contas');
       loadAccountsSuccess(dispatch, data);
     } catch (error) {
+      messageResponse.error(error);
       loadAccountsFailure(dispatch);
     }
   };
@@ -32,25 +28,23 @@ const loadAccountsFailure = (dispatch) => {
 };
 
 export const saveAccount = (account) => {
-  return (dispatch) => {
+  return () => {
     try {
       writeData('contas', account);
-      dispatch(
-        saveTransactions({
-          ...account,
-          description: 'Criação da conta',
-          value: account.balance,
-          type: transactionType.TRANSACTION_IN,
-          accountId: account.account,
-          status: 1,
-          category: 1,
-        }),
-      );
-
-      dispatch(loadAccounts());
     } catch (e) {
       messageResponse.error(e);
       return e;
+    }
+  };
+};
+
+export const deleteAccount = (id) => {
+  return async (dispatch) => {
+    try {
+      await removeById('contas', id);
+      dispatch(loadAccounts());
+    } catch (e) {
+      messageResponse.error(e);
     }
   };
 };

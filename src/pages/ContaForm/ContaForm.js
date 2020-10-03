@@ -1,134 +1,56 @@
-import React, {useState, useEffect} from 'react';
-import {StatusBar, ActivityIndicator, Alert, Keyboard} from 'react-native';
-import {TextInputMask} from 'react-native-masked-text';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import messageResponse from './../../utils/messageResponse';
+import React from 'react';
+import {Alert, StatusBar} from 'react-native';
 import colors from '../../styles/colors';
-import getRealm, {getId} from './../../services/realm';
-import accounts from '../../utils/accounts';
-import {useDispatch} from 'react-redux';
-import {loadAccounts, saveAccount} from '../../store/accounts/actions';
+import {accounts} from '../../utils/accounts';
+import {useDispatch, useSelector} from 'react-redux';
+import {deleteAccount, saveAccount} from '../../store/accounts/actions';
 
 import {
   Container,
-  TxtHeaderForm,
-  HeaderForm,
-  BtnFechar,
   Form,
-  InputContainer,
-  Input,
-  BtnNovaConta,
-  LabelBtn,
-  styles,
-  Picker,
-  ImgConta,
-  ContainerIcon,
   BtnRemove,
   LabelBtnRemove,
   ContainerFormFooter,
+  ButtonSave,
 } from './styles';
 
-import standard_icon from './../../assets/contas/standard_icon.png';
+import Select from '../../components/Select/Index';
+import Input from '../../components/Input';
+import {Formik} from 'formik';
+import Header from '../../components/Header';
+import {getId} from '../../services/realm';
+import {alertGeral} from '../../utils/messageResponse';
 
 export default function ContaForm({route, navigation}) {
-  const {params} = route;
-  const [contas] = useState(accounts);
-  const [description, setDescription] = useState('');
-  const [balance, setBalance] = useState(0);
-  const [account, setAccount] = useState('');
-  const [icon, setIcon] = useState(standard_icon);
-  const [loading, setLoading] = useState(false);
-  const [id, setId] = useState(0);
-  const [isEdition, setEdit] = useState(false);
-  const [keyboardExpanded, setKeyboardExpanded] = useState(false);
+  const {
+    params: {account},
+  } = route;
+  const accountItem = account && account.item;
   const dispatch = useDispatch();
 
-  const getAccountEdit = (accountParam) => {
-    setId(accountParam.id);
-    setBalance(accountParam.balance / 100);
-    setPropertyAccount(accountParam.account);
+  const INITIAL_VALUES = {
+    id: accountItem ? accountItem.id : '',
+    date: accountItem ? accountItem.date : '',
+    accountType: account ? account.accountType : '',
+    balance: accountItem ? accountItem.balance / 100 : 0,
+    account: account ? account : undefined,
   };
+  const loading = useSelector((state) => state.accounts.loading);
+  const refs = {};
 
-  useEffect(() => {
-    const accountParam = params ? params.account : null;
-    if (accountParam) {
-      setEdit(true);
-      getAccountEdit(accountParam);
-    }
-
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      _keyboardDidShow,
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      _keyboardDidHide,
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const setPropertyAccount = (code) => {
-    setAccount(code);
-    setDescription(contas[code].description);
-    setIcon(contas[code].icon);
-  };
-
-  const formatBalance = (balanceParam) => {
-    if (typeof balanceParam === 'string') {
-      const removedChar = balanceParam
-        .substr(2)
-        .replace('.', '')
-        .replace(',', '.');
-      const patternParse = parseFloat(removedChar) * 100;
-      return patternParse;
-    }
-    return balanceParam * 100;
-  };
-
-  const handleLoadAccounts = () => {
-    dispatch(loadAccounts());
-  };
-
-  const validateForm = () => {
-    if (description.length === 0) {
-      Alert.alert('Atenção', 'Digite uma descrição!');
+  const validateForm = (values) => {
+    if (!values.accountType.length) {
+      alertGeral('Atenção', 'Digite uma descrição!');
       return false;
     }
-    if (balance.length === 0) {
-      Alert.alert('Atenção', 'Preencha o saldo da conta!');
+    if (!values.balance) {
+      alertGeral('Atenção', 'Preencha o saldo da conta!');
       return false;
     }
     return true;
   };
-  const setObject = async () => {
-    const idMaxAccount = await getId('contas');
-    let idAccount = 0;
-    let valueBalance = 0;
-    valueBalance = formatBalance(balance);
-    if (isEdition) {
-      idAccount = id;
-    } else {
-      idAccount = idMaxAccount;
-    }
-    if (validateForm()) {
-      const data = {
-        id: idAccount,
-        date: new Date(),
-        description,
-        balance: valueBalance,
-        account,
-      };
-      navigation.goBack();
-      dispatch(saveAccount(data));
-    }
-  };
 
-  const askDelection = async () => {
+  const askDelection = async (id) => {
     Alert.alert(
       'Atenção',
       'Deseja realmente deletar essa conta?',
@@ -141,7 +63,7 @@ export default function ContaForm({route, navigation}) {
         {
           text: 'Sim',
           onPress: () => {
-            deleteAccount();
+            handleDeleteAccount(id);
           },
         },
       ],
@@ -149,29 +71,27 @@ export default function ContaForm({route, navigation}) {
     );
   };
 
-  const deleteAccount = async () => {
-    setLoading(true);
-    const realm = await getRealm();
-    try {
-      realm.write(() => {
-        const conta = realm.objectForPrimaryKey('contas', id);
-        realm.delete(conta);
-        setLoading(false);
-        handleLoadAccounts();
-        navigation.goBack();
-      });
-    } catch (e) {
-      setLoading(false);
-      messageResponse.error(e);
-    }
+  const handleDeleteAccount = (id) => {
+    dispatch(deleteAccount(id));
+    navigation.goBack();
   };
 
-  function _keyboardDidShow(e) {
-    // setKeyboardExpanded(true);
-  }
-
-  function _keyboardDidHide() {
-    setKeyboardExpanded(false);
+  async function onSubmit(values) {
+    if (validateForm(values)) {
+      const account = values.account.value;
+      let id = values.id;
+      let balance = values.balance;
+      if (!account) {
+        const idMaxAccount = await getId('contas');
+        id = idMaxAccount;
+      }
+      if (typeof values.balance === 'string')
+        balance = refs.balance.getRawValue() * 100;
+      const date = new Date();
+      values = {...values, account, id, date, balance};
+      navigation.goBack();
+      dispatch(saveAccount(values));
+    }
   }
 
   return (
@@ -180,82 +100,67 @@ export default function ContaForm({route, navigation}) {
         barStyle="light-content"
         backgroundColor={colors.backgroundColorPrimary}
       />
-      <HeaderForm>
-        <TxtHeaderForm>
-          {isEdition ? 'ATUALIZAR CONTA' : 'NOVA CONTA'}
-        </TxtHeaderForm>
-        <BtnFechar
-          onPress={async () => {
-            navigation.goBack();
-          }}>
-          <Icon name="close" color="#fff" size={30} />
-        </BtnFechar>
-      </HeaderForm>
-      <Form>
-        <ContainerIcon>
-          <ImgConta source={icon} />
-        </ContainerIcon>
-        <InputContainer>
-          <Picker
-            selectedValue={account}
-            onValueChange={(selected) => {
-              if (selected) {
-                setPropertyAccount(selected);
-              }
-            }}
-            style={styles.input}>
-            <Picker.Item label="Selecione" value={false} />
-            <Picker.Item label="Carteira" value="000" />
-            <Picker.Item label="Banco do Brasil - 001" value="001" />
-            <Picker.Item label="Caixa Econômica - 104" value="104" />
-            <Picker.Item label="Nuconta - 260" value="260" />
-            <Picker.Item label="Bradesco - 204" value="204" />
-            <Picker.Item label="Santander - 033" value="033" />
-            <Picker.Item label="Itaú - 341" value="341" />
-          </Picker>
-        </InputContainer>
-        <Input
-          placeholder="Descrição"
-          value={description}
-          onChangeText={(value) => {
-            setDescription(value);
-          }}
-        />
-        <InputContainer>
-          <TextInputMask
-            type={'money'}
-            options={{
-              precision: 2,
-              separator: ',',
-              delimiter: '.',
-              unit: 'R$',
-              suffixUnit: '',
-            }}
-            value={balance}
-            onChangeText={(value) => {
-              setBalance(value);
-            }}
-            style={styles.input}
-          />
-        </InputContainer>
-        {isEdition && !keyboardExpanded && (
-          <ContainerFormFooter>
-            <BtnRemove onPress={() => askDelection()}>
-              <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
-            </BtnRemove>
-          </ContainerFormFooter>
+      <Header
+        title={account ? 'Atualizar conta' : 'Nova conta'}
+        navigation={navigation}
+      />
+
+      <Formik
+        initialValues={INITIAL_VALUES}
+        onSubmit={(values) => onSubmit(values)}>
+        {({setFieldValue, handleSubmit, values}) => (
+          <Form contentContainerStyle={{paddingBottom: 10}}>
+            <Select
+              placeholder="Selecione uma conta"
+              label="Conta"
+              options={accounts}
+              lineLeftColor
+              value={values.account}
+              onValueChange={(selected) => {
+                setFieldValue('account', selected);
+                setFieldValue('accountType', selected.accountType);
+              }}
+            />
+            <Input
+              label="Tipo da conta"
+              value={values.accountType}
+              onChangeText={(text) => {
+                setFieldValue('accountType', text);
+              }}
+            />
+            <Input
+              label="Valor"
+              placeholder="R$40,00"
+              type={'money'}
+              options={{
+                precision: 2,
+                separator: ',',
+                delimiter: '.',
+                unit: 'R$',
+                suffixUnit: '',
+              }}
+              value={values.balance}
+              onChangeText={(maskedText) => {
+                setFieldValue('balance', maskedText);
+              }}
+              ref={(ref) => (refs.balance = ref)}
+            />
+            {account && (
+              <ContainerFormFooter>
+                <BtnRemove onPress={() => askDelection(values.id)}>
+                  <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
+                </BtnRemove>
+              </ContainerFormFooter>
+            )}
+            <ButtonSave
+              label="Salvar"
+              background={colors.greenApp}
+              onPress={handleSubmit}
+              loading={loading}
+            />
+          </Form>
         )}
-      </Form>
-      <BtnNovaConta
-        disabled={loading}
-        activeOpacity={0.9}
-        onPress={() => setObject()}>
-        {loading ? (
-          <ActivityIndicator size="large" color="#fff" />
-        ) : (
-          <LabelBtn>SALVAR</LabelBtn>
-        )}
-      </BtnNovaConta>
+      </Formik>
     </Container>
   );
 }

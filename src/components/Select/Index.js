@@ -4,7 +4,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import * as S from './styles';
 
-const Select = ({placeholder, label, options = [], ...rest}) => {
+const Select = ({
+  placeholder,
+  label,
+  options = [],
+  lineLeftColor,
+  btnClear = false,
+  ...rest
+}) => {
   function renderOption(settings) {
     const {item, getLabel} = settings;
     return (
@@ -17,15 +24,25 @@ const Select = ({placeholder, label, options = [], ...rest}) => {
 
   function renderField(settings) {
     const {selectedItem, defaultText, getLabel, clear} = settings;
+
     return (
       <S.FieldWrapper>
         {!selectedItem && <S.Placeholder>{defaultText}</S.Placeholder>}
         {selectedItem && (
           <>
-            <S.Placeholder>{getLabel(selectedItem)}</S.Placeholder>
-            <S.BtnClear onPress={clear}>
-              <Icon name="close" color="#fff" size={13} />
-            </S.BtnClear>
+            <S.LabelWrapper>
+              {lineLeftColor && (
+                <S.LineLeft lineLeftColor={selectedItem.color} />
+              )}
+              <S.Placeholder lineLeft={!!lineLeftColor}>
+                {getLabel(selectedItem)}
+              </S.Placeholder>
+            </S.LabelWrapper>
+            {btnClear && (
+              <S.BtnClear onPress={clear}>
+                <Icon name="close" color="#fff" size={13} />
+              </S.BtnClear>
+            )}
           </>
         )}
       </S.FieldWrapper>

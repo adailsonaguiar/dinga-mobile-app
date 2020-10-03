@@ -1,51 +1,31 @@
 import React, {useState, useEffect} from 'react';
 import {StatusBar, FlatList} from 'react-native';
-import Header from '../../components/Header/Header';
-import accountsUtil from '../../utils/accounts';
+import {getAccountIndentity} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
 import moment from 'moment';
 
-import {
-  Container,
-  HerderList,
-  TitleComponent,
-  TxtDate,
-  Conta,
-  Icon,
-  TitleConta,
-  CategoryConta,
-  ColLeft,
-  ColRight,
-  Saldo,
-  Atualizado,
-  Lista,
-  Footer,
-  SaldoTotal,
-  BtnNovaConta,
-  TxtNovaConta,
-} from './styles';
+import * as S from './styles';
 import colors from '../../styles/colors';
+import Header from '../../components/Header';
 
 const Carteiras = ({navigation}) => {
-  const [arrayAccounts] = useState(accountsUtil);
-  const [currentDate, setCurrentDate] = useState('');
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.accounts.accounts);
+  const accountIndetify = getAccountIndentity();
 
   useEffect(() => {
-    getDate().then((date) => {
-      setCurrentDate(`${date.day}/${date.month}/${date.year}`);
-      dispatch(loadAccounts(date.month, date.year));
+    const unsubscribe = navigation.addListener('focus', () => {
+      getDate().then((date) => {
+        dispatch(loadAccounts(date.month, date.year));
+      });
+      sumTotalValue();
     });
-    sumTotalValue();
-  }, []);
 
-  useEffect(() => {
-    sumTotalValue();
-  }, [accounts]);
+    return unsubscribe;
+  }, []);
 
   const sumTotalValue = () => {
     let sumValue = 0;
@@ -56,61 +36,58 @@ const Carteiras = ({navigation}) => {
   };
 
   return (
-    <Container>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={colors.backgroundColorPrimary}
-      />
-      <Header title="Finax" />
-      <HerderList>
-        <TitleComponent>SUAS CONTAS</TitleComponent>
-        <TxtDate>{currentDate}</TxtDate>
-      </HerderList>
-      <Lista>
-        <FlatList
-          data={accounts}
-          renderItem={({item}) => (
-            <Conta
-              onPress={() => {
-                navigation.navigate('ContaForm', {
-                  account: {
-                    id: item.id,
-                    balance: item.balance,
-                    label: item.label,
-                    date: item.date,
-                    description: item.description,
-                    account: item.account,
-                  },
-                });
-              }}>
-              <Icon source={arrayAccounts[item.account].icon} />
-              <ColLeft>
-                <TitleConta>{arrayAccounts[item.account].label}</TitleConta>
-                <CategoryConta>{item.description}</CategoryConta>
-              </ColLeft>
-              <ColRight>
-                <Saldo>R${`${formatMoney(item.balance)}`}</Saldo>
-                <Atualizado>
-                  Atualizado: {`${moment(item.date).format('DD/MM/YYYY')}`}
-                </Atualizado>
-              </ColRight>
-            </Conta>
-          )}
-          keyExtractor={(item) => item.id.toString()}
+    <>
+      <Header title="Suas contas" />
+      <S.Container>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor={colors.backgroundColorPrimary}
         />
-      </Lista>
-      <Footer>
-        <SaldoTotal>
-          {totalValue !== 0 ? `Saldo das contas: R$ ${totalValue}` : ''}
-        </SaldoTotal>
-        <BtnNovaConta
-          onPress={() => {
-            navigation.navigate('ContaForm', {});
-          }}>
-          <TxtNovaConta>Adicionar Conta</TxtNovaConta>
-        </BtnNovaConta>
-      </Footer>
-    </Container>
+        <S.Lista>
+          <FlatList
+            data={accounts}
+            renderItem={({item}) => (
+              <S.Conta
+                onPress={() => {
+                  navigation.navigate('ContaForm', {
+                    account: {...accountIndetify[item.account], item},
+                  });
+                }}>
+                <S.LineLeft
+                  lineLeftColor={accountIndetify[item.account]?.color}
+                />
+                <S.ColLeft>
+                  <S.TitleConta>
+                    {accountIndetify[item.account]?.label}
+                  </S.TitleConta>
+                  <S.CategoryConta>
+                    {accountIndetify[item.account]?.accountType}
+                  </S.CategoryConta>
+                </S.ColLeft>
+                <S.ColRight>
+                  <S.Saldo>R${`${formatMoney(item.balance)}`}</S.Saldo>
+                  <S.Atualizado>
+                    Atualizado: {`${moment(item.date).format('DD/MM/YYYY')}`}
+                  </S.Atualizado>
+                </S.ColRight>
+              </S.Conta>
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </S.Lista>
+        <S.Footer>
+          <S.SaldoTotal>
+            {totalValue !== 0 ? `Saldo das contas: R$ ${totalValue}` : ''}
+          </S.SaldoTotal>
+          <S.BtnNovaConta
+            onPress={() => {
+              navigation.navigate('ContaForm', {});
+            }}>
+            <S.TxtNovaConta>Adicionar Conta</S.TxtNovaConta>
+          </S.BtnNovaConta>
+        </S.Footer>
+      </S.Container>
+    </>
   );
 };
 

@@ -1,23 +1,21 @@
 import styled from 'styled-components/native';
-import {screenHeight} from '../../styles/dimensons';
 import {TextInputMask} from 'react-native-masked-text';
+import colors from '../../styles/colors';
 
-const INPUT_HEIGHT = screenHeight / 7;
-
-const Container = styled.View`
-  height: ${INPUT_HEIGHT}px;
+export const Container = styled.View`
+  margin-bottom: 10px;
 `;
 
-const Label = styled.Text`
+export const Label = styled.Text`
   color: #95a5a6;
   font-family: Poppins-Medium;
   margin-bottom: 6px;
   font-size: 15px;
 `;
 
-const Input = styled.TextInput`
+export const Input = styled.TextInput`
   border-width: 1.5px;
-  border-color: #2d536c;
+  border-color: ${colors.graphite};
   border-radius: 4px;
   color: #fff;
   padding-left: 10px;
@@ -25,9 +23,9 @@ const Input = styled.TextInput`
   font-family: Poppins-Medium;
 `;
 
-const InputMask = styled(TextInputMask)`
+export const InputMask = styled(TextInputMask)`
   border-width: 1.5px;
-  border-color: #2d536c;
+  border-color: ${colors.graphite};
   border-radius: 4px;
   color: #fff;
   padding-left: 10px;
@@ -35,8 +33,6 @@ const InputMask = styled(TextInputMask)`
   font-family: Poppins-Medium;
 `;
 
-const InputWrapper = styled.View`
+export const InputWrapper = styled.View`
   justify-content: center;
 `;
-
-export {Container, Label, Input, InputWrapper, InputMask};
