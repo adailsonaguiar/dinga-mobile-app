@@ -21,7 +21,7 @@ import Header from '../../components/Header';
 import {getId} from '../../services/realm';
 import {alertGeral} from '../../utils/messageResponse';
 
-export default function ContaForm({route, navigation, idAccount = ''}) {
+export default function ContaForm({route, navigation}) {
   const {
     params: {account},
   } = route;
@@ -81,7 +81,7 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
       const account = values.account.value;
       let id = values.id;
       let balance = values.balance;
-      if (!idAccount.length) {
+      if (!account) {
         const idMaxAccount = await getId('contas');
         id = idMaxAccount;
       }
@@ -101,7 +101,7 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
         backgroundColor={colors.backgroundColorPrimary}
       />
       <Header
-        title={idAccount.length ? 'Atualizar conta' : 'Nova conta'}
+        title={account ? 'Atualizar conta' : 'Nova conta'}
         navigation={navigation}
       />
 
