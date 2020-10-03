@@ -1,4 +1,9 @@
-import getRealm, {getId, loadData, writeData} from './../../services/realm';
+import getRealm, {
+  getId,
+  loadData,
+  removeById,
+  writeData,
+} from './../../services/realm';
 import {
   LOAD_ACCOUNTS_SUCCESS,
   LOAD_ACCOUNTS,
@@ -39,6 +44,16 @@ export const saveAccount = (account) => {
     } catch (e) {
       messageResponse.error(e);
       return e;
+    }
+  };
+};
+
+export const deleteAccount = (id) => {
+  return async () => {
+    try {
+      await removeById('contas', id);
+    } catch (e) {
+      messageResponse.error(e);
     }
   };
 };

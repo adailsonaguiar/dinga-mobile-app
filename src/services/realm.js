@@ -22,6 +22,17 @@ export const getId = async (schema) => {
   }
 };
 
+export const loadData = async (schema) => {
+  return getRealm()
+    .then((date) => {
+      const data = date.objects(schema).sorted('id', 1);
+      return data;
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
 export const writeData = async (schema, data) => {
   return getRealm().then((realm) => {
     try {
@@ -34,11 +45,13 @@ export const writeData = async (schema, data) => {
   });
 };
 
-export const loadData = async (schema) => {
-  return getRealm()
-    .then((date) => {
-      const data = date.objects(schema).sorted('id', 1);
-      return data;
+export const removeById = async (schema, id) => {
+  getRealm()
+    .then((realm) => {
+      realm.write(() => {
+        const data = realm.objectForPrimaryKey(schema, id);
+        realm.delete(data);
+      });
     })
     .catch((error) => {
       throw error;

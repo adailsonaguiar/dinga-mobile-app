@@ -1,3 +1,4 @@
+import { RectButton } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 import Button from '../../components/Button';
 import colors from '../../styles/colors';
@@ -27,13 +28,12 @@ export const InputContainer = styled.View`
 export const ContainerFormFooter = styled.View`
   justify-content: center;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 `;
 
-export const BtnRemove = styled.TouchableOpacity`
-  background: transparent;
-  border-width: 1px;
-  border-color: #383642;
+export const BtnRemove = styled(RectButton)`
+  background: #2d536c;
   height: 35px;
   width: 230px;
   border-radius: 24px;
@@ -44,7 +44,7 @@ export const BtnRemove = styled.TouchableOpacity`
 export const LabelBtnRemove = styled.Text`
   color: ${colors.fontLight};
   font-family: ${fontMedium};
-  font-size: 11px;
+  font-size: 13px;
   color: #95a5a6;
 `;
 

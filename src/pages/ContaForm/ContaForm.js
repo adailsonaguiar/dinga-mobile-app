@@ -1,9 +1,9 @@
 import React from 'react';
-import {StatusBar} from 'react-native';
+import {Alert, StatusBar} from 'react-native';
 import colors from '../../styles/colors';
 import {accounts} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
-import {saveAccount} from '../../store/accounts/actions';
+import {deleteAccount, saveAccount} from '../../store/accounts/actions';
 
 import {
   Container,
@@ -54,62 +54,48 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
     return true;
   };
 
-  // const askDelection = async () => {
-  //   Alert.alert(
-  //     'Atenção',
-  //     'Deseja realmente deletar essa conta?',
-  //     [
-  //       {
-  //         text: 'Cancelar',
-  //         onPress: () => {},
-  //         style: {backgroundColor: 'red'},
-  //       },
-  //       {
-  //         text: 'Sim',
-  //         onPress: () => {
-  //           deleteAccount();
-  //         },
-  //       },
-  //     ],
-  //     {cancelable: false},
-  //   );
-  // };
+  const askDelection = async (id) => {
+    Alert.alert(
+      'Atenção',
+      'Deseja realmente deletar essa conta?',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => {},
+          style: {backgroundColor: 'red'},
+        },
+        {
+          text: 'Sim',
+          onPress: () => {
+            handleDeleteAccount(id);
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
-  // const deleteAccount = async () => {
-  //   setLoading(true);
-  //   const realm = await getRealm();
-  //   try {
-  //     realm.write(() => {
-  //       const conta = realm.objectForPrimaryKey('contas', id);
-  //       realm.delete(conta);
-  //       setLoading(false);
-  //       handleLoadAccounts();
-  //       navigation.goBack();
-  //     });
-  //   } catch (e) {
-  //     setLoading(false);
-  //     messageResponse.error(e);
-  //   }
-  // };
+  const handleDeleteAccount = async (id) => {
+    await dispatch(deleteAccount(id));
+    navigation.goBack();
+  };
 
   async function onSubmit(values) {
-    console.info(values);
-    // if (validateForm(values)) {
-    //   const account = values.account.value;
-    //   let id = values.id;
-    //   let balance = values.balance;
-    //   if (!idAccount.length) {
-    //     const idMaxAccount = await getId('contas');
-    //     id = idMaxAccount;
-    //   }
-    //   if (typeof values.balance === 'string')
-    //     balance = refs.balance.getRawValue();
-    //   const date = new Date();
-    //   values = {...values, account, id, date, balance};
-    //   console.log(values);
-    //   navigation.goBack();
-    //   dispatch(saveAccount(values));
-    // }
+    if (validateForm(values)) {
+      const account = values.account.value;
+      let id = values.id;
+      let balance = values.balance;
+      if (!idAccount.length) {
+        const idMaxAccount = await getId('contas');
+        id = idMaxAccount;
+      }
+      if (typeof values.balance === 'string')
+        balance = refs.balance.getRawValue();
+      const date = new Date();
+      values = {...values, account, id, date, balance};
+      navigation.goBack();
+      dispatch(saveAccount(values));
+    }
   }
 
   return (
@@ -160,13 +146,13 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
               }}
               ref={(ref) => (refs.balance = ref)}
             />
-            {/* {!idAccount.length && (
+            {account && (
               <ContainerFormFooter>
-                <BtnRemove onPress={() => askDelection()}>
+                <BtnRemove onPress={() => askDelection(values.id)}>
                   <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
                 </BtnRemove>
               </ContainerFormFooter>
-            )} */}
+            )}
             <ButtonSave
               label="Salvar"
               background={colors.greenApp}
