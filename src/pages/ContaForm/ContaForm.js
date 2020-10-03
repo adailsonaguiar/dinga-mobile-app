@@ -103,7 +103,7 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
       const date = new Date();
       values = {...values, account, id, date, balance};
       console.log(values);
-      // navigation.goBack();
+      navigation.goBack();
       dispatch(saveAccount(values));
     }
   }

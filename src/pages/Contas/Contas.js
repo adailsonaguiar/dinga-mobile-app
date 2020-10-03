@@ -1,6 +1,11 @@
 import React, {useState, useEffect} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+
 import {StatusBar, FlatList} from 'react-native';
-import {accounts as accountsUtil} from '../../utils/accounts';
+import {
+  accounts as accountsUtil,
+  getAccountIndentity,
+} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
@@ -8,11 +13,7 @@ import moment from 'moment';
 
 import {
   Container,
-  HerderList,
-  TitleComponent,
-  TxtDate,
   Conta,
-  Icon,
   TitleConta,
   CategoryConta,
   ColLeft,
@@ -24,28 +25,28 @@ import {
   SaldoTotal,
   BtnNovaConta,
   TxtNovaConta,
+  LineLeft,
 } from './styles';
 import colors from '../../styles/colors';
 import Header from '../../components/Header';
 
 const Carteiras = ({navigation}) => {
   // const arrayAccounts = accountsUtil;
-  const [currentDate, setCurrentDate] = useState('');
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.accounts.accounts);
+  const accountIndetify = getAccountIndentity();
 
   useEffect(() => {
-    getDate().then((date) => {
-      setCurrentDate(`${date.day}/${date.month}/${date.year}`);
-      dispatch(loadAccounts(date.month, date.year));
+    const unsubscribe = navigation.addListener('focus', () => {
+      getDate().then((date) => {
+        dispatch(loadAccounts(date.month, date.year));
+      });
+      sumTotalValue();
     });
-    sumTotalValue();
-  }, []);
 
-  useEffect(() => {
-    sumTotalValue();
-  }, [accounts]);
+    return unsubscribe;
+  }, []);
 
   const sumTotalValue = () => {
     let sumValue = 0;
@@ -80,10 +81,16 @@ const Carteiras = ({navigation}) => {
                     },
                   });
                 }}>
-                {/* <Icon source={arrayAccounts[item.account].icon} /> */}
+                <LineLeft
+                  lineLeftColor={accountIndetify[item.account]?.color}
+                />
                 <ColLeft>
-                  <TitleConta>tedste</TitleConta>
-                  <CategoryConta>teste</CategoryConta>
+                  <TitleConta>
+                    {accountIndetify[item.account]?.label}
+                  </TitleConta>
+                  <CategoryConta>
+                    {accountIndetify[item.account]?.accountType}
+                  </CategoryConta>
                 </ColLeft>
                 <ColRight>
                   <Saldo>R${`${formatMoney(item.balance)}`}</Saldo>

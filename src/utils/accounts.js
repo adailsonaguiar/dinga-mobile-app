@@ -36,3 +36,11 @@ export const accounts = [
     value: '341',
   },
 ];
+
+export const getAccountIndentity = () => {
+  const accountIndetify = {};
+  accounts.map((account) => {
+    accountIndetify[account.value] = account;
+  });
+  return accountIndetify;
+};

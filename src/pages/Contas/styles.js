@@ -1,7 +1,7 @@
 import {RectButton} from 'react-native-gesture-handler';
-import styled from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 import colors from '../../styles/colors';
-import {fontMedium} from '../../styles/fonts';
+import {fontMedium, fontRegular} from '../../styles/fonts';
 
 export const Container = styled.View`
   flex: 1;
@@ -12,7 +12,7 @@ export const Lista = styled.View`
   flex: 5;
 `;
 
-export const Conta = styled.TouchableOpacity`
+export const Conta = styled(RectButton)`
   flex-direction: row;
   border-top-width: 1px;
   border-top-color: ${colors.colorStroke};
@@ -22,27 +22,20 @@ export const Conta = styled.TouchableOpacity`
   padding-right: 20px;
 `;
 
-export const Icon = styled.Image`
-  width: 30px;
-  height: 30px;
-`;
-
 export const ColLeft = styled.View`
   flex-direction: column;
   align-items: flex-start;
-  margin-left: 10px;
-  flex: 2;
 `;
 
 export const TitleConta = styled.Text`
   color: ${colors.fontLight};
   font-size: 15px;
-  font-family: Roboto-Bold;
+  font-family: ${fontMedium};
 `;
 
 export const CategoryConta = styled.Text`
   color: #90909c;
-  font-family: Roboto-Regular;
+  font-family: ${fontRegular};
   font-size: 11px;
 `;
 
@@ -55,12 +48,12 @@ export const ColRight = styled.View`
 export const Saldo = styled.Text`
   color: ${colors.fontLight};
   font-size: 16px;
-  font-family: Roboto-Bold;
+  font-family: ${fontMedium};
 `;
 
 export const Atualizado = styled.Text`
   color: #90909c;
-  font-family: Roboto-Regular;
+  font-family: ${fontRegular};
   font-size: 11px;
 `;
 
@@ -94,4 +87,13 @@ export const TxtNovaConta = styled.Text`
   color: ${colors.fontLight};
   font-family: ${fontMedium};
   font-size: 11px;
+`;
+
+export const LineLeft = styled.View`
+  ${({lineLeftColor}) => css`
+    width: 5px;
+    height: 37px;
+    background-color: ${lineLeftColor ? lineLeftColor : '#90909C'};
+    margin-right: 10px;
+  `}
 `;
