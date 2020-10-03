@@ -1,37 +1,16 @@
 import React, {useState, useEffect} from 'react';
-import {useFocusEffect} from '@react-navigation/native';
-
 import {StatusBar, FlatList} from 'react-native';
-import {
-  accounts as accountsUtil,
-  getAccountIndentity,
-} from '../../utils/accounts';
+import {getAccountIndentity} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
 import moment from 'moment';
 
-import {
-  Container,
-  Conta,
-  TitleConta,
-  CategoryConta,
-  ColLeft,
-  ColRight,
-  Saldo,
-  Atualizado,
-  Lista,
-  Footer,
-  SaldoTotal,
-  BtnNovaConta,
-  TxtNovaConta,
-  LineLeft,
-} from './styles';
+import * as S from './styles';
 import colors from '../../styles/colors';
 import Header from '../../components/Header';
 
 const Carteiras = ({navigation}) => {
-  // const arrayAccounts = accountsUtil;
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.accounts.accounts);
@@ -59,16 +38,16 @@ const Carteiras = ({navigation}) => {
   return (
     <>
       <Header title="Suas contas" />
-      <Container>
+      <S.Container>
         <StatusBar
           barStyle="light-content"
           backgroundColor={colors.backgroundColorPrimary}
         />
-        <Lista>
+        <S.Lista>
           <FlatList
             data={accounts}
             renderItem={({item}) => (
-              <Conta
+              <S.Conta
                 onPress={() => {
                   navigation.navigate('ContaForm', {
                     account: {
@@ -81,40 +60,40 @@ const Carteiras = ({navigation}) => {
                     },
                   });
                 }}>
-                <LineLeft
+                <S.LineLeft
                   lineLeftColor={accountIndetify[item.account]?.color}
                 />
-                <ColLeft>
-                  <TitleConta>
+                <S.ColLeft>
+                  <S.TitleConta>
                     {accountIndetify[item.account]?.label}
-                  </TitleConta>
-                  <CategoryConta>
+                  </S.TitleConta>
+                  <S.CategoryConta>
                     {accountIndetify[item.account]?.accountType}
-                  </CategoryConta>
-                </ColLeft>
-                <ColRight>
-                  <Saldo>R${`${formatMoney(item.balance)}`}</Saldo>
-                  <Atualizado>
+                  </S.CategoryConta>
+                </S.ColLeft>
+                <S.ColRight>
+                  <S.Saldo>R${`${formatMoney(item.balance)}`}</S.Saldo>
+                  <S.Atualizado>
                     Atualizado: {`${moment(item.date).format('DD/MM/YYYY')}`}
-                  </Atualizado>
-                </ColRight>
-              </Conta>
+                  </S.Atualizado>
+                </S.ColRight>
+              </S.Conta>
             )}
             keyExtractor={(item) => item.id.toString()}
           />
-        </Lista>
-        <Footer>
-          <SaldoTotal>
+        </S.Lista>
+        <S.Footer>
+          <S.SaldoTotal>
             {totalValue !== 0 ? `Saldo das contas: R$ ${totalValue}` : ''}
-          </SaldoTotal>
-          <BtnNovaConta
+          </S.SaldoTotal>
+          <S.BtnNovaConta
             onPress={() => {
               navigation.navigate('ContaForm', {});
             }}>
-            <TxtNovaConta>Adicionar Conta</TxtNovaConta>
-          </BtnNovaConta>
-        </Footer>
-      </Container>
+            <S.TxtNovaConta>Adicionar Conta</S.TxtNovaConta>
+          </S.BtnNovaConta>
+        </S.Footer>
+      </S.Container>
     </>
   );
 };

@@ -63,6 +63,7 @@ export const Footer = styled.View`
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 10px;
+  padding-top: 10px;
   flex-direction: row;
 `;
 
