@@ -22,15 +22,18 @@ import {getId} from '../../services/realm';
 import {alertGeral} from '../../utils/messageResponse';
 
 export default function ContaForm({route, navigation, idAccount = ''}) {
-  const {params} = route;
+  const {
+    params: {account},
+  } = route;
+  const accountItem = account && account.item;
   const dispatch = useDispatch();
 
   const INITIAL_VALUES = {
-    id: idAccount,
-    date: new Date(),
-    accountType: '',
-    balance: 0,
-    account: '',
+    id: accountItem ? accountItem.id : '',
+    date: accountItem ? accountItem.date : '',
+    accountType: account ? account.accountType : '',
+    balance: accountItem ? accountItem.balance : 0,
+    account: account ? account : undefined,
   };
   const loading = useSelector((state) => state.accounts.loading);
   const refs = {};
@@ -90,22 +93,23 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
   // };
 
   async function onSubmit(values) {
-    if (validateForm(values)) {
-      const account = values.account.value;
-      let id = values.id;
-      let balance = values.balance;
-      if (!idAccount.length) {
-        const idMaxAccount = await getId('contas');
-        id = idMaxAccount;
-      }
-      if (typeof values.balance === 'string')
-        balance = refs.balance.getRawValue();
-      const date = new Date();
-      values = {...values, account, id, date, balance};
-      console.log(values);
-      navigation.goBack();
-      dispatch(saveAccount(values));
-    }
+    console.info(values);
+    // if (validateForm(values)) {
+    //   const account = values.account.value;
+    //   let id = values.id;
+    //   let balance = values.balance;
+    //   if (!idAccount.length) {
+    //     const idMaxAccount = await getId('contas');
+    //     id = idMaxAccount;
+    //   }
+    //   if (typeof values.balance === 'string')
+    //     balance = refs.balance.getRawValue();
+    //   const date = new Date();
+    //   values = {...values, account, id, date, balance};
+    //   console.log(values);
+    //   navigation.goBack();
+    //   dispatch(saveAccount(values));
+    // }
   }
 
   return (
@@ -125,7 +129,8 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
               placeholder="Selecione uma conta"
               label="Conta"
               options={accounts}
-              lineLeftColor={values.account.color}
+              lineLeftColor
+              value={values.account}
               onValueChange={(selected) => {
                 setFieldValue('account', selected);
                 setFieldValue('accountType', selected.accountType);

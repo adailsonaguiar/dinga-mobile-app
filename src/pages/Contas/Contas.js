@@ -50,14 +50,7 @@ const Carteiras = ({navigation}) => {
               <S.Conta
                 onPress={() => {
                   navigation.navigate('ContaForm', {
-                    account: {
-                      id: item.id,
-                      balance: item.balance,
-                      label: item.label,
-                      date: item.date,
-                      description: item.description,
-                      account: item.account,
-                    },
+                    account: {...accountIndetify[item.account], item},
                   });
                 }}>
                 <S.LineLeft

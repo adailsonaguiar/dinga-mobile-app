@@ -17,13 +17,16 @@ const Select = ({placeholder, label, options = [], lineLeftColor, ...rest}) => {
 
   function renderField(settings) {
     const {selectedItem, defaultText, getLabel, clear} = settings;
+
     return (
       <S.FieldWrapper>
         {!selectedItem && <S.Placeholder>{defaultText}</S.Placeholder>}
         {selectedItem && (
           <>
             <S.LabelWrapper>
-              {lineLeftColor && <S.LineLeft lineLeftColor={lineLeftColor} />}
+              {lineLeftColor && (
+                <S.LineLeft lineLeftColor={selectedItem.color} />
+              )}
               <S.Placeholder lineLeft={!!lineLeftColor}>
                 {getLabel(selectedItem)}
               </S.Placeholder>

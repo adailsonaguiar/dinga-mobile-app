@@ -55,7 +55,7 @@ export const LabelWrapper = styled.View`
 export const LineLeft = styled.View`
   ${({lineLeftColor}) => css`
     width: 5px;
-    height: 37px;
+    height: 27px;
     background-color: ${lineLeftColor};
   `}
 `;
