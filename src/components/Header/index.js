@@ -7,7 +7,6 @@ const Header = ({
   title,
   navigation,
   lineColor,
-  showClose = false,
   showMonthHeader = false,
   children,
 }) => {
@@ -17,7 +16,7 @@ const Header = ({
       <S.HeaderForm>
         <S.RowWrapper>
           <S.TxtHeaderForm>{title}</S.TxtHeaderForm>
-          {showClose && (
+          {navigation && (
             <S.BtnFechar
               onPress={async () => {
                 navigation.goBack();

@@ -14,11 +14,6 @@ export const Form = styled.ScrollView`
   padding-right: 20px;
 `;
 
-export const Picker = styled.Picker`
-  margin-bottom: 20px;
-  color: #95a5a6;
-`;
-
 export const ContainerFormFooter = styled.View`
   justify-content: center;
   align-items: center;

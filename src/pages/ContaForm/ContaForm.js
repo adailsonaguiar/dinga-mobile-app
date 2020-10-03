@@ -32,15 +32,11 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
     id: accountItem ? accountItem.id : '',
     date: accountItem ? accountItem.date : '',
     accountType: account ? account.accountType : '',
-    balance: accountItem ? accountItem.balance : 0,
+    balance: accountItem ? accountItem.balance / 100 : 0,
     account: account ? account : undefined,
   };
   const loading = useSelector((state) => state.accounts.loading);
   const refs = {};
-
-  // const handleLoadAccounts = () => {
-  //   dispatch(loadAccounts());
-  // };
 
   const validateForm = (values) => {
     if (!values.accountType.length) {
@@ -75,8 +71,8 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
     );
   };
 
-  const handleDeleteAccount = async (id) => {
-    await dispatch(deleteAccount(id));
+  const handleDeleteAccount = (id) => {
+    dispatch(deleteAccount(id));
     navigation.goBack();
   };
 
@@ -90,7 +86,7 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
         id = idMaxAccount;
       }
       if (typeof values.balance === 'string')
-        balance = refs.balance.getRawValue();
+        balance = refs.balance.getRawValue() * 100;
       const date = new Date();
       values = {...values, account, id, date, balance};
       navigation.goBack();
@@ -104,7 +100,10 @@ export default function ContaForm({route, navigation, idAccount = ''}) {
         barStyle="light-content"
         backgroundColor={colors.backgroundColorPrimary}
       />
-      <Header title={idAccount.length ? 'Atualizar conta' : 'Nova conta'} />
+      <Header
+        title={idAccount.length ? 'Atualizar conta' : 'Nova conta'}
+        navigation={navigation}
+      />
 
       <Formik
         initialValues={INITIAL_VALUES}

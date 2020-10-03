@@ -14,8 +14,6 @@ export const Lista = styled.View`
 
 export const Conta = styled(RectButton)`
   flex-direction: row;
-  border-top-width: 1px;
-  border-top-color: ${colors.colorStroke};
   height: 70px;
   align-items: center;
   padding-left: 20px;
