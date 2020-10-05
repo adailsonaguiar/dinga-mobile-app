@@ -12,6 +12,7 @@ const CardTransaction = ({
   transactionTitle,
   categoryTransaction,
   value,
+  status = '',
   date,
 }) => {
   return (
@@ -23,9 +24,7 @@ const CardTransaction = ({
       </S.ColLeft>
       <S.ColRight>
         <S.Saldo>R${`${formatMoney(value)}`}</S.Saldo>
-        <S.Atualizado>
-          Atualizado: {`${format(date, 'dd/MM/yyyy')}`}
-        </S.Atualizado>
+        <S.Atualizado>{`${status} ${format(date, 'dd MMM')}`}</S.Atualizado>
       </S.ColRight>
     </S.Conta>
   );
