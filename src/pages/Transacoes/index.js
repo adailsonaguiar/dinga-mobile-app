@@ -1,44 +1,25 @@
 import React, {useState, useEffect} from 'react';
 import {StatusBar, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import moment from 'moment';
 
-import accountsUtil from '../../utils/accounts';
+import {getAccountIndentity} from '../../utils/accounts';
 import {loadTransactions} from '../../store/transactions/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
 import colors from '../../styles/colors';
 
-import {
-  Container,
-  HerderList,
-  TitleComponent,
-  TxtDate,
-  Conta,
-  Icon,
-  TitleConta,
-  CategoryConta,
-  ColLeft,
-  ColRight,
-  Saldo,
-  Atualizado,
-  Lista,
-  Footer,
-  SaldoTotal,
-} from './styles';
+import * as S from './styles';
 import Header from '../../components/Header';
+import {pages} from '../../routes';
+import CardTransaction from '../../components/CardTransaction';
 
 const Transacoes = ({navigation}) => {
-  const [arrayAccounts] = useState(accountsUtil);
-  const [currentDate, setCurrentDate] = useState('');
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
-  const transactions = useSelector((state) => state.accounts.transactions);
-
-  console.info(transactions);
+  const transactions = useSelector((state) => state.transactions.list);
+  const accountIndetify = getAccountIndentity();
 
   useEffect(() => {
     getDate().then((date) => {
-      setCurrentDate(`${date.day}/${date.month}/${date.year}`);
       dispatch(loadTransactions(date.month, date.year));
     });
     sumTotalValue();
@@ -64,44 +45,33 @@ const Transacoes = ({navigation}) => {
   return (
     <>
       <Header title="Transações" showMonthHeader />
-      <Container>
+      <S.Container>
         <StatusBar
           barStyle="light-content"
           backgroundColor={colors.backgroundColorPrimary}
         />
-        <Lista>
+        <S.Lista>
           <FlatList
             data={transactions}
             renderItem={({item}) => (
-              <Conta
-                onPress={() => {
-                  navigation.navigate('ContaForm', {
-                    account: item,
-                  });
-                }}>
-                {/* <Icon source={arrayAccounts[item.account].icon} /> */}
-                <ColLeft>
-                  <TitleConta>{item.description}</TitleConta>
-                  <CategoryConta>
-                    {arrayAccounts[item.accountId].label}
-                  </CategoryConta>
-                </ColLeft>
-                <ColRight>
-                  <Saldo>R${`${formatMoney(item.value)}`}</Saldo>
-                  <Atualizado>
-                    {moment(item.date).format('DD/MM')}{' '}
-                    {getTransactionStatus(item.status)}
-                  </Atualizado>
-                </ColRight>
-              </Conta>
+              <CardTransaction
+                navigation={navigation}
+                screenNavigate={pages.despesaForm}
+                parameters={{}}
+                transactionTitle={item.description}
+                categoryTransaction={accountIndetify[item.accountId]?.label}
+                value={item.value}
+                date={item.date}
+                status={getTransactionStatus(item.status)}
+              />
             )}
             keyExtractor={(item) => item.id.toString()}
           />
-        </Lista>
-        <Footer>
-          <SaldoTotal>Saldo das contas: R$ {totalValue}</SaldoTotal>
-        </Footer>
-      </Container>
+        </S.Lista>
+        <S.Footer>
+          <S.SaldoTotal>Saldo das contas: R$ {totalValue}</S.SaldoTotal>
+        </S.Footer>
+      </S.Container>
     </>
   );
 };

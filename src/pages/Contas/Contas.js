@@ -3,12 +3,13 @@ import {StatusBar, FlatList} from 'react-native';
 import {getAccountIndentity} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
-import {getDate, formatMoney} from '../../utils/FunctionUtils';
-import moment from 'moment';
+import {formatMoney} from '../../utils/FunctionUtils';
 
 import * as S from './styles';
 import colors from '../../styles/colors';
 import Header from '../../components/Header';
+import CardTransaction from '../../components/CardTransaction';
+import {pages} from '../../routes';
 
 const Carteiras = ({navigation}) => {
   const [totalValue, setTotalValue] = useState(0);
@@ -18,14 +19,14 @@ const Carteiras = ({navigation}) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      getDate().then((date) => {
-        dispatch(loadAccounts(date.month, date.year));
-      });
-      sumTotalValue();
+      dispatch(loadAccounts());
     });
-
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    sumTotalValue();
+  }, [accounts]);
 
   const sumTotalValue = () => {
     let sumValue = 0;
@@ -47,30 +48,16 @@ const Carteiras = ({navigation}) => {
           <FlatList
             data={accounts}
             renderItem={({item}) => (
-              <S.Conta
-                onPress={() => {
-                  navigation.navigate('ContaForm', {
-                    account: {...accountIndetify[item.account], item},
-                  });
-                }}>
-                <S.LineLeft
-                  lineLeftColor={accountIndetify[item.account]?.color}
-                />
-                <S.ColLeft>
-                  <S.TitleConta>
-                    {accountIndetify[item.account]?.label}
-                  </S.TitleConta>
-                  <S.CategoryConta>
-                    {accountIndetify[item.account]?.accountType}
-                  </S.CategoryConta>
-                </S.ColLeft>
-                <S.ColRight>
-                  <S.Saldo>R${`${formatMoney(item.balance)}`}</S.Saldo>
-                  <S.Atualizado>
-                    Atualizado: {`${moment(item.date).format('DD/MM/YYYY')}`}
-                  </S.Atualizado>
-                </S.ColRight>
-              </S.Conta>
+              <CardTransaction
+                navigation={navigation}
+                screenNavigate={pages.contaForm}
+                parameters={{account: {...accountIndetify[item.id], item}}}
+                lineLeftColor={accountIndetify[item.id]?.color}
+                transactionTitle={accountIndetify[item.id]?.label}
+                categoryTransaction={accountIndetify[item.id]?.accountType}
+                value={item.balance}
+                date={item.date}
+              />
             )}
             keyExtractor={(item) => item.id.toString()}
           />

@@ -9,8 +9,8 @@ import {
 } from './actionTypes';
 import {error} from '../../utils/messageResponse';
 
-const loadTransactionsSuccess = (dispatch, accounts) => {
-  dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: accounts});
+const loadTransactionsSuccess = (dispatch, transactions) => {
+  dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: transactions});
 };
 
 const loadTransactionsFailure = (dispatch) => {
@@ -22,6 +22,7 @@ export const loadTransactions = ({month}) => {
     try {
       dispatch({type: LOAD_TRANSACTIONS});
       const data = await loadData('transaction');
+      console.log(data);
       loadTransactionsSuccess(dispatch, data);
     } catch (error) {
       loadTransactionsFailure();

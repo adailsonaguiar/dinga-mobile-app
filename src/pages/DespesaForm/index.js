@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
+import parse from 'date-fns/parse';
 import {getAccountIndentity} from '../../utils/accounts';
 import Input from '../../components/Input';
 import Select from '../../components/Select/Index';
@@ -25,6 +26,7 @@ import Header from '../../components/Header';
 
 const DespesaForm = ({navigation}) => {
   const INITIAL_VALUES = {
+    id: 0,
     category: '',
     value: '',
     date: '',
@@ -46,21 +48,31 @@ const DespesaForm = ({navigation}) => {
       navigation.navigate(pages.contaForm);
     }
 
-    const accountIndetify = accountsSaved.map(
-      (account) => standardAccounts[account.account],
-      // console.log(standardAccounts[account.account]);
-    );
+    const accountIndetify = accountsSaved.map((account) => ({
+      ...standardAccounts[account.id],
+      id: account.id,
+    }));
     setArraySelect(accountIndetify);
   }, []);
 
-  function onSubmit(values) {
-    values.value = refs.value.getRawValue();
-    dispatch(saveTransactions(values));
+  async function onSubmit(values) {
+    const value = refs.value.getRawValue() * 100;
+    const date = parse(values.date, 'dd/MM/yyyy', new Date());
+    if (true) {
+      const idMaxAccount = await getId('transaction');
+      values.id = idMaxAccount;
+    }
+
+    console.log({...values, value, date});
+    dispatch(saveTransactions({...values, value, date}));
   }
 
   return (
     <>
-      <Header title="Nova" lineColor={colors.colorDanger} showClose>
+      <Header
+        title="Nova"
+        lineColor={colors.colorDanger}
+        navigation={navigation}>
         {'Despesa / investimento'}
       </Header>
       <Container>
@@ -117,7 +129,7 @@ const DespesaForm = ({navigation}) => {
                 label="Contas"
                 options={arraySelect}
                 onValueChange={(selected) =>
-                  setFieldValue('accountId', selected.id)
+                  setFieldValue('accountId', selected.value)
                 }
               />
               <Input
@@ -133,6 +145,7 @@ const DespesaForm = ({navigation}) => {
                 onChangeText={(maskedText) => {
                   setFieldValue('value', maskedText);
                 }}
+                value={values.value}
                 ref={(ref) => (refs.value = ref)}
               />
               {/* {isEdition && (
