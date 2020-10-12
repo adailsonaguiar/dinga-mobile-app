@@ -1,4 +1,4 @@
-package com.dinga;
+package com.dingaapp1_1;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "dinga";
+    return "dingaapp1_1";
   }
 }
