@@ -51,10 +51,10 @@ const Carteiras = ({navigation}) => {
               <CardTransaction
                 navigation={navigation}
                 screenNavigate={pages.contaForm}
-                parameters={{account: {...accountIndetify[item.id], item}}}
-                lineLeftColor={accountIndetify[item.id]?.color}
-                transactionTitle={accountIndetify[item.id]?.label}
-                categoryTransaction={accountIndetify[item.id]?.accountType}
+                parameters={{account: {...accountIndetify[item.account], item}}}
+                lineLeftColor={accountIndetify[item.account]?.color}
+                transactionTitle={accountIndetify[item.account]?.label}
+                categoryTransaction={item.description}
                 value={item.balance}
                 date={item.date}
               />
