@@ -7,7 +7,7 @@ const TransactionSchema = {
     value: 'float',
     date: 'date',
     type: 'string',
-    accountId: 'string',
+    accountId: 'int',
     status: 'int',
     category: 'int',
   },

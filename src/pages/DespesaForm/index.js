@@ -49,8 +49,9 @@ const DespesaForm = ({navigation}) => {
     }
 
     const accountIndetify = accountsSaved.map((account) => ({
-      ...standardAccounts[account.id],
+      ...standardAccounts[account.account],
       id: account.id,
+      label: account.description,
     }));
     setArraySelect(accountIndetify);
   }, []);
@@ -70,11 +71,10 @@ const DespesaForm = ({navigation}) => {
   return (
     <>
       <Header
-        title="Nova"
+        title="Nova Despesa"
         lineColor={colors.colorDanger}
-        navigation={navigation}>
-        {'Despesa / investimento'}
-      </Header>
+        navigation={navigation}
+      />
       <Container>
         <StatusBar
           barStyle="light-content"
@@ -95,12 +95,12 @@ const DespesaForm = ({navigation}) => {
                 options={[
                   {
                     color: '#2660A4',
-                    label: 'Essencial',
+                    label: 'Alimentação',
                     value: 1,
                   },
                   {
                     color: '#FF6B35',
-                    label: 'Investimentos',
+                    label: 'Veículos',
                     value: 2,
                   },
                   {
@@ -110,7 +110,12 @@ const DespesaForm = ({navigation}) => {
                   },
                   {
                     color: '#AD343E',
-                    label: 'Extra',
+                    label: 'Comras online',
+                    value: 4,
+                  },
+                  {
+                    color: '#AD3444',
+                    label: 'Outros',
                     value: 4,
                   },
                 ]}
@@ -122,6 +127,7 @@ const DespesaForm = ({navigation}) => {
                 options={{
                   format: 'DD/MM/YYYY',
                 }}
+                value={values.date}
                 onChangeText={(maskedText) => setFieldValue('date', maskedText)}
               />
               <Select
@@ -129,7 +135,7 @@ const DespesaForm = ({navigation}) => {
                 label="Contas"
                 options={arraySelect}
                 onValueChange={(selected) =>
-                  setFieldValue('accountId', selected.value)
+                  setFieldValue('accountId', selected.id)
                 }
               />
               <Input
