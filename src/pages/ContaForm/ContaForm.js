@@ -19,6 +19,7 @@ import Input from '../../components/Input';
 import {Formik} from 'formik';
 import Header from '../../components/Header';
 import {alertGeral} from '../../utils/messageResponse';
+import {getId} from '../../services/realm';
 
 export default function ContaForm({route, navigation}) {
   const {
@@ -26,19 +27,19 @@ export default function ContaForm({route, navigation}) {
   } = route;
   const accountItem = account && account.item;
   const dispatch = useDispatch();
-  console.info(account);
 
   const INITIAL_VALUES = {
     id: account ? account.item.id : '',
     date: accountItem ? accountItem.date : '',
-    accountType: account ? account.accountType : '',
+    description: account ? account.item.description : '',
     balance: accountItem ? accountItem.balance / 100 : 0,
+    account: account ? account : null,
   };
   const loading = useSelector((state) => state.accounts.loading);
   const refs = {};
 
   const validateForm = (values) => {
-    if (!values.accountType.length) {
+    if (!values.description.length) {
       alertGeral('Atenção', 'Digite uma descrição!');
       return false;
     }
@@ -71,7 +72,6 @@ export default function ContaForm({route, navigation}) {
   };
 
   const handleDeleteAccount = (id) => {
-    console.log('aaaaa', id);
     dispatch(deleteAccount(id));
     navigation.goBack();
   };
@@ -79,13 +79,16 @@ export default function ContaForm({route, navigation}) {
   async function onSubmit(values) {
     if (validateForm(values)) {
       let balance = values.balance;
-      // if (!account) {
-      //   const idMaxAccount = await getId('contas');
-      //   id = idMaxAccount;
-      // }
+      if (!account) {
+        const idMaxAccount = await getId('contas');
+        values.id = idMaxAccount;
+      }
       if (typeof values.balance === 'string')
         balance = refs.balance.getRawValue() * 100;
       const date = new Date();
+
+      values.account = values.account.value;
+
       values = {...values, date, balance};
       dispatch(saveAccount(values));
       navigation.goBack();
@@ -117,15 +120,14 @@ export default function ContaForm({route, navigation}) {
               value={account}
               onValueChange={(selected) => {
                 setFieldValue('account', selected);
-                setFieldValue('id', selected.value);
-                setFieldValue('accountType', selected.accountType);
+                setFieldValue('description', selected.accountType);
               }}
             />
             <Input
-              label="Tipo da conta"
-              value={values.accountType}
+              label="Descrição"
+              value={values.description}
               onChangeText={(text) => {
-                setFieldValue('accountType', text);
+                setFieldValue('description', text);
               }}
             />
             <Input

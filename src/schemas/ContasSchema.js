@@ -2,10 +2,11 @@ const ContasSchema = {
   name: 'contas',
   primaryKey: 'id',
   properties: {
-    id: {type: 'string', indexed: true},
+    id: {type: 'int', indexed: true},
     date: 'date',
-    accountType: 'string',
+    description: 'string',
     balance: 'float',
+    account: 'string',
   },
 };
 
