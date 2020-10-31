@@ -1,6 +1,6 @@
 import React from 'react';
 import * as S from './styles';
-import MonthHeader from '../MothHeader/MonthHeader';
+import MonthHeader from '../MothHeader';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Header = ({

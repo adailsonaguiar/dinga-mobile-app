@@ -2,10 +2,10 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 
-import Dash from './pages/Dash/Dash';
+import Dash from './pages/Dash';
 import Transacoes from './pages/Transacoes';
-import Contas from './pages/Contas/Contas';
-import ContaForm from './pages/ContaForm/ContaForm';
+import Contas from './pages/Contas';
+import ContaForm from './pages/ContaForm';
 import DespesaForm from './pages/DespesaForm';
 
 export const pages = {
