@@ -19,6 +19,7 @@ import {
   ContainerFormFooter,
   ButtonWrapper,
   ButtonSave,
+  Switch,
 } from './styles';
 import {getId} from '../../services/realm';
 import {saveTransactions} from '../../store/transactions/actions';
@@ -39,6 +40,7 @@ const DespesaForm = ({navigation, route}) => {
     accountId: '',
     type: transactionType.TRANSACTION_IN,
     status: 0,
+    paid: false,
   };
   const dispatch = useDispatch();
   const accountsSaved = useSelector((state) => state.accounts.accounts);
@@ -56,7 +58,9 @@ const DespesaForm = ({navigation, route}) => {
     const accountIndetify = accountsSaved.map((account) => ({
       ...standardAccounts[account.account],
       id: account.id,
-      label: account.description,
+      label: `${account.description} | ${
+        standardAccounts[account.account].label
+      }`,
     }));
     setArraySelect(accountIndetify);
   }, []);
@@ -68,8 +72,8 @@ const DespesaForm = ({navigation, route}) => {
       const idMaxAccount = await getId('transaction');
       values.id = idMaxAccount;
     }
+    values.status = values.paid ? 1 : 0;
 
-    console.log({...values, value, date});
     dispatch(saveTransactions({...values, value, date}));
   }
 
@@ -133,6 +137,10 @@ const DespesaForm = ({navigation, route}) => {
                 }}
                 value={values.value}
                 ref={(ref) => (refs.value = ref)}
+              />
+              <Switch
+                toggleSwitch={() => setFieldValue('paid', !values.paid)}
+                isEnabled={values.paid}
               />
               {/* {isEdition && (
               <ContainerFormFooter>

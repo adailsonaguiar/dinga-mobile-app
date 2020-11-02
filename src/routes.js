@@ -7,6 +7,7 @@ import Transacoes from './pages/Transacoes';
 import Contas from './pages/Contas';
 import ContaForm from './pages/ContaForm';
 import DespesaForm from './pages/DespesaForm';
+import {navigationRef} from './services/navService';
 
 export const pages = {
   dash: 'Dash',
@@ -20,7 +21,7 @@ const Stack = createStackNavigator();
 
 export default () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,

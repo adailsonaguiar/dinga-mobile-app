@@ -36,8 +36,8 @@ const Transacoes = ({navigation}) => {
 
   function getTransactionStatus(status) {
     const statusList = {
-      0: 'PENDENTE',
-      1: 'CONFIRMADO',
+      0: 'Pendente',
+      1: 'Confirmado',
       2: '',
     };
     return statusList[status];

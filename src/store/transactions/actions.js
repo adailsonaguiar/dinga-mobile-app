@@ -8,6 +8,8 @@ import {
   SAVE_TRANSACTION_FAILURE,
 } from './actionTypes';
 import {error} from '../../utils/messageResponse';
+import {navigate} from '../../services/navService';
+import {pages} from '../../routes';
 
 const loadTransactionsSuccess = (dispatch, transactions) => {
   dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: transactions});
@@ -47,7 +49,7 @@ export const saveTransactions = (transaction) => {
       transaction.id = newId;
       transaction.date = new Date();
       await writeData('transaction', transaction);
-      // console.info(transaction);
+      navigate(pages.transacoes);
       saveTransactionsSuccess(dispatch);
     } catch (e) {
       error(e);
