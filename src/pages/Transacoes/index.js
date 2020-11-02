@@ -11,6 +11,7 @@ import * as S from './styles';
 import Header from '../../components/Header';
 import {pages} from '../../routes';
 import CardTransaction from '../../components/CardTransaction';
+import categories from '../../utils/categoriesTransactions';
 
 const Transacoes = ({navigation}) => {
   const [totalValue, setTotalValue] = useState(0);
@@ -57,9 +58,9 @@ const Transacoes = ({navigation}) => {
               <CardTransaction
                 navigation={navigation}
                 screenNavigate={pages.despesaForm}
-                parameters={{}}
+                parameters={{transaction: item}}
                 transactionTitle={item.description}
-                categoryTransaction={accountIndetify[item.accountId]?.label}
+                categoryTransaction={categories[item.category].label}
                 value={item.value}
                 date={item.date}
                 status={getTransactionStatus(item.status)}

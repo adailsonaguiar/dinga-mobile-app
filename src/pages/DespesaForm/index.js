@@ -8,6 +8,7 @@ import Input from '../../components/Input';
 import Select from '../../components/Select/Index';
 import {pages} from '../../routes';
 import {alertGeral} from '../../utils/messageResponse';
+import {getArrayCategories} from '../../utils/categoriesTransactions';
 
 import colors from '../../styles/colors';
 import {
@@ -24,13 +25,17 @@ import {saveTransactions} from '../../store/transactions/actions';
 import {transactionType} from '../../schemas/TransactionSchema';
 import Header from '../../components/Header';
 
-const DespesaForm = ({navigation}) => {
+const DespesaForm = ({navigation, route}) => {
+  const expenseEdit = route.params?.transaction
+    ? route.params?.transaction
+    : null;
+  console.log(expenseEdit ? expenseEdit.date : '');
   const INITIAL_VALUES = {
     id: 0,
     category: '',
-    value: '',
+    value: expenseEdit ? expenseEdit.value / 100 : '',
     date: '',
-    description: '',
+    description: expenseEdit ? expenseEdit.description : '',
     accountId: '',
     type: transactionType.TRANSACTION_IN,
     status: 0,
@@ -87,38 +92,13 @@ const DespesaForm = ({navigation}) => {
             <Form contentContainerStyle={{paddingBottom: 40}}>
               <Input
                 label="Descrição"
+                value={values.description}
                 onChangeText={(text) => setFieldValue('description', text)}
               />
               <Select
                 placeholder="Selecione uma categoria"
                 label="Categoria"
-                options={[
-                  {
-                    color: '#2660A4',
-                    label: 'Alimentação',
-                    value: 1,
-                  },
-                  {
-                    color: '#FF6B35',
-                    label: 'Veículos',
-                    value: 2,
-                  },
-                  {
-                    color: '#FFBC42',
-                    label: 'Educação',
-                    value: 3,
-                  },
-                  {
-                    color: '#AD343E',
-                    label: 'Comras online',
-                    value: 4,
-                  },
-                  {
-                    color: '#AD3444',
-                    label: 'Outros',
-                    value: 4,
-                  },
-                ]}
+                options={getArrayCategories()}
                 onValueChange={(obj) => setFieldValue('category', obj.value)}
               />
               <Input

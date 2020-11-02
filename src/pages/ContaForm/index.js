@@ -22,18 +22,15 @@ import {alertGeral} from '../../utils/messageResponse';
 import {getId} from '../../services/realm';
 
 export default function ContaForm({route, navigation}) {
-  const {
-    params: {account},
-  } = route;
-  const accountItem = account && account.item;
+  const accountItem = route.params?.account || null;
   const dispatch = useDispatch();
 
   const INITIAL_VALUES = {
-    id: account ? account.item.id : '',
+    id: accountItem ? accountItem.item.id : '',
     date: accountItem ? accountItem.date : '',
-    description: account ? account.item.description : '',
-    balance: accountItem ? accountItem.balance / 100 : 0,
-    account: account ? account : null,
+    description: accountItem ? accountItem.item.description : '',
+    balance: accountItem ? accountItem.item.balance / 100 : 0,
+    account: accountItem ? accountItem : null,
   };
   const loading = useSelector((state) => state.accounts.loading);
   const refs = {};
@@ -78,18 +75,18 @@ export default function ContaForm({route, navigation}) {
 
   async function onSubmit(values) {
     if (validateForm(values)) {
-      let balance = values.balance;
-      if (!account) {
+      if (!accountItem) {
         const idMaxAccount = await getId('contas');
         values.id = idMaxAccount;
       }
       if (typeof values.balance === 'string')
-        balance = refs.balance.getRawValue() * 100;
+        values.balance = refs.balance.getRawValue();
+      values.balance = values.balance * 100;
       const date = new Date();
 
       values.account = values.account.value;
 
-      values = {...values, date, balance};
+      values = {...values, date};
       dispatch(saveAccount(values));
       navigation.goBack();
     }
@@ -102,7 +99,7 @@ export default function ContaForm({route, navigation}) {
         backgroundColor={colors.backgroundColorPrimary}
       />
       <Header
-        title={account ? 'Atualizar conta' : 'Nova conta'}
+        title={accountItem ? 'Atualizar conta' : 'Nova conta'}
         navigation={navigation}
       />
 
@@ -117,7 +114,7 @@ export default function ContaForm({route, navigation}) {
               options={accounts}
               lineLeftColor
               enable={false}
-              value={account}
+              value={accountItem}
               onValueChange={(selected) => {
                 setFieldValue('account', selected);
                 setFieldValue('description', selected.accountType);
@@ -147,7 +144,7 @@ export default function ContaForm({route, navigation}) {
               }}
               ref={(ref) => (refs.balance = ref)}
             />
-            {account && (
+            {accountItem && (
               <ContainerFormFooter>
                 <BtnRemove onPress={() => askDelection(values.id)}>
                   <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
