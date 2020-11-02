@@ -1,6 +1,6 @@
 import styled, {css} from 'styled-components/native';
 import colors from '../../styles/colors';
-import {fontBold, fontMedium} from '../../styles/fonts';
+import {fontMedium} from '../../styles/fonts';
 
 export const Container = styled.TouchableOpacity`
   border-width: 1.5px;

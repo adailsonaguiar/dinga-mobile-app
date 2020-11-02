@@ -8,6 +8,8 @@ target 'dingaapp1_1' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
   target 'dingaapp1_1Tests' do
     inherit! :complete
     # Pods for testing

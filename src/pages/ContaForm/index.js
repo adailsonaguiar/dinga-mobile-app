@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, StatusBar} from 'react-native';
 import colors from '../../styles/colors';
-import {accounts} from '../../utils/accounts';
+import {accounts, getArrayAccounts} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {deleteAccount, saveAccount} from '../../store/accounts/actions';
 
@@ -111,7 +111,7 @@ export default function ContaForm({route, navigation}) {
             <Select
               placeholder="Selecione uma conta"
               label="Conta"
-              options={accounts}
+              options={getArrayAccounts()}
               lineLeftColor
               enable={false}
               value={accountItem}

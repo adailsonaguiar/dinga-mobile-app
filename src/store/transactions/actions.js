@@ -24,7 +24,6 @@ export const loadTransactions = ({month}) => {
     try {
       dispatch({type: LOAD_TRANSACTIONS});
       const data = await loadData('transaction');
-      console.log(data);
       loadTransactionsSuccess(dispatch, data);
     } catch (error) {
       loadTransactionsFailure();
@@ -45,11 +44,8 @@ export const saveTransactions = (transaction) => {
   return async (dispatch) => {
     try {
       dispatch({type: SAVE_TRANSACTION_REQUEST});
-      const newId = await getId('transaction');
-      transaction.id = newId;
-      transaction.date = new Date();
       await writeData('transaction', transaction);
-      navigate(pages.transacoes);
+      navigate(pages.dash);
       saveTransactionsSuccess(dispatch);
     } catch (e) {
       error(e);

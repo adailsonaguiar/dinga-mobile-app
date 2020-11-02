@@ -2,13 +2,14 @@ import React, {useState, useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
-import parse from 'date-fns/parse';
 import {getAccountIndentity} from '../../utils/accounts';
 import Input from '../../components/Input';
 import Select from '../../components/Select/Index';
 import {pages} from '../../routes';
 import {alertGeral} from '../../utils/messageResponse';
 import {getArrayCategories} from '../../utils/categoriesTransactions';
+import categories from '../../utils/categoriesTransactions';
+import {accounts} from '../../utils/accounts';
 
 import colors from '../../styles/colors';
 import {
@@ -20,9 +21,13 @@ import {
   ButtonWrapper,
   ButtonSave,
   Switch,
+  CustomDatePicker,
 } from './styles';
 import {getId} from '../../services/realm';
-import {saveTransactions} from '../../store/transactions/actions';
+import {
+  loadTransactions,
+  saveTransactions,
+} from '../../store/transactions/actions';
 import {transactionType} from '../../schemas/TransactionSchema';
 import Header from '../../components/Header';
 
@@ -30,18 +35,19 @@ const DespesaForm = ({navigation, route}) => {
   const expenseEdit = route.params?.transaction
     ? route.params?.transaction
     : null;
-  console.log(expenseEdit ? expenseEdit.date : '');
   const INITIAL_VALUES = {
-    id: 0,
-    category: '',
+    id: expenseEdit ? expenseEdit.id : '',
+    category: expenseEdit ? categories[expenseEdit.category] : {},
     value: expenseEdit ? expenseEdit.value / 100 : '',
-    date: '',
+    date: expenseEdit ? expenseEdit.date : new Date(),
     description: expenseEdit ? expenseEdit.description : '',
-    accountId: '',
+    accountId: expenseEdit ? expenseEdit.accountId : '',
+    account: {},
     type: transactionType.TRANSACTION_IN,
-    status: 0,
-    paid: false,
+    status: expenseEdit ? expenseEdit.status : 0,
+    paid: expenseEdit ? !!expenseEdit.status : false,
   };
+
   const dispatch = useDispatch();
   const accountsSaved = useSelector((state) => state.accounts.accounts);
   const loading = useSelector((state) => state.transactions.loading);
@@ -53,8 +59,14 @@ const DespesaForm = ({navigation, route}) => {
     if (!accountsSaved.length) {
       alertGeral('Você precisa cadastrar uma conta primeiro!');
       navigation.navigate(pages.contaForm);
+    } else if (expenseEdit) {
+      const accountFiltered = accountsSaved.filter((item) => {
+        if (expenseEdit) if (item.id === expenseEdit.accountId) return item;
+      });
+      INITIAL_VALUES.account = accountFiltered
+        ? accounts[accountFiltered[0].account]
+        : {};
     }
-
     const accountIndetify = accountsSaved.map((account) => ({
       ...standardAccounts[account.account],
       id: account.id,
@@ -66,15 +78,18 @@ const DespesaForm = ({navigation, route}) => {
   }, []);
 
   async function onSubmit(values) {
-    const value = refs.value.getRawValue() * 100;
-    const date = parse(values.date, 'dd/MM/yyyy', new Date());
-    if (true) {
+    if (!expenseEdit) {
       const idMaxAccount = await getId('transaction');
       values.id = idMaxAccount;
     }
+    if (typeof values.value === 'string')
+      values.value = refs.value.getRawValue();
+    values.value = values.value * 100;
     values.status = values.paid ? 1 : 0;
+    values.category = values.category.value;
+    const account = values.account.value;
 
-    dispatch(saveTransactions({...values, value, date}));
+    dispatch(saveTransactions({...values, account}));
   }
 
   return (
@@ -98,26 +113,25 @@ const DespesaForm = ({navigation, route}) => {
                 label="Descrição"
                 value={values.description}
                 onChangeText={(text) => setFieldValue('description', text)}
+                placeholder="Compras mercadinho"
               />
               <Select
                 placeholder="Selecione uma categoria"
                 label="Categoria"
                 options={getArrayCategories()}
-                onValueChange={(obj) => setFieldValue('category', obj.value)}
+                value={values.category}
+                onValueChange={(obj) => setFieldValue('category', obj)}
               />
-              <Input
-                label="Data"
-                type={'datetime'}
-                options={{
-                  format: 'DD/MM/YYYY',
-                }}
-                value={values.date}
-                onChangeText={(maskedText) => setFieldValue('date', maskedText)}
+              <CustomDatePicker
+                mode="date"
+                date={values.date}
+                setDate={(value) => setFieldValue('date', new Date(value))}
               />
               <Select
                 placeholder="Selecione uma conta"
                 label="Contas"
                 options={arraySelect}
+                value={values.account}
                 onValueChange={(selected) =>
                   setFieldValue('accountId', selected.id)
                 }
@@ -137,6 +151,7 @@ const DespesaForm = ({navigation, route}) => {
                 }}
                 value={values.value}
                 ref={(ref) => (refs.value = ref)}
+                placeholder="R$ 120,00"
               />
               <Switch
                 toggleSwitch={() => setFieldValue('paid', !values.paid)}
