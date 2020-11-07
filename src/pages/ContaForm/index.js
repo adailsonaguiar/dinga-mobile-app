@@ -20,6 +20,7 @@ import {Formik} from 'formik';
 import Header from '../../components/Header';
 import {alertGeral} from '../../utils/messageResponse';
 import {getId} from '../../services/realm';
+import {showAlertError} from '../../services/alertService';
 
 export default function ContaForm({route, navigation}) {
   const accountItem = route.params?.account || null;
@@ -37,11 +38,11 @@ export default function ContaForm({route, navigation}) {
 
   const validateForm = (values) => {
     if (!values.description.length) {
-      alertGeral('Atenção', 'Digite uma descrição!');
+      showAlertError('Digite uma descrição!');
       return false;
     }
     if (!values.balance) {
-      alertGeral('Atenção', 'Preencha o saldo da conta!');
+      showAlertError('Preencha o saldo da conta!');
       return false;
     }
     return true;

@@ -4,12 +4,14 @@ import {Provider} from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import combineReducers from './store';
 import Routes from './routes';
+import FlashMessage from 'react-native-flash-message';
 
 export default function App() {
   return (
     <Provider
       store={createStore(combineReducers, {}, applyMiddleware(ReduxThunk))}>
       <Routes />
+      <FlashMessage />
     </Provider>
   );
 }
