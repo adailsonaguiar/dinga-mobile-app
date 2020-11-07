@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, StatusBar} from 'react-native';
 import colors from '../../styles/colors';
-import {accounts, getArrayAccounts} from '../../utils/accounts';
+import {getArrayAccounts} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {deleteAccount, saveAccount} from '../../store/accounts/actions';
 
@@ -18,7 +18,6 @@ import Select from '../../components/Select/Index';
 import Input from '../../components/Input';
 import {Formik} from 'formik';
 import Header from '../../components/Header';
-import {alertGeral} from '../../utils/messageResponse';
 import {getId} from '../../services/realm';
 import {showAlertError} from '../../services/alertService';
 
@@ -37,12 +36,12 @@ export default function ContaForm({route, navigation}) {
   const refs = {};
 
   const validateForm = (values) => {
-    if (!values.description.length) {
-      showAlertError('Digite uma descrição!');
+    if (!values.account) {
+      showAlertError('Selecione uma conta!');
       return false;
     }
-    if (!values.balance) {
-      showAlertError('Preencha o saldo da conta!');
+    if (!values.description.length) {
+      showAlertError('Digite uma descrição!');
       return false;
     }
     return true;

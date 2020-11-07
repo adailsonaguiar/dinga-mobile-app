@@ -24,12 +24,10 @@ import {
   CustomDatePicker,
 } from './styles';
 import {getId} from '../../services/realm';
-import {
-  loadTransactions,
-  saveTransactions,
-} from '../../store/transactions/actions';
+import {saveTransactions} from '../../store/transactions/actions';
 import {transactionType} from '../../schemas/TransactionSchema';
 import Header from '../../components/Header';
+import {showAlertError} from '../../services/alertService';
 
 const DespesaForm = ({navigation, route}) => {
   const expenseEdit = route.params?.transaction
@@ -38,10 +36,10 @@ const DespesaForm = ({navigation, route}) => {
   const INITIAL_VALUES = {
     id: expenseEdit ? expenseEdit.id : '',
     category: expenseEdit ? categories[expenseEdit.category] : {},
-    value: expenseEdit ? expenseEdit.value / 100 : '',
+    value: expenseEdit ? expenseEdit.value / 100 : 0,
     date: expenseEdit ? expenseEdit.date : new Date(),
     description: expenseEdit ? expenseEdit.description : '',
-    accountId: expenseEdit ? expenseEdit.accountId : '',
+    accountId: expenseEdit ? expenseEdit.accountId : null,
     account: {},
     type: transactionType.TRANSACTION_IN,
     status: expenseEdit ? expenseEdit.status : 0,
@@ -77,19 +75,37 @@ const DespesaForm = ({navigation, route}) => {
     setArraySelect(accountIndetify);
   }, []);
 
-  async function onSubmit(values) {
-    if (!expenseEdit) {
-      const idMaxAccount = await getId('transaction');
-      values.id = idMaxAccount;
+  function validateForm(values) {
+    if (!values.description.length) {
+      showAlertError('Digite uma descrição!');
+      return false;
     }
-    if (typeof values.value === 'string')
-      values.value = refs.value.getRawValue();
-    values.value = values.value * 100;
-    values.status = values.paid ? 1 : 0;
-    values.category = values.category.value;
-    const account = values.account.value;
+    if (!values.category.value) {
+      showAlertError('Escolha uma categoria!');
+      return false;
+    }
+    if (values.accountId === null) {
+      showAlertError('Escolha uma conta!');
+      return false;
+    }
+    return true;
+  }
 
-    dispatch(saveTransactions({...values, account}));
+  async function onSubmit(values) {
+    if (validateForm(values)) {
+      if (!expenseEdit) {
+        const idMaxAccount = await getId('transaction');
+        values.id = idMaxAccount;
+      }
+      if (typeof values.value === 'string')
+        values.value = refs.value.getRawValue();
+      values.value = values.value * 100;
+      values.status = values.paid ? 1 : 0;
+      values.category = values.category.value;
+      const account = values.account.value;
+
+      dispatch(saveTransactions({...values, account}));
+    }
   }
 
   return (
