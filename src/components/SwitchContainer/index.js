@@ -3,11 +3,17 @@ import colors from '../../styles/colors';
 
 import * as S from './styles';
 
-const SwitchContainer = ({toggleSwitch, isEnabled, ...rest}) => {
+const SwitchContainer = ({
+  toggleSwitch,
+  isEnabled,
+  labelEnable,
+  labelDisable,
+  ...rest
+}) => {
   return (
     <S.Container {...rest} onPress={toggleSwitch}>
       <S.TitleLabel isEnabled={isEnabled}>
-        {isEnabled ? 'PAGO' : 'NÃO PAGO'}
+        {isEnabled ? labelEnable : labelDisable}
       </S.TitleLabel>
       <S.CustomSwitch
         trackColor={{false: '#767577', true: '#767577'}}

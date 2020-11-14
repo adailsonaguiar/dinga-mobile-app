@@ -6,7 +6,6 @@ import {getAccountIndentity} from '../../utils/accounts';
 import Input from '../../components/Input';
 import Select from '../../components/Select/Index';
 import {pages} from '../../routes';
-import {alertGeral} from '../../utils/messageResponse';
 import {getArrayCategories} from '../../utils/categoriesTransactions';
 import categories from '../../utils/categoriesTransactions';
 import {accounts} from '../../utils/accounts';
@@ -30,6 +29,7 @@ import Header from '../../components/Header';
 import {showAlertError} from '../../services/alertService';
 
 const DespesaForm = ({navigation, route}) => {
+  const FORM_TYPE = route.params?.formType;
   const expenseEdit = route.params?.transaction
     ? route.params?.transaction
     : null;
@@ -41,7 +41,9 @@ const DespesaForm = ({navigation, route}) => {
     description: expenseEdit ? expenseEdit.description : '',
     accountId: expenseEdit ? expenseEdit.accountId : null,
     account: {},
-    type: transactionType.TRANSACTION_IN,
+    type: !FORM_TYPE
+      ? transactionType.TRANSACTION_OUT
+      : transactionType.TRANSACTION_IN,
     status: expenseEdit ? expenseEdit.status : 0,
     paid: expenseEdit ? !!expenseEdit.status : false,
   };
@@ -55,7 +57,7 @@ const DespesaForm = ({navigation, route}) => {
 
   useEffect(() => {
     if (!accountsSaved.length) {
-      alertGeral('Você precisa cadastrar uma conta primeiro!');
+      showAlertError('Você precisa cadastrar uma conta primeiro!');
       navigation.navigate(pages.contaForm);
     } else if (expenseEdit) {
       const accountFiltered = accountsSaved.filter((item) => {
@@ -111,8 +113,8 @@ const DespesaForm = ({navigation, route}) => {
   return (
     <>
       <Header
-        title="Nova Despesa"
-        lineColor={colors.colorDanger}
+        title={!FORM_TYPE ? 'Nova Despesa' : 'Nova Receita'}
+        lineColor={!FORM_TYPE ? colors.colorDanger : colors.greenApp}
         navigation={navigation}
       />
       <Container>
@@ -172,6 +174,8 @@ const DespesaForm = ({navigation, route}) => {
               <Switch
                 toggleSwitch={() => setFieldValue('paid', !values.paid)}
                 isEnabled={values.paid}
+                labelEnable={!FORM_TYPE ? 'PAGO' : 'RECEBIDO'}
+                labelDisable={!FORM_TYPE ? 'NÃO PAGO' : 'NÃO RECEBIDO'}
               />
               {/* {isEdition && (
               <ContainerFormFooter>
@@ -182,7 +186,7 @@ const DespesaForm = ({navigation, route}) => {
             )} */}
               <ButtonSave
                 label="Salvar"
-                background={colors.colorDanger}
+                background={!FORM_TYPE ? colors.colorDanger : colors.greenApp}
                 onPress={handleSubmit}
                 loading={loading}
               />

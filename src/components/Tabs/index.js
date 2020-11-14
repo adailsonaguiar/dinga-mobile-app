@@ -20,7 +20,8 @@ const Tabs = ({translateY, navigation}) => {
         </IconArea>
         <TitleCard>Transações</TitleCard>
       </TabItem>
-      <TabItem onPress={() => console.log('teste')}>
+      <TabItem
+        onPress={() => navigation.navigate('DespesaForm', {formType: true})}>
         <IconArea>
           <ImageIcon source={receitaIcon} />
         </IconArea>

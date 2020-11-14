@@ -18,6 +18,16 @@ export function showAlertError(error) {
   });
 }
 
+export function showError(error) {
+  showMessage({
+    message: error,
+    type: 'danger',
+    icon: 'info',
+    style: BOX_MENSAGE_STYLE,
+    titleStyle: MESSAGE_STYLE,
+  });
+}
+
 export function showAlert(message) {
   showMessage({
     message: message,

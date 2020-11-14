@@ -1,4 +1,4 @@
-import {getId, loadData, writeData} from './../../services/realm';
+import {loadData, writeData} from './../../services/realm';
 import {
   LOAD_TRANSACTIONS,
   LOAD_TRANSACTIONS_SUCCESS,
@@ -7,9 +7,9 @@ import {
   SAVE_TRANSACTION_SUCCESS,
   SAVE_TRANSACTION_FAILURE,
 } from './actionTypes';
-import {error} from '../../utils/messageResponse';
 import {navigate} from '../../services/navService';
 import {pages} from '../../routes';
+import {showError} from '../../services/alertService';
 
 const loadTransactionsSuccess = (dispatch, transactions) => {
   dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: transactions});
@@ -27,7 +27,7 @@ export const loadTransactions = ({month}) => {
       loadTransactionsSuccess(dispatch, data);
     } catch (error) {
       loadTransactionsFailure();
-      error(error);
+      showError(error);
     }
   };
 };
@@ -48,7 +48,7 @@ export const saveTransactions = (transaction) => {
       navigate(pages.dash);
       saveTransactionsSuccess(dispatch);
     } catch (e) {
-      error(e);
+      showError(e);
       saveTransactionsFailure(dispatch);
     }
   };
