@@ -6,8 +6,12 @@ import {getAccountIndentity} from '../../utils/accounts';
 import Input from '../../components/Input';
 import Select from '../../components/Select/Index';
 import {pages} from '../../routes';
-import {getArrayCategories} from '../../utils/categoriesTransactions';
-import categories from '../../utils/categoriesTransactions';
+import {
+  categoriesExpense,
+  categoriesIncome,
+  getArrayCategoriesIncome,
+  getArrayCategoriesExpense,
+} from '../../utils/categoriesTransactions';
 import {accounts} from '../../utils/accounts';
 
 import colors from '../../styles/colors';
@@ -33,9 +37,16 @@ const DespesaForm = ({navigation, route}) => {
   const expenseEdit = route.params?.transaction
     ? route.params?.transaction
     : null;
+  console.log(expenseEdit);
+
+  function getCategories() {
+    if (expenseEdit.type === transactionType.TRANSACTION_IN)
+      return categoriesIncome;
+    return categoriesExpense;
+  }
   const INITIAL_VALUES = {
     id: expenseEdit ? expenseEdit.id : '',
-    category: expenseEdit ? categories[expenseEdit.category] : {},
+    category: expenseEdit ? getCategories()[expenseEdit.category] : {},
     value: expenseEdit ? expenseEdit.value / 100 : 0,
     date: expenseEdit ? expenseEdit.date : new Date(),
     description: expenseEdit ? expenseEdit.description : '',
@@ -136,7 +147,11 @@ const DespesaForm = ({navigation, route}) => {
               <Select
                 placeholder="Selecione uma categoria"
                 label="Categoria"
-                options={getArrayCategories()}
+                options={
+                  !FORM_TYPE
+                    ? getArrayCategoriesExpense()
+                    : getArrayCategoriesIncome()
+                }
                 value={values.category}
                 onValueChange={(obj) => setFieldValue('category', obj)}
               />
