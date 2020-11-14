@@ -1,4 +1,4 @@
-package com.dingaapp1_1;
+package com.app.dinga;
 
 import com.facebook.react.ReactActivity;
 

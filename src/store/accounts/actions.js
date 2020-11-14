@@ -4,7 +4,7 @@ import {
   LOAD_ACCOUNTS,
   LOAD_ACCOUNTS_FAILURE,
 } from './actionTypes';
-import messageResponse from '../../utils/messageResponse';
+import {showError} from '../../services/alertService';
 
 export const loadAccounts = (month, year) => {
   return async (dispatch) => {
@@ -32,7 +32,7 @@ export const saveAccount = (account) => {
     try {
       writeData('contas', account);
     } catch (e) {
-      messageResponse.error(e);
+      showError(e);
       return e;
     }
   };
@@ -44,7 +44,7 @@ export const deleteAccount = (id) => {
       await removeById('contas', id);
       dispatch(loadAccounts());
     } catch (e) {
-      messageResponse.error(e);
+      showError(e);
     }
   };
 };

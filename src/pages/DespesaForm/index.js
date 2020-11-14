@@ -2,12 +2,13 @@ import React, {useState, useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
-import parse from 'date-fns/parse';
 import {getAccountIndentity} from '../../utils/accounts';
 import Input from '../../components/Input';
 import Select from '../../components/Select/Index';
 import {pages} from '../../routes';
-import {alertGeral} from '../../utils/messageResponse';
+import {getArrayCategories} from '../../utils/categoriesTransactions';
+import categories from '../../utils/categoriesTransactions';
+import {accounts} from '../../utils/accounts';
 
 import colors from '../../styles/colors';
 import {
@@ -18,23 +19,35 @@ import {
   ContainerFormFooter,
   ButtonWrapper,
   ButtonSave,
+  Switch,
+  CustomDatePicker,
 } from './styles';
 import {getId} from '../../services/realm';
 import {saveTransactions} from '../../store/transactions/actions';
 import {transactionType} from '../../schemas/TransactionSchema';
 import Header from '../../components/Header';
+import {showAlertError} from '../../services/alertService';
 
-const DespesaForm = ({navigation}) => {
+const DespesaForm = ({navigation, route}) => {
+  const FORM_TYPE = route.params?.formType;
+  const expenseEdit = route.params?.transaction
+    ? route.params?.transaction
+    : null;
   const INITIAL_VALUES = {
-    id: 0,
-    category: '',
-    value: '',
-    date: '',
-    description: '',
-    accountId: '',
-    type: transactionType.TRANSACTION_IN,
-    status: 0,
+    id: expenseEdit ? expenseEdit.id : '',
+    category: expenseEdit ? categories[expenseEdit.category] : {},
+    value: expenseEdit ? expenseEdit.value / 100 : 0,
+    date: expenseEdit ? expenseEdit.date : new Date(),
+    description: expenseEdit ? expenseEdit.description : '',
+    accountId: expenseEdit ? expenseEdit.accountId : null,
+    account: {},
+    type: !FORM_TYPE
+      ? transactionType.TRANSACTION_OUT
+      : transactionType.TRANSACTION_IN,
+    status: expenseEdit ? expenseEdit.status : 0,
+    paid: expenseEdit ? !!expenseEdit.status : false,
   };
+
   const dispatch = useDispatch();
   const accountsSaved = useSelector((state) => state.accounts.accounts);
   const loading = useSelector((state) => state.transactions.loading);
@@ -44,37 +57,66 @@ const DespesaForm = ({navigation}) => {
 
   useEffect(() => {
     if (!accountsSaved.length) {
-      alertGeral('Você precisa cadastrar uma conta primeiro!');
+      showAlertError('Você precisa cadastrar uma conta primeiro!');
       navigation.navigate(pages.contaForm);
+    } else if (expenseEdit) {
+      const accountFiltered = accountsSaved.filter((item) => {
+        if (expenseEdit) if (item.id === expenseEdit.accountId) return item;
+      });
+      INITIAL_VALUES.account = accountFiltered
+        ? accounts[accountFiltered[0].account]
+        : {};
     }
-
     const accountIndetify = accountsSaved.map((account) => ({
-      ...standardAccounts[account.id],
+      ...standardAccounts[account.account],
       id: account.id,
+      label: `${account.description} | ${
+        standardAccounts[account.account].label
+      }`,
     }));
     setArraySelect(accountIndetify);
   }, []);
 
-  async function onSubmit(values) {
-    const value = refs.value.getRawValue() * 100;
-    const date = parse(values.date, 'dd/MM/yyyy', new Date());
-    if (true) {
-      const idMaxAccount = await getId('transaction');
-      values.id = idMaxAccount;
+  function validateForm(values) {
+    if (!values.description.length) {
+      showAlertError('Digite uma descrição!');
+      return false;
     }
+    if (!values.category.value) {
+      showAlertError('Escolha uma categoria!');
+      return false;
+    }
+    if (values.accountId === null) {
+      showAlertError('Escolha uma conta!');
+      return false;
+    }
+    return true;
+  }
 
-    console.log({...values, value, date});
-    dispatch(saveTransactions({...values, value, date}));
+  async function onSubmit(values) {
+    if (validateForm(values)) {
+      if (!expenseEdit) {
+        const idMaxAccount = await getId('transaction');
+        values.id = idMaxAccount;
+      }
+      if (typeof values.value === 'string')
+        values.value = refs.value.getRawValue();
+      values.value = values.value * 100;
+      values.status = values.paid ? 1 : 0;
+      values.category = values.category.value;
+      const account = values.account.value;
+
+      dispatch(saveTransactions({...values, account}));
+    }
   }
 
   return (
     <>
       <Header
-        title="Nova"
-        lineColor={colors.colorDanger}
-        navigation={navigation}>
-        {'Despesa / investimento'}
-      </Header>
+        title={!FORM_TYPE ? 'Nova Despesa' : 'Nova Receita'}
+        lineColor={!FORM_TYPE ? colors.colorDanger : colors.greenApp}
+        navigation={navigation}
+      />
       <Container>
         <StatusBar
           barStyle="light-content"
@@ -87,49 +129,29 @@ const DespesaForm = ({navigation}) => {
             <Form contentContainerStyle={{paddingBottom: 40}}>
               <Input
                 label="Descrição"
+                value={values.description}
                 onChangeText={(text) => setFieldValue('description', text)}
+                placeholder="Compras mercadinho"
               />
               <Select
                 placeholder="Selecione uma categoria"
                 label="Categoria"
-                options={[
-                  {
-                    color: '#2660A4',
-                    label: 'Essencial',
-                    value: 1,
-                  },
-                  {
-                    color: '#FF6B35',
-                    label: 'Investimentos',
-                    value: 2,
-                  },
-                  {
-                    color: '#FFBC42',
-                    label: 'Educação',
-                    value: 3,
-                  },
-                  {
-                    color: '#AD343E',
-                    label: 'Extra',
-                    value: 4,
-                  },
-                ]}
-                onValueChange={(obj) => setFieldValue('category', obj.value)}
+                options={getArrayCategories()}
+                value={values.category}
+                onValueChange={(obj) => setFieldValue('category', obj)}
               />
-              <Input
-                label="Data"
-                type={'datetime'}
-                options={{
-                  format: 'DD/MM/YYYY',
-                }}
-                onChangeText={(maskedText) => setFieldValue('date', maskedText)}
+              <CustomDatePicker
+                mode="date"
+                date={values.date}
+                setDate={(value) => setFieldValue('date', new Date(value))}
               />
               <Select
                 placeholder="Selecione uma conta"
                 label="Contas"
                 options={arraySelect}
+                value={values.account}
                 onValueChange={(selected) =>
-                  setFieldValue('accountId', selected.value)
+                  setFieldValue('accountId', selected.id)
                 }
               />
               <Input
@@ -147,6 +169,13 @@ const DespesaForm = ({navigation}) => {
                 }}
                 value={values.value}
                 ref={(ref) => (refs.value = ref)}
+                placeholder="R$ 120,00"
+              />
+              <Switch
+                toggleSwitch={() => setFieldValue('paid', !values.paid)}
+                isEnabled={values.paid}
+                labelEnable={!FORM_TYPE ? 'PAGO' : 'RECEBIDO'}
+                labelDisable={!FORM_TYPE ? 'NÃO PAGO' : 'NÃO RECEBIDO'}
               />
               {/* {isEdition && (
               <ContainerFormFooter>
@@ -157,7 +186,7 @@ const DespesaForm = ({navigation}) => {
             )} */}
               <ButtonSave
                 label="Salvar"
-                background={colors.colorDanger}
+                background={!FORM_TYPE ? colors.colorDanger : colors.greenApp}
                 onPress={handleSubmit}
                 loading={loading}
               />

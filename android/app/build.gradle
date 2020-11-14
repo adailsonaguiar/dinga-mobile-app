@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.dingaapp1_1"
+        applicationId "com.app.dinga"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

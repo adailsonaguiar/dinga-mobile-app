@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.dingaapp1_1">
+  package="com.app.dinga">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, StatusBar} from 'react-native';
 import colors from '../../styles/colors';
-import {accounts} from '../../utils/accounts';
+import {getArrayAccounts} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
 import {deleteAccount, saveAccount} from '../../store/accounts/actions';
 
@@ -18,33 +18,30 @@ import Select from '../../components/Select/Index';
 import Input from '../../components/Input';
 import {Formik} from 'formik';
 import Header from '../../components/Header';
-import {alertGeral} from '../../utils/messageResponse';
 import {getId} from '../../services/realm';
+import {showAlertError} from '../../services/alertService';
 
 export default function ContaForm({route, navigation}) {
-  const {
-    params: {account},
-  } = route;
-  const accountItem = account && account.item;
+  const accountItem = route.params?.account || null;
   const dispatch = useDispatch();
 
   const INITIAL_VALUES = {
-    id: account ? account.item.id : '',
+    id: accountItem ? accountItem.item.id : '',
     date: accountItem ? accountItem.date : '',
-    description: account ? account.item.description : '',
-    balance: accountItem ? accountItem.balance / 100 : 0,
-    account: account ? account : null,
+    description: accountItem ? accountItem.item.description : '',
+    balance: accountItem ? accountItem.item.balance / 100 : 0,
+    account: accountItem ? accountItem : null,
   };
   const loading = useSelector((state) => state.accounts.loading);
   const refs = {};
 
   const validateForm = (values) => {
-    if (!values.description.length) {
-      alertGeral('Atenção', 'Digite uma descrição!');
+    if (!values.account) {
+      showAlertError('Selecione uma conta!');
       return false;
     }
-    if (!values.balance) {
-      alertGeral('Atenção', 'Preencha o saldo da conta!');
+    if (!values.description.length) {
+      showAlertError('Digite uma descrição!');
       return false;
     }
     return true;
@@ -78,18 +75,18 @@ export default function ContaForm({route, navigation}) {
 
   async function onSubmit(values) {
     if (validateForm(values)) {
-      let balance = values.balance;
-      if (!account) {
+      if (!accountItem) {
         const idMaxAccount = await getId('contas');
         values.id = idMaxAccount;
       }
       if (typeof values.balance === 'string')
-        balance = refs.balance.getRawValue() * 100;
+        values.balance = refs.balance.getRawValue();
+      values.balance = values.balance * 100;
       const date = new Date();
 
       values.account = values.account.value;
 
-      values = {...values, date, balance};
+      values = {...values, date};
       dispatch(saveAccount(values));
       navigation.goBack();
     }
@@ -102,7 +99,7 @@ export default function ContaForm({route, navigation}) {
         backgroundColor={colors.backgroundColorPrimary}
       />
       <Header
-        title={account ? 'Atualizar conta' : 'Nova conta'}
+        title={accountItem ? 'Atualizar conta' : 'Nova conta'}
         navigation={navigation}
       />
 
@@ -114,10 +111,10 @@ export default function ContaForm({route, navigation}) {
             <Select
               placeholder="Selecione uma conta"
               label="Conta"
-              options={accounts}
+              options={getArrayAccounts()}
               lineLeftColor
               enable={false}
-              value={account}
+              value={accountItem}
               onValueChange={(selected) => {
                 setFieldValue('account', selected);
                 setFieldValue('description', selected.accountType);
@@ -147,7 +144,7 @@ export default function ContaForm({route, navigation}) {
               }}
               ref={(ref) => (refs.balance = ref)}
             />
-            {account && (
+            {accountItem && (
               <ContainerFormFooter>
                 <BtnRemove onPress={() => askDelection(values.id)}>
                   <LabelBtnRemove>Deletar Conta</LabelBtnRemove>

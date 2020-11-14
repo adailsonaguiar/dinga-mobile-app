@@ -1,7 +1,8 @@
 import styled from 'styled-components/native';
 import Button from '../../components/Button';
+import DatePicker from '../../components/DatePicker';
+import SwitchContainer from '../../components/SwitchContainer';
 import colors from '../../styles/colors';
-import {fontMedium} from '../../styles/fonts';
 
 export const Container = styled.View`
   flex: 1;
@@ -35,3 +36,9 @@ export const BtnRemove = styled.TouchableOpacity`
 export const ButtonSave = styled(Button)`
   margin-top: 20px;
 `;
+
+export const Switch = styled(SwitchContainer)`
+  margin-top: 30px;
+`;
+
+export const CustomDatePicker = styled(DatePicker)``;
