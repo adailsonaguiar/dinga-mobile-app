@@ -11,13 +11,19 @@ import * as S from './styles';
 import Header from '../../components/Header';
 import {pages} from '../../routes';
 import CardTransaction from '../../components/CardTransaction';
-import categories from '../../utils/categoriesTransactions';
+import {
+  categoriesExpense,
+  categoriesIncome,
+} from '../../utils/categoriesTransactions';
+import {transactionType} from '../../schemas/TransactionSchema';
 
 const Transacoes = ({navigation}) => {
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions.list);
   const accountIndetify = getAccountIndentity();
+
+  console.log(transactions);
 
   useEffect(() => {
     getDate().then((date) => {
@@ -43,6 +49,12 @@ const Transacoes = ({navigation}) => {
     return statusList[status];
   }
 
+  function getCategories(transaction) {
+    if (transaction.type === transactionType.TRANSACTION_IN)
+      return categoriesIncome;
+    return categoriesExpense;
+  }
+
   return (
     <>
       <Header title="Transações" showMonthHeader />
@@ -58,12 +70,16 @@ const Transacoes = ({navigation}) => {
               <CardTransaction
                 navigation={navigation}
                 screenNavigate={pages.despesaForm}
-                parameters={{transaction: item}}
+                parameters={{
+                  transaction: item,
+                  formType: item.type === transactionType.TRANSACTION_IN,
+                }}
                 transactionTitle={item.description}
-                categoryTransaction={categories[item.category].label}
+                categoryTransaction={getCategories(item)[item.category].label}
                 value={item.value}
                 date={item.date}
                 status={getTransactionStatus(item.status)}
+                type={item.type}
               />
             )}
             keyExtractor={(item) => item.id.toString()}

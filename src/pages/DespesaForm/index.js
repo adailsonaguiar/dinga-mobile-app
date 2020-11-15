@@ -6,8 +6,12 @@ import {getAccountIndentity} from '../../utils/accounts';
 import Input from '../../components/Input';
 import Select from '../../components/Select/Index';
 import {pages} from '../../routes';
-import {getArrayCategories} from '../../utils/categoriesTransactions';
-import categories from '../../utils/categoriesTransactions';
+import {
+  categoriesExpense,
+  categoriesIncome,
+  getArrayCategoriesIncome,
+  getArrayCategoriesExpense,
+} from '../../utils/categoriesTransactions';
 import {accounts} from '../../utils/accounts';
 
 import colors from '../../styles/colors';
@@ -33,9 +37,16 @@ const DespesaForm = ({navigation, route}) => {
   const expenseEdit = route.params?.transaction
     ? route.params?.transaction
     : null;
+  console.log(expenseEdit);
+
+  function getCategories() {
+    if (expenseEdit.type === transactionType.TRANSACTION_IN)
+      return categoriesIncome;
+    return categoriesExpense;
+  }
   const INITIAL_VALUES = {
     id: expenseEdit ? expenseEdit.id : '',
-    category: expenseEdit ? categories[expenseEdit.category] : {},
+    category: expenseEdit ? getCategories()[expenseEdit.category] : {},
     value: expenseEdit ? expenseEdit.value / 100 : 0,
     date: expenseEdit ? expenseEdit.date : new Date(),
     description: expenseEdit ? expenseEdit.description : '',
@@ -79,15 +90,15 @@ const DespesaForm = ({navigation, route}) => {
 
   function validateForm(values) {
     if (!values.description.length) {
-      showAlertError('Digite uma descrição!');
+      showAlertError('Digite uma descrição');
       return false;
     }
     if (!values.category.value) {
-      showAlertError('Escolha uma categoria!');
+      showAlertError('Selecione uma categoria');
       return false;
     }
     if (values.accountId === null) {
-      showAlertError('Escolha uma conta!');
+      showAlertError('Selecione uma conta');
       return false;
     }
     return true;
@@ -110,10 +121,16 @@ const DespesaForm = ({navigation, route}) => {
     }
   }
 
+  function handleSceneTitle() {
+    if (expenseEdit) return 'Editar';
+    if (!FORM_TYPE) return 'Nova despesa';
+    return 'Nova receita';
+  }
+
   return (
     <>
       <Header
-        title={!FORM_TYPE ? 'Nova Despesa' : 'Nova Receita'}
+        title={handleSceneTitle()}
         lineColor={!FORM_TYPE ? colors.colorDanger : colors.greenApp}
         navigation={navigation}
       />
@@ -131,12 +148,18 @@ const DespesaForm = ({navigation, route}) => {
                 label="Descrição"
                 value={values.description}
                 onChangeText={(text) => setFieldValue('description', text)}
-                placeholder="Compras mercadinho"
+                placeholder={
+                  !FORM_TYPE ? 'Compras mercadinho' : 'Prestação de seriço'
+                }
               />
               <Select
                 placeholder="Selecione uma categoria"
                 label="Categoria"
-                options={getArrayCategories()}
+                options={
+                  !FORM_TYPE
+                    ? getArrayCategoriesExpense()
+                    : getArrayCategoriesIncome()
+                }
                 value={values.category}
                 onValueChange={(obj) => setFieldValue('category', obj)}
               />

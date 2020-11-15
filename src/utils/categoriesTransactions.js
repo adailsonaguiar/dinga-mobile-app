@@ -1,4 +1,4 @@
-const categories = {
+export const categoriesExpense = {
   1: {
     color: '#2660A4',
     label: 'Alimentação',
@@ -26,8 +26,28 @@ const categories = {
   },
 };
 
-export function getArrayCategories() {
-  return Object.values(categories);
+export const categoriesIncome = {
+  1: {
+    color: '#2660A4',
+    label: 'Salário',
+    value: 1,
+  },
+  2: {
+    color: '#FF6B35',
+    label: 'Presente',
+    value: 2,
+  },
+  3: {
+    color: '#FFBC42',
+    label: 'Vendas',
+    value: 3,
+  },
+};
+
+export function getArrayCategoriesExpense() {
+  return Object.values(categoriesExpense);
 }
 
-export default categories;
+export function getArrayCategoriesIncome() {
+  return Object.values(categoriesIncome);
+}

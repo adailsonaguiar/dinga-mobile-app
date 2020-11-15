@@ -14,6 +14,7 @@ const CardTransaction = ({
   value,
   status = '',
   date,
+  type = 'TRANSACTION_IN',
 }) => {
   return (
     <S.Conta onPress={() => navigation.navigate(screenNavigate, parameters)}>
@@ -23,7 +24,7 @@ const CardTransaction = ({
         <S.CategoryConta>{categoryTransaction}</S.CategoryConta>
       </S.ColLeft>
       <S.ColRight>
-        <S.Saldo>R${`${formatMoney(value)}`}</S.Saldo>
+        <S.Saldo type={type}>R${`${formatMoney(value)}`}</S.Saldo>
         <S.Atualizado>{`${status} ${format(date, 'dd MMM')}`}</S.Atualizado>
       </S.ColRight>
     </S.Conta>

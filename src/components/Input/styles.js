@@ -13,7 +13,9 @@ export const Label = styled.Text`
   font-size: 15px;
 `;
 
-export const Input = styled.TextInput`
+export const Input = styled.TextInput.attrs({
+  placeholderTextColor: colors.colorStroke,
+})`
   border-width: 1.5px;
   border-color: ${colors.graphite};
   border-radius: 4px;

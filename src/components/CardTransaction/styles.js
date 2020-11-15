@@ -3,6 +3,8 @@ import styled, {css} from 'styled-components';
 import colors from '../../styles/colors';
 import {fontMedium, fontRegular} from '../../styles/fonts';
 
+import {transactionType} from '../../schemas/TransactionSchema';
+
 export const Conta = styled(RectButton)`
   flex-direction: row;
   height: 70px;
@@ -35,9 +37,13 @@ export const ColRight = styled.View`
 `;
 
 export const Saldo = styled.Text`
-  color: ${colors.fontLight};
-  font-size: 16px;
-  font-family: ${fontMedium};
+  ${({type}) => css`
+    color: ${type === transactionType.TRANSACTION_IN
+      ? colors.greenApp
+      : colors.colorDanger};
+    font-size: 16px;
+    font-family: ${fontMedium};
+  `}
 `;
 
 export const Atualizado = styled.Text`
