@@ -14,7 +14,7 @@ const CardTransaction = ({
   value,
   status = '',
   date,
-  type,
+  type = 'TRANSACTION_IN',
 }) => {
   return (
     <S.Conta onPress={() => navigation.navigate(screenNavigate, parameters)}>

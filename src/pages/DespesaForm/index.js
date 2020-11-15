@@ -90,15 +90,15 @@ const DespesaForm = ({navigation, route}) => {
 
   function validateForm(values) {
     if (!values.description.length) {
-      showAlertError('Digite uma descrição!');
+      showAlertError('Digite uma descrição');
       return false;
     }
     if (!values.category.value) {
-      showAlertError('Escolha uma categoria!');
+      showAlertError('Selecione uma categoria');
       return false;
     }
     if (values.accountId === null) {
-      showAlertError('Escolha uma conta!');
+      showAlertError('Selecione uma conta');
       return false;
     }
     return true;
@@ -148,7 +148,9 @@ const DespesaForm = ({navigation, route}) => {
                 label="Descrição"
                 value={values.description}
                 onChangeText={(text) => setFieldValue('description', text)}
-                placeholder="Compras mercadinho"
+                placeholder={
+                  !FORM_TYPE ? 'Compras mercadinho' : 'Prestação de seriço'
+                }
               />
               <Select
                 placeholder="Selecione uma categoria"
