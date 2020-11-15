@@ -166,7 +166,9 @@ const DespesaForm = ({navigation, route}) => {
               <CustomDatePicker
                 mode="date"
                 date={values.date}
-                setDate={(value) => setFieldValue('date', new Date(value))}
+                setDate={(value) => {
+                  if (value) setFieldValue('date', new Date(value));
+                }}
               />
               <Select
                 placeholder="Selecione uma conta"

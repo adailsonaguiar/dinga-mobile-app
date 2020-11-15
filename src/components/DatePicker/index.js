@@ -13,7 +13,7 @@ const DatePicker = ({mode, date, setDate, ...rest}) => {
   }
   const onChange = (event, selectedDate) => {
     setShow(false);
-    setDate(selectedDate);
+    if (selectedDate) setDate(selectedDate);
   };
 
   return (
