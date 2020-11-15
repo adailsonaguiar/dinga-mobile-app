@@ -121,10 +121,16 @@ const DespesaForm = ({navigation, route}) => {
     }
   }
 
+  function handleSceneTitle() {
+    if (expenseEdit) return 'Editar';
+    if (!FORM_TYPE) return 'Nova despesa';
+    return 'Nova receita';
+  }
+
   return (
     <>
       <Header
-        title={!FORM_TYPE ? 'Nova Despesa' : 'Nova Receita'}
+        title={handleSceneTitle()}
         lineColor={!FORM_TYPE ? colors.colorDanger : colors.greenApp}
         navigation={navigation}
       />

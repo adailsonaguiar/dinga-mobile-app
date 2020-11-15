@@ -70,7 +70,10 @@ const Transacoes = ({navigation}) => {
               <CardTransaction
                 navigation={navigation}
                 screenNavigate={pages.despesaForm}
-                parameters={{transaction: item}}
+                parameters={{
+                  transaction: item,
+                  formType: item.type === transactionType.TRANSACTION_IN,
+                }}
                 transactionTitle={item.description}
                 categoryTransaction={getCategories(item)[item.category].label}
                 value={item.value}
