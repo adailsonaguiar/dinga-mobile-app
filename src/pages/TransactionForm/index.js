@@ -15,13 +15,7 @@ import {
 import {accounts} from '../../utils/accounts';
 
 import colors from '../../styles/colors';
-import {
-  Container,
-  Form,
-  ButtonSave,
-  Switch,
-  CustomDatePicker,
-} from './styles';
+import {Container, Form, ButtonSave, Switch, CustomDatePicker} from './styles';
 import {getId} from '../../services/realm';
 import {saveTransactions} from '../../store/transactions/actions';
 import {transactionType} from '../../schemas/TransactionSchema';
@@ -33,7 +27,7 @@ import {
   LabelBtnRemove,
 } from '../ContaForm/styles';
 
-const DespesaForm = ({navigation, route}) => {
+const TransactionForm = ({navigation, route}) => {
   const FORM_TYPE = route.params?.formType;
   const expenseEdit = route.params?.transaction
     ? route.params?.transaction
@@ -223,4 +217,4 @@ const DespesaForm = ({navigation, route}) => {
   );
 };
 
-export default DespesaForm;
+export default TransactionForm;

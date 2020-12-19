@@ -69,7 +69,7 @@ const Transacoes = ({navigation}) => {
             renderItem={({item}) => (
               <CardTransaction
                 navigation={navigation}
-                screenNavigate={pages.despesaForm}
+                screenNavigate={pages.transactionForm}
                 parameters={{
                   transaction: item,
                   formType: item.type === transactionType.TRANSACTION_IN,

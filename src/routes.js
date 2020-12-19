@@ -6,7 +6,7 @@ import Dash from './pages/Dash';
 import Transacoes from './pages/Transacoes';
 import Contas from './pages/Contas';
 import ContaForm from './pages/ContaForm';
-import DespesaForm from './pages/DespesaForm';
+import TransactionForm from './pages/TransactionForm';
 import {navigationRef} from './services/navService';
 
 export const pages = {
@@ -14,7 +14,7 @@ export const pages = {
   contas: 'Contas',
   contaForm: 'ContaForm',
   transacoes: 'Transacoes',
-  despesaForm: 'DespesaForm',
+  transactionForm: 'transactionForm',
 };
 
 const Stack = createStackNavigator();
@@ -31,7 +31,10 @@ export default () => {
         <Stack.Screen name={pages.contas} component={Contas} />
         <Stack.Screen name={pages.contaForm} component={ContaForm} />
         <Stack.Screen name={pages.transacoes} component={Transacoes} />
-        <Stack.Screen name={pages.despesaForm} component={DespesaForm} />
+        <Stack.Screen
+          name={pages.transactionForm}
+          component={TransactionForm}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
