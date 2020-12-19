@@ -1,4 +1,4 @@
-import {loadData, writeData} from './../../services/realm';
+import {loadData, removeById, writeData} from './../../services/realm';
 import {
   LOAD_TRANSACTIONS,
   LOAD_TRANSACTIONS_SUCCESS,
@@ -53,3 +53,28 @@ export const saveTransactions = (transaction) => {
     }
   };
 };
+
+export const deleteTransaction = (id) => {
+  return async (dispatch) => {
+    try {
+      await removeById('transaction', id);
+      dispatch(loadTransactions({}));
+    } catch (e) {
+      console.error(e);
+      showError(e);
+    }
+  };
+};
+
+export function loadTransactionsByAccount() {
+  return async (dispatch) => {
+    try {
+      dispatch({type: LOAD_TRANSACTIONS});
+      const data = await loadData('transaction', 'accountId = 1 LIMIT(5)');
+      loadTransactionsSuccess(dispatch, data);
+    } catch (error) {
+      loadTransactionsFailure();
+      showError(error);
+    }
+  };
+}

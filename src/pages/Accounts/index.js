@@ -50,7 +50,7 @@ const Accounts = ({navigation}) => {
             renderItem={({item}) => (
               <CardTransaction
                 navigation={navigation}
-                screenNavigate={pages.contaForm}
+                screenNavigate={pages.accountForm}
                 parameters={{account: {...accountIndetify[item.account], item}}}
                 lineLeftColor={accountIndetify[item.account]?.color}
                 transactionTitle={accountIndetify[item.account]?.label}

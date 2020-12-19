@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {Alert, StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import {getAccountIndentity} from '../../utils/accounts';
@@ -17,7 +17,10 @@ import {accounts} from '../../utils/accounts';
 import colors from '../../styles/colors';
 import {Container, Form, ButtonSave, Switch, CustomDatePicker} from './styles';
 import {getId} from '../../services/realm';
-import {saveTransactions} from '../../store/transactions/actions';
+import {
+  deleteTransaction,
+  saveTransactions,
+} from '../../store/transactions/actions';
 import {transactionType} from '../../schemas/TransactionSchema';
 import Header from '../../components/Header';
 import {showAlertError} from '../../services/alertService';
@@ -38,6 +41,7 @@ const TransactionForm = ({navigation, route}) => {
       return categoriesIncome;
     return categoriesExpense;
   }
+
   const INITIAL_VALUES = {
     id: expenseEdit ? expenseEdit.id : '',
     category: expenseEdit ? getCategories()[expenseEdit.category] : {},
@@ -121,6 +125,32 @@ const TransactionForm = ({navigation, route}) => {
     return 'Nova receita';
   }
 
+  const askDelection = async (id) => {
+    Alert.alert(
+      'Atenção',
+      'Deseja realmente deletar essa transação?',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => {},
+          style: {backgroundColor: 'red'},
+        },
+        {
+          text: 'Sim',
+          onPress: () => {
+            handleDelete(id);
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const handleDelete = (id) => {
+    dispatch(deleteTransaction(id));
+    navigation.goBack();
+  };
+
   return (
     <>
       <Header
@@ -198,7 +228,10 @@ const TransactionForm = ({navigation, route}) => {
               />
               {expenseEdit && (
                 <ContainerFormFooter>
-                  <BtnRemove onPress={() => {}}>
+                  <BtnRemove
+                    onPress={() => {
+                      askDelection(expenseEdit.id);
+                    }}>
                     <LabelBtnRemove>Deletar Transação</LabelBtnRemove>
                   </BtnRemove>
                 </ContainerFormFooter>

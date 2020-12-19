@@ -18,8 +18,9 @@ import Select from '../../components/Select/Index';
 import Input from '../../components/Input';
 import {Formik} from 'formik';
 import Header from '../../components/Header';
-import {getId} from '../../services/realm';
-import {showAlertError} from '../../services/alertService';
+import {getId, loadData} from '../../services/realm';
+import {showAlert, showAlertError} from '../../services/alertService';
+import {loadTransactionsByAccount} from '../../store/transactions/actions';
 
 export default function AccountForm({route, navigation}) {
   const accountItem = route.params?.account || null;
@@ -68,9 +69,16 @@ export default function AccountForm({route, navigation}) {
     );
   };
 
-  const handleDeleteAccount = (id) => {
-    dispatch(deleteAccount(id));
-    navigation.goBack();
+  const handleDeleteAccount = async (id) => {
+    const data = await loadData('transaction', `accountId = ${id} LIMIT(1)`);
+    if (data.length)
+      showAlertError(
+        'Você não pode remover essa conta, ela ainda contém transações',
+      );
+    else {
+      dispatch(deleteAccount(id));
+      navigation.goBack();
+    }
   };
 
   async function onSubmit(values) {
