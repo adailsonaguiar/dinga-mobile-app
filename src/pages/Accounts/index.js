@@ -11,7 +11,7 @@ import Header from '../../components/Header';
 import CardTransaction from '../../components/CardTransaction';
 import {pages} from '../../routes';
 
-const Carteiras = ({navigation}) => {
+const Accounts = ({navigation}) => {
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.accounts.accounts);
@@ -78,4 +78,4 @@ const Carteiras = ({navigation}) => {
   );
 };
 
-export default Carteiras;
+export default Accounts;

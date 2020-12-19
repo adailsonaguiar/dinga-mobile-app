@@ -4,15 +4,15 @@ import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 
 import Dash from './pages/Dash';
 import Transactions from './pages/Transactions';
-import Contas from './pages/Contas';
-import ContaForm from './pages/ContaForm';
+import Accounts from './pages/Accounts';
+import AccountForm from './pages/AccountForm';
 import TransactionForm from './pages/TransactionForm';
 import {navigationRef} from './services/navService';
 
 export const pages = {
   dash: 'Dash',
-  contas: 'Contas',
-  contaForm: 'ContaForm',
+  accounts: 'Accounts',
+  accountForm: 'AccountForm',
   transactions: 'Transactions',
   transactionForm: 'transactionForm',
 };
@@ -28,8 +28,8 @@ export default () => {
           ...TransitionPresets.SlideFromRightIOS,
         }}>
         <Stack.Screen name={pages.dash} component={Dash} />
-        <Stack.Screen name={pages.contas} component={Contas} />
-        <Stack.Screen name={pages.contaForm} component={ContaForm} />
+        <Stack.Screen name={pages.accounts} component={Accounts} />
+        <Stack.Screen name={pages.accountForm} component={AccountForm} />
         <Stack.Screen name={pages.transactions} component={Transactions} />
         <Stack.Screen
           name={pages.transactionForm}

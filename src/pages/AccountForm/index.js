@@ -21,7 +21,7 @@ import Header from '../../components/Header';
 import {getId} from '../../services/realm';
 import {showAlertError} from '../../services/alertService';
 
-export default function ContaForm({route, navigation}) {
+export default function AccountForm({route, navigation}) {
   const accountItem = route.params?.account || null;
   const dispatch = useDispatch();
 
