@@ -68,7 +68,7 @@ const Accounts = ({navigation}) => {
           </S.SaldoTotal>
           <S.BtnNovaConta
             onPress={() => {
-              navigation.navigate('ContaForm', {});
+              navigation.navigate(pages.accountForm, {});
             }}>
             <S.TxtNovaConta>Adicionar Conta</S.TxtNovaConta>
           </S.BtnNovaConta>

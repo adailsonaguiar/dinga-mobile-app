@@ -25,7 +25,7 @@ import {
   BtnRemove,
   ContainerFormFooter,
   LabelBtnRemove,
-} from '../ContaForm/styles';
+} from '../AccountForm/styles';
 
 const TransactionForm = ({navigation, route}) => {
   const FORM_TYPE = route.params?.formType;
