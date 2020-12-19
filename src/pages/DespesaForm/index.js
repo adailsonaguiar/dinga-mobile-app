@@ -18,10 +18,6 @@ import colors from '../../styles/colors';
 import {
   Container,
   Form,
-  BtnRemove,
-  LabelBtnRemove,
-  ContainerFormFooter,
-  ButtonWrapper,
   ButtonSave,
   Switch,
   CustomDatePicker,
@@ -31,13 +27,17 @@ import {saveTransactions} from '../../store/transactions/actions';
 import {transactionType} from '../../schemas/TransactionSchema';
 import Header from '../../components/Header';
 import {showAlertError} from '../../services/alertService';
+import {
+  BtnRemove,
+  ContainerFormFooter,
+  LabelBtnRemove,
+} from '../ContaForm/styles';
 
 const DespesaForm = ({navigation, route}) => {
   const FORM_TYPE = route.params?.formType;
   const expenseEdit = route.params?.transaction
     ? route.params?.transaction
     : null;
-  console.log(expenseEdit);
 
   function getCategories() {
     if (expenseEdit.type === transactionType.TRANSACTION_IN)
@@ -202,13 +202,13 @@ const DespesaForm = ({navigation, route}) => {
                 labelEnable={!FORM_TYPE ? 'PAGO' : 'RECEBIDO'}
                 labelDisable={!FORM_TYPE ? 'NÃO PAGO' : 'NÃO RECEBIDO'}
               />
-              {/* {isEdition && (
-              <ContainerFormFooter>
-                <BtnRemove onPress={() => {}}>
-                  <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
-                </BtnRemove>
-              </ContainerFormFooter>
-            )} */}
+              {expenseEdit && (
+                <ContainerFormFooter>
+                  <BtnRemove onPress={() => {}}>
+                    <LabelBtnRemove>Deletar Transação</LabelBtnRemove>
+                  </BtnRemove>
+                </ContainerFormFooter>
+              )}
               <ButtonSave
                 label="Salvar"
                 background={!FORM_TYPE ? colors.colorDanger : colors.greenApp}
