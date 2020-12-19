@@ -17,7 +17,7 @@ import {
 } from '../../utils/categoriesTransactions';
 import {transactionType} from '../../schemas/TransactionSchema';
 
-const Transacoes = ({navigation}) => {
+const Transactions = ({navigation}) => {
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions.list);
@@ -93,4 +93,4 @@ const Transacoes = ({navigation}) => {
   );
 };
 
-export default Transacoes;
+export default Transactions;

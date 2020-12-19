@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 
 import Dash from './pages/Dash';
-import Transacoes from './pages/Transacoes';
+import Transactions from './pages/Transactions';
 import Contas from './pages/Contas';
 import ContaForm from './pages/ContaForm';
 import TransactionForm from './pages/TransactionForm';
@@ -13,7 +13,7 @@ export const pages = {
   dash: 'Dash',
   contas: 'Contas',
   contaForm: 'ContaForm',
-  transacoes: 'Transacoes',
+  transactions: 'Transactions',
   transactionForm: 'transactionForm',
 };
 
@@ -30,7 +30,7 @@ export default () => {
         <Stack.Screen name={pages.dash} component={Dash} />
         <Stack.Screen name={pages.contas} component={Contas} />
         <Stack.Screen name={pages.contaForm} component={ContaForm} />
-        <Stack.Screen name={pages.transacoes} component={Transacoes} />
+        <Stack.Screen name={pages.transactions} component={Transactions} />
         <Stack.Screen
           name={pages.transactionForm}
           component={TransactionForm}
