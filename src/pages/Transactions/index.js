@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {StatusBar, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {getAccountIndentity} from '../../utils/accounts';
 import {loadTransactions} from '../../store/transactions/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
 import colors from '../../styles/colors';
@@ -21,13 +20,10 @@ const Transactions = ({navigation}) => {
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions.list);
-  const accountIndetify = getAccountIndentity();
-
-  console.log(transactions);
 
   useEffect(() => {
     getDate().then((date) => {
-      dispatch(loadTransactions(date.month, date.year));
+      dispatch(loadTransactions({initDate: date, finalDate: date}));
     });
     sumTotalValue();
   }, []);

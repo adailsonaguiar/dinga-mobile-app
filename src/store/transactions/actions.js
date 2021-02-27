@@ -19,11 +19,14 @@ const loadTransactionsFailure = (dispatch) => {
   dispatch({type: LOAD_TRANSACTIONS_FAILURE});
 };
 
-export const loadTransactions = ({month}) => {
+export const loadTransactions = ({initDate, finalData}) => {
   return async (dispatch) => {
     try {
       dispatch({type: LOAD_TRANSACTIONS});
-      const data = await loadData('transaction');
+      const data = await loadData(
+        'transaction',
+        `data BETWEEN ${initDate} AND ${finalData}`,
+      );
       loadTransactionsSuccess(dispatch, data);
     } catch (error) {
       loadTransactionsFailure();
