@@ -23,10 +23,7 @@ export const loadTransactions = ({initDate, finalData}) => {
   return async (dispatch) => {
     try {
       dispatch({type: LOAD_TRANSACTIONS});
-      const data = await loadData(
-        'transaction',
-        `data BETWEEN ${initDate} AND ${finalData}`,
-      );
+      const data = await loadData('transaction');
       loadTransactionsSuccess(dispatch, data);
     } catch (error) {
       loadTransactionsFailure();

@@ -29,6 +29,7 @@ import {
   ContainerFormFooter,
   LabelBtnRemove,
 } from '../AccountForm/styles';
+import {formatteNumber} from '../../utils/FunctionUtils';
 
 const TransactionForm = ({navigation, route}) => {
   const FORM_TYPE = route.params?.formType;
@@ -42,11 +43,22 @@ const TransactionForm = ({navigation, route}) => {
     return categoriesExpense;
   }
 
+  const dateExpense = () =>
+    expenseEdit
+      ? new Date(
+          `${expenseEdit.year}-${formatteNumber(
+            expenseEdit.month,
+          )}-${formatteNumber(Number(expenseEdit.day) + 1)}T00:00:00.000Z`,
+        )
+      : new Date();
+
+  console.log(dateExpense());
+
   const INITIAL_VALUES = {
     id: expenseEdit ? expenseEdit.id : '',
     category: expenseEdit ? getCategories()[expenseEdit.category] : {},
     value: expenseEdit ? expenseEdit.value / 100 : 0,
-    date: expenseEdit ? expenseEdit.date : new Date(),
+    date: dateExpense(),
     description: expenseEdit ? expenseEdit.description : '',
     accountId: expenseEdit ? expenseEdit.accountId : null,
     account: {},
@@ -56,11 +68,6 @@ const TransactionForm = ({navigation, route}) => {
     status: expenseEdit ? expenseEdit.status : 0,
     paid: expenseEdit ? !!expenseEdit.status : false,
   };
-
-  // console.log(
-  //   `${expenseEdit.month}-${expenseEdit.day}-${expenseEdit.year}`,
-  //   new Date(`${expenseEdit.month}-${expenseEdit.day}-${expenseEdit.year}`),
-  // );
 
   const dispatch = useDispatch();
   const accountsSaved = useSelector((state) => state.accounts.accounts);
@@ -121,7 +128,7 @@ const TransactionForm = ({navigation, route}) => {
       const account = values.account.value;
       values.day = String(values.date.getDate());
       values.month = String(values.date.getMonth() + 1);
-      values.year = String(values.date.getFullYear() + 1);
+      values.year = String(values.date.getFullYear());
 
       dispatch(saveTransactions({...values, account}));
 
@@ -201,17 +208,13 @@ const TransactionForm = ({navigation, route}) => {
                 value={values.category}
                 onValueChange={(obj) => setFieldValue('category', obj)}
               />
-              {/* <CustomDatePicker
+              <CustomDatePicker
                 mode="date"
-                date={
-                  new Date(
-                    `${values.year} - ${values.month} - ${values.day}`,
-                  )
-                }
+                date={values.date}
                 setDate={(value) => {
                   if (value) setFieldValue('date', new Date(value));
                 }}
-              /> */}
+              />
               <Select
                 placeholder="Selecione uma conta"
                 label="Contas"
