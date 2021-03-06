@@ -50,7 +50,7 @@ export default function MothHeader() {
           size={30}
         />
       </ButtonMonth>
-      <Month>{`${months[month] ? months[month] : ''}/${year}`}</Month>
+      <Month>{`${months[month] ? months[month] : ''} ${year}`}</Month>
       <ButtonMonth onPress={nextMonth}>
         <CustomIcon
           name="keyboard-arrow-right"

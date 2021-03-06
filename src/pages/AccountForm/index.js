@@ -18,10 +18,10 @@ import Select from '../../components/Select/Index';
 import Input from '../../components/Input';
 import {Formik} from 'formik';
 import Header from '../../components/Header';
-import {getId} from '../../services/realm';
+import {getId, loadData} from '../../services/realm';
 import {showAlertError} from '../../services/alertService';
 
-export default function ContaForm({route, navigation}) {
+export default function AccountForm({route, navigation}) {
   const accountItem = route.params?.account || null;
   const dispatch = useDispatch();
 
@@ -68,9 +68,16 @@ export default function ContaForm({route, navigation}) {
     );
   };
 
-  const handleDeleteAccount = (id) => {
-    dispatch(deleteAccount(id));
-    navigation.goBack();
+  const handleDeleteAccount = async (id) => {
+    const data = await loadData('transaction', `accountId = ${id} LIMIT(1)`);
+    if (data.length)
+      showAlertError(
+        'Você não pode remover essa conta, ela ainda contém transações',
+      );
+    else {
+      dispatch(deleteAccount(id));
+      navigation.goBack();
+    }
   };
 
   async function onSubmit(values) {
@@ -82,11 +89,14 @@ export default function ContaForm({route, navigation}) {
       if (typeof values.balance === 'string')
         values.balance = refs.balance.getRawValue();
       values.balance = values.balance * 100;
+
       const date = new Date();
+      values.day = String(date.getDate());
+      values.month = String(date.getMonth() + 1);
+      values.year = String(date.getFullYear());
 
       values.account = values.account.value;
 
-      values = {...values, date};
       dispatch(saveAccount(values));
       navigation.goBack();
     }

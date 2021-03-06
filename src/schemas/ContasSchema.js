@@ -3,7 +3,9 @@ const ContasSchema = {
   primaryKey: 'id',
   properties: {
     id: {type: 'int', indexed: true},
-    date: 'date',
+    day: 'string',
+    month: 'string',
+    year: 'string',
     description: 'string',
     balance: 'float',
     account: 'string',

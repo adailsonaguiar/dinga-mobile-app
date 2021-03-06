@@ -42,3 +42,8 @@ export const formatMoney = (value) => {
     console.log(e);
   }
 };
+
+export const formatteNumber = (number) => {
+  if (number < 10) return `0${number}`;
+  return number;
+};

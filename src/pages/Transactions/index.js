@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {StatusBar, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {getAccountIndentity} from '../../utils/accounts';
 import {loadTransactions} from '../../store/transactions/actions';
 import {getDate, formatMoney} from '../../utils/FunctionUtils';
 import colors from '../../styles/colors';
@@ -17,19 +16,21 @@ import {
 } from '../../utils/categoriesTransactions';
 import {transactionType} from '../../schemas/TransactionSchema';
 
-const Transacoes = ({navigation}) => {
+const Transactions = ({navigation}) => {
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions.list);
-  const accountIndetify = getAccountIndentity();
-
-  console.log(transactions);
 
   useEffect(() => {
-    getDate().then((date) => {
-      dispatch(loadTransactions(date.month, date.year));
-    });
-    sumTotalValue();
+    const initDate = new Date('2021-01-01');
+    const finalDate = new Date('2021-01-31');
+    console.log(initDate < finalDate);
+    dispatch(loadTransactions({initDate: initDate, finalDate: finalDate}));
+
+    // getDate().then((date) => {
+    //   dispatch(loadTransactions({initDate: date, finalDate: date}));
+    // });
+    // sumTotalValue();
   }, []);
 
   const sumTotalValue = () => {
@@ -63,28 +64,29 @@ const Transacoes = ({navigation}) => {
           barStyle="light-content"
           backgroundColor={colors.backgroundColorPrimary}
         />
-        <S.Lista>
+        <S.List>
           <FlatList
             data={transactions}
             renderItem={({item}) => (
               <CardTransaction
                 navigation={navigation}
-                screenNavigate={pages.despesaForm}
+                screenNavigate={pages.transactionForm}
                 parameters={{
                   transaction: item,
+                  date: {day: item.day, month: item.month, year: item.year},
                   formType: item.type === transactionType.TRANSACTION_IN,
                 }}
                 transactionTitle={item.description}
                 categoryTransaction={getCategories(item)[item.category].label}
                 value={item.value}
-                date={item.date}
+                date={{day: item.day, month: item.month, year: item.year}}
                 status={getTransactionStatus(item.status)}
                 type={item.type}
               />
             )}
             keyExtractor={(item) => item.id.toString()}
           />
-        </S.Lista>
+        </S.List>
         <S.Footer>
           <S.SaldoTotal>Saldo das contas: R$ {totalValue}</S.SaldoTotal>
         </S.Footer>
@@ -93,4 +95,4 @@ const Transacoes = ({navigation}) => {
   );
 };
 
-export default Transacoes;
+export default Transactions;

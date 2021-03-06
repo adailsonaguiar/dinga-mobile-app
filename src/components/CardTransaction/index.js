@@ -1,7 +1,6 @@
 import React from 'react';
-import format from 'date-fns/format';
 
-import {formatMoney} from '../../utils/FunctionUtils';
+import {formatMoney, formatteNumber} from '../../utils/FunctionUtils';
 import * as S from './styles';
 
 const CardTransaction = ({
@@ -25,7 +24,9 @@ const CardTransaction = ({
       </S.ColLeft>
       <S.ColRight>
         <S.Saldo type={type}>R${`${formatMoney(value)}`}</S.Saldo>
-        <S.Atualizado>{`${status} ${format(date, 'dd MMM')}`}</S.Atualizado>
+        <S.Atualizado>{`${status} ${formatteNumber(date.day)}/${formatteNumber(
+          date.month,
+        )}`}</S.Atualizado>
       </S.ColRight>
     </S.Conta>
   );

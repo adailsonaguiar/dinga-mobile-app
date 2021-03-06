@@ -3,18 +3,18 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 
 import Dash from './pages/Dash';
-import Transacoes from './pages/Transacoes';
-import Contas from './pages/Contas';
-import ContaForm from './pages/ContaForm';
-import DespesaForm from './pages/DespesaForm';
+import Transactions from './pages/Transactions';
+import Accounts from './pages/Accounts';
+import AccountForm from './pages/AccountForm';
+import TransactionForm from './pages/TransactionForm';
 import {navigationRef} from './services/navService';
 
 export const pages = {
   dash: 'Dash',
-  contas: 'Contas',
-  contaForm: 'ContaForm',
-  transacoes: 'Transacoes',
-  despesaForm: 'DespesaForm',
+  accounts: 'Accounts',
+  accountForm: 'AccountForm',
+  transactions: 'Transactions',
+  transactionForm: 'transactionForm',
 };
 
 const Stack = createStackNavigator();
@@ -28,10 +28,13 @@ export default () => {
           ...TransitionPresets.SlideFromRightIOS,
         }}>
         <Stack.Screen name={pages.dash} component={Dash} />
-        <Stack.Screen name={pages.contas} component={Contas} />
-        <Stack.Screen name={pages.contaForm} component={ContaForm} />
-        <Stack.Screen name={pages.transacoes} component={Transacoes} />
-        <Stack.Screen name={pages.despesaForm} component={DespesaForm} />
+        <Stack.Screen name={pages.accounts} component={Accounts} />
+        <Stack.Screen name={pages.accountForm} component={AccountForm} />
+        <Stack.Screen name={pages.transactions} component={Transactions} />
+        <Stack.Screen
+          name={pages.transactionForm}
+          component={TransactionForm}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

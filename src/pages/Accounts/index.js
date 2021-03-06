@@ -11,7 +11,7 @@ import Header from '../../components/Header';
 import CardTransaction from '../../components/CardTransaction';
 import {pages} from '../../routes';
 
-const Carteiras = ({navigation}) => {
+const Accounts = ({navigation}) => {
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.accounts.accounts);
@@ -50,13 +50,13 @@ const Carteiras = ({navigation}) => {
             renderItem={({item}) => (
               <CardTransaction
                 navigation={navigation}
-                screenNavigate={pages.contaForm}
+                screenNavigate={pages.accountForm}
                 parameters={{account: {...accountIndetify[item.account], item}}}
                 lineLeftColor={accountIndetify[item.account]?.color}
                 transactionTitle={accountIndetify[item.account]?.label}
                 categoryTransaction={item.description}
                 value={item.balance}
-                date={item.date}
+                date={{day: item.day, month: item.month, year: item.year}}
               />
             )}
             keyExtractor={(item) => item.id.toString()}
@@ -68,7 +68,7 @@ const Carteiras = ({navigation}) => {
           </S.SaldoTotal>
           <S.BtnNovaConta
             onPress={() => {
-              navigation.navigate('ContaForm', {});
+              navigation.navigate(pages.accountForm, {});
             }}>
             <S.TxtNovaConta>Adicionar Conta</S.TxtNovaConta>
           </S.BtnNovaConta>
@@ -78,4 +78,4 @@ const Carteiras = ({navigation}) => {
   );
 };
 
-export default Carteiras;
+export default Accounts;

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {Alert, StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import {getAccountIndentity} from '../../utils/accounts';
@@ -15,40 +15,50 @@ import {
 import {accounts} from '../../utils/accounts';
 
 import colors from '../../styles/colors';
-import {
-  Container,
-  Form,
-  BtnRemove,
-  LabelBtnRemove,
-  ContainerFormFooter,
-  ButtonWrapper,
-  ButtonSave,
-  Switch,
-  CustomDatePicker,
-} from './styles';
+import {Container, Form, ButtonSave, Switch, CustomDatePicker} from './styles';
 import {getId} from '../../services/realm';
-import {saveTransactions} from '../../store/transactions/actions';
+import {
+  deleteTransaction,
+  saveTransactions,
+} from '../../store/transactions/actions';
 import {transactionType} from '../../schemas/TransactionSchema';
 import Header from '../../components/Header';
 import {showAlertError} from '../../services/alertService';
+import {
+  BtnRemove,
+  ContainerFormFooter,
+  LabelBtnRemove,
+} from '../AccountForm/styles';
+import {formatteNumber} from '../../utils/FunctionUtils';
 
-const DespesaForm = ({navigation, route}) => {
+const TransactionForm = ({navigation, route}) => {
   const FORM_TYPE = route.params?.formType;
   const expenseEdit = route.params?.transaction
     ? route.params?.transaction
     : null;
-  console.log(expenseEdit);
 
   function getCategories() {
     if (expenseEdit.type === transactionType.TRANSACTION_IN)
       return categoriesIncome;
     return categoriesExpense;
   }
+
+  const dateExpense = () =>
+    expenseEdit
+      ? new Date(
+          `${expenseEdit.year}-${formatteNumber(
+            expenseEdit.month,
+          )}-${formatteNumber(Number(expenseEdit.day) + 1)}T00:00:00.000Z`,
+        )
+      : new Date();
+
+  console.log(dateExpense());
+
   const INITIAL_VALUES = {
     id: expenseEdit ? expenseEdit.id : '',
     category: expenseEdit ? getCategories()[expenseEdit.category] : {},
     value: expenseEdit ? expenseEdit.value / 100 : 0,
-    date: expenseEdit ? expenseEdit.date : new Date(),
+    date: dateExpense(),
     description: expenseEdit ? expenseEdit.description : '',
     accountId: expenseEdit ? expenseEdit.accountId : null,
     account: {},
@@ -69,7 +79,7 @@ const DespesaForm = ({navigation, route}) => {
   useEffect(() => {
     if (!accountsSaved.length) {
       showAlertError('Você precisa cadastrar uma conta primeiro!');
-      navigation.navigate(pages.contaForm);
+      navigation.navigate(pages.accountForm);
     } else if (expenseEdit) {
       const accountFiltered = accountsSaved.filter((item) => {
         if (expenseEdit) if (item.id === expenseEdit.accountId) return item;
@@ -116,8 +126,17 @@ const DespesaForm = ({navigation, route}) => {
       values.status = values.paid ? 1 : 0;
       values.category = values.category.value;
       const account = values.account.value;
+      values.day = String(values.date.getDate());
+      values.month = String(values.date.getMonth() + 1);
+      values.year = String(values.date.getFullYear());
 
       dispatch(saveTransactions({...values, account}));
+
+      console.log(
+        values.date.getDate(),
+        values.date.getMonth(),
+        values.date.getFullYear(),
+      );
     }
   }
 
@@ -126,6 +145,32 @@ const DespesaForm = ({navigation, route}) => {
     if (!FORM_TYPE) return 'Nova despesa';
     return 'Nova receita';
   }
+
+  const askDelection = async (id) => {
+    Alert.alert(
+      'Atenção',
+      'Deseja realmente deletar essa transação?',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => {},
+          style: {backgroundColor: 'red'},
+        },
+        {
+          text: 'Sim',
+          onPress: () => {
+            handleDelete(id);
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const handleDelete = (id) => {
+    dispatch(deleteTransaction(id));
+    navigation.goBack();
+  };
 
   return (
     <>
@@ -166,7 +211,9 @@ const DespesaForm = ({navigation, route}) => {
               <CustomDatePicker
                 mode="date"
                 date={values.date}
-                setDate={(value) => setFieldValue('date', new Date(value))}
+                setDate={(value) => {
+                  if (value) setFieldValue('date', new Date(value));
+                }}
               />
               <Select
                 placeholder="Selecione uma conta"
@@ -200,13 +247,16 @@ const DespesaForm = ({navigation, route}) => {
                 labelEnable={!FORM_TYPE ? 'PAGO' : 'RECEBIDO'}
                 labelDisable={!FORM_TYPE ? 'NÃO PAGO' : 'NÃO RECEBIDO'}
               />
-              {/* {isEdition && (
-              <ContainerFormFooter>
-                <BtnRemove onPress={() => {}}>
-                  <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
-                </BtnRemove>
-              </ContainerFormFooter>
-            )} */}
+              {expenseEdit && (
+                <ContainerFormFooter>
+                  <BtnRemove
+                    onPress={() => {
+                      askDelection(expenseEdit.id);
+                    }}>
+                    <LabelBtnRemove>Deletar Transação</LabelBtnRemove>
+                  </BtnRemove>
+                </ContainerFormFooter>
+              )}
               <ButtonSave
                 label="Salvar"
                 background={!FORM_TYPE ? colors.colorDanger : colors.greenApp}
@@ -221,4 +271,4 @@ const DespesaForm = ({navigation, route}) => {
   );
 };
 
-export default DespesaForm;
+export default TransactionForm;
