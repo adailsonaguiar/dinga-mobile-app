@@ -22,10 +22,15 @@ const Transactions = ({navigation}) => {
   const transactions = useSelector((state) => state.transactions.list);
 
   useEffect(() => {
-    getDate().then((date) => {
-      dispatch(loadTransactions({initDate: date, finalDate: date}));
-    });
-    sumTotalValue();
+    const initDate = new Date('2021-01-01');
+    const finalDate = new Date('2021-01-31');
+    console.log(initDate < finalDate);
+    dispatch(loadTransactions({initDate: initDate, finalDate: finalDate}));
+
+    // getDate().then((date) => {
+    //   dispatch(loadTransactions({initDate: date, finalDate: date}));
+    // });
+    // sumTotalValue();
   }, []);
 
   const sumTotalValue = () => {
@@ -59,7 +64,7 @@ const Transactions = ({navigation}) => {
           barStyle="light-content"
           backgroundColor={colors.backgroundColorPrimary}
         />
-        <S.Lista>
+        <S.List>
           <FlatList
             data={transactions}
             renderItem={({item}) => (
@@ -68,19 +73,20 @@ const Transactions = ({navigation}) => {
                 screenNavigate={pages.transactionForm}
                 parameters={{
                   transaction: item,
+                  date: {day: item.day, month: item.month, year: item.year},
                   formType: item.type === transactionType.TRANSACTION_IN,
                 }}
                 transactionTitle={item.description}
                 categoryTransaction={getCategories(item)[item.category].label}
                 value={item.value}
-                date={item.date}
+                date={{day: item.day, month: item.month, year: item.year}}
                 status={getTransactionStatus(item.status)}
                 type={item.type}
               />
             )}
             keyExtractor={(item) => item.id.toString()}
           />
-        </S.Lista>
+        </S.List>
         <S.Footer>
           <S.SaldoTotal>Saldo das contas: R$ {totalValue}</S.SaldoTotal>
         </S.Footer>

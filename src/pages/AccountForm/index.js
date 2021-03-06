@@ -19,8 +19,7 @@ import Input from '../../components/Input';
 import {Formik} from 'formik';
 import Header from '../../components/Header';
 import {getId, loadData} from '../../services/realm';
-import {showAlert, showAlertError} from '../../services/alertService';
-import {loadTransactionsByAccount} from '../../store/transactions/actions';
+import {showAlertError} from '../../services/alertService';
 
 export default function AccountForm({route, navigation}) {
   const accountItem = route.params?.account || null;
@@ -90,11 +89,14 @@ export default function AccountForm({route, navigation}) {
       if (typeof values.balance === 'string')
         values.balance = refs.balance.getRawValue();
       values.balance = values.balance * 100;
+
       const date = new Date();
+      values.day = String(date.getDate());
+      values.month = String(date.getMonth() + 1);
+      values.year = String(date.getFullYear());
 
       values.account = values.account.value;
 
-      values = {...values, date};
       dispatch(saveAccount(values));
       navigation.goBack();
     }

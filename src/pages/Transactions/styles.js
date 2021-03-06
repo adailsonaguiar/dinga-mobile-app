@@ -8,7 +8,7 @@ export const Container = styled.View`
   background: ${colors.backgroundColorPrimary};
 `;
 
-export const Lista = styled.View`
+export const List = styled.View`
   flex: 5;
 `;
 

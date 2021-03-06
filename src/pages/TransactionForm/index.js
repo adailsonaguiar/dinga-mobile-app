@@ -57,6 +57,11 @@ const TransactionForm = ({navigation, route}) => {
     paid: expenseEdit ? !!expenseEdit.status : false,
   };
 
+  // console.log(
+  //   `${expenseEdit.month}-${expenseEdit.day}-${expenseEdit.year}`,
+  //   new Date(`${expenseEdit.month}-${expenseEdit.day}-${expenseEdit.year}`),
+  // );
+
   const dispatch = useDispatch();
   const accountsSaved = useSelector((state) => state.accounts.accounts);
   const loading = useSelector((state) => state.transactions.loading);
@@ -67,7 +72,7 @@ const TransactionForm = ({navigation, route}) => {
   useEffect(() => {
     if (!accountsSaved.length) {
       showAlertError('Você precisa cadastrar uma conta primeiro!');
-      navigation.navigate(pages.contaForm);
+      navigation.navigate(pages.accountForm);
     } else if (expenseEdit) {
       const accountFiltered = accountsSaved.filter((item) => {
         if (expenseEdit) if (item.id === expenseEdit.accountId) return item;
@@ -114,8 +119,17 @@ const TransactionForm = ({navigation, route}) => {
       values.status = values.paid ? 1 : 0;
       values.category = values.category.value;
       const account = values.account.value;
+      values.day = String(values.date.getDate());
+      values.month = String(values.date.getMonth() + 1);
+      values.year = String(values.date.getFullYear() + 1);
 
       dispatch(saveTransactions({...values, account}));
+
+      console.log(
+        values.date.getDate(),
+        values.date.getMonth(),
+        values.date.getFullYear(),
+      );
     }
   }
 
@@ -187,13 +201,17 @@ const TransactionForm = ({navigation, route}) => {
                 value={values.category}
                 onValueChange={(obj) => setFieldValue('category', obj)}
               />
-              <CustomDatePicker
+              {/* <CustomDatePicker
                 mode="date"
-                date={values.date}
+                date={
+                  new Date(
+                    `${values.year} - ${values.month} - ${values.day}`,
+                  )
+                }
                 setDate={(value) => {
                   if (value) setFieldValue('date', new Date(value));
                 }}
-              />
+              /> */}
               <Select
                 placeholder="Selecione uma conta"
                 label="Contas"

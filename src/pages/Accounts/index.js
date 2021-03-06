@@ -56,7 +56,7 @@ const Accounts = ({navigation}) => {
                 transactionTitle={accountIndetify[item.account]?.label}
                 categoryTransaction={item.description}
                 value={item.balance}
-                date={item.date}
+                date={{day: item.day, month: item.month, year: item.year}}
               />
             )}
             keyExtractor={(item) => item.id.toString()}
