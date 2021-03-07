@@ -22,10 +22,7 @@ const Transactions = ({navigation}) => {
   const transactions = useSelector((state) => state.transactions.list);
 
   useEffect(() => {
-    const initDate = new Date('2021-01-01');
-    const finalDate = new Date('2021-01-31');
-    console.log(initDate < finalDate);
-    dispatch(loadTransactions({initDate: initDate, finalDate: finalDate}));
+    dispatch(loadTransactions({month: 3, year: 2021}));
 
     // getDate().then((date) => {
     //   dispatch(loadTransactions({initDate: date, finalDate: date}));
