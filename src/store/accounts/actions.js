@@ -30,7 +30,7 @@ const loadAccountsFailure = (dispatch) => {
 export const saveAccount = (account) => {
   return () => {
     try {
-      writeData('contas', account);
+      writeData('contas', account); 
     } catch (e) {
       showError(e);
       return e;

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
+import {loadTransactions} from '../../store/transactions/actions';
 import colors from '../../styles/colors';
 import {setTwoDigits} from '../../utils/FunctionUtils';
 import months from '../../utils/months';
@@ -10,6 +11,7 @@ export default function MothHeader() {
   const dispatch = useDispatch();
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
+
   useEffect(() => {
     getDate();
   }, []);
@@ -24,20 +26,22 @@ export default function MothHeader() {
     if (month === 11) {
       setMonth(0);
       setYear(year + 1);
-      dispatch(loadAccounts(setTwoDigits(1), `${year + 1}`));
+      console.log(1);
+
+      dispatch(loadTransactions({month: 1, year: year + 1}));
     } else {
       setMonth(month + 1);
-      dispatch(loadAccounts(setTwoDigits(month + 2), `${year}`));
+      dispatch(loadTransactions({month: month + 2, year: year}));
     }
   };
   const previousMonth = () => {
     if (month === 0) {
       setMonth(11);
       setYear(year - 1);
-      dispatch(loadAccounts(setTwoDigits(12), `${year - 1}`));
+      dispatch(loadTransactions({month: 12, year: year - 1}));
     } else {
       setMonth(month - 1);
-      dispatch(loadAccounts(setTwoDigits(month), `${year}`));
+      dispatch(loadTransactions({month: month, year: year}));
     }
   };
 

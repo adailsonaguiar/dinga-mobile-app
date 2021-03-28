@@ -16,17 +16,23 @@ const loadTransactionsSuccess = (dispatch, transactions) => {
 };
 
 const loadTransactionsFailure = (dispatch) => {
+  showError('Erro ao carregar transações');
   dispatch({type: LOAD_TRANSACTIONS_FAILURE});
 };
 
-export const loadTransactions = ({initDate, finalData}) => {
+export const loadTransactions = ({month, year}) => {
   return async (dispatch) => {
     try {
       dispatch({type: LOAD_TRANSACTIONS});
-      const data = await loadData('transaction');
+      const data = await loadData(
+        'transaction',
+        `month = '${month}' AND year = '${year}'`,
+      );
       loadTransactionsSuccess(dispatch, data);
+
+      // console.log(data);
     } catch (error) {
-      loadTransactionsFailure();
+      loadTransactionsFailure(dispatch);
       showError(error);
     }
   };

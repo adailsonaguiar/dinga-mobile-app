@@ -3,16 +3,18 @@ import {widthPercentageToDP as wp} from '../../utils/ResponsiveDimensionsLayout'
 import colors from '../../styles/colors';
 
 export const Container = styled.View`
-  background: #fff;
+  background: ${colors.backgroundColorPrimary};
   flex: 1;
+  /* flex-direction: column; */
+  /* justify-content: space-between; */
 `;
 
 export const CompHead = styled.View`
-  background: ${colors.backgroundColorPrimary};
   flex-direction: column;
   align-items: center;
   padding-top: 30px;
   padding-bottom: 30px;
+  /* flex: 1; */
 `;
 export const TitleGrid = styled.Text`
   color: #00d0b4;
@@ -50,5 +52,4 @@ export const TxtDescricao = styled.Text`
 
 export const Progressbar = styled.ProgressBarAndroid`
   width: 80%;
-  margin-bottom: 30px;
 `;
