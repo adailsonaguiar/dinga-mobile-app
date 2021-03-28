@@ -14,6 +14,7 @@ import {
   ContainerSaldo,
   Cifra,
 } from './styles';
+import SlideBanners from '../../components/SlideBanners';
 
 export default Dash = ({navigation}) => {
   const dispatch = useDispatch();
@@ -29,17 +30,18 @@ export default Dash = ({navigation}) => {
       <CompHead>
         <TxtDescricao>Saldo disponível</TxtDescricao>
         <ContainerSaldo>
-          <Cifra>R$</Cifra>
-          <TxtSaldo>9.857,96</TxtSaldo>
-        </ContainerSaldo>
+        <Cifra>R$</Cifra>
+        <TxtSaldo>9.857,96</TxtSaldo>
+      </ContainerSaldo>
         <Progressbar
           styleAttr="Horizontal"
           color={colors.greenApp}
           indeterminate={false}
-          progress={0.5}
+          progress={0.8}
         />
-        <Tabs navigation={navigation} />
       </CompHead>
+      <SlideBanners />
+      <Tabs navigation={navigation} />
     </Container>
   );
 };

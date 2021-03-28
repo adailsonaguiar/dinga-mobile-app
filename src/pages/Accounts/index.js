@@ -64,7 +64,7 @@ const Accounts = ({navigation}) => {
         </S.Lista>
         <S.Footer>
           <S.SaldoTotal>
-            {totalValue !== 0 ? `Saldo das contas: R$ ${totalValue}` : ''}
+            {totalValue !== 0 ? `Saldo inicial das contas: R$ ${totalValue}` : ''}
           </S.SaldoTotal>
           <S.BtnNovaConta
             onPress={() => {

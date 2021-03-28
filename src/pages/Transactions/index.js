@@ -3,7 +3,7 @@ import {StatusBar, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {loadTransactions} from '../../store/transactions/actions';
-import {getDate, formatMoney} from '../../utils/FunctionUtils';
+import {formatMoney, getDate} from '../../utils/FunctionUtils';
 import colors from '../../styles/colors';
 
 import * as S from './styles';
@@ -22,18 +22,19 @@ const Transactions = ({navigation}) => {
   const transactions = useSelector((state) => state.transactions.list);
 
   useEffect(() => {
-    dispatch(loadTransactions({month: 3, year: 2021}));
-
-    // getDate().then((date) => {
-    //   dispatch(loadTransactions({initDate: date, finalDate: date}));
-    // });
+    getDate().then((date) =>
+      dispatch(
+        loadTransactions({month: Number(date.month), year: Number(date.year)}),
+      ),
+    );
     // sumTotalValue();
   }, []);
 
   const sumTotalValue = () => {
     let sumValue = 0;
-    transactions.forEach((account) => {
-      sumValue += account.balance;
+    transactions.forEach((transaction) => {
+      console.log(transaction);
+      // sumValue += account.balance;
     });
     setTotalValue(formatMoney(sumValue));
   };
@@ -85,7 +86,7 @@ const Transactions = ({navigation}) => {
           />
         </S.List>
         <S.Footer>
-          <S.SaldoTotal>Saldo das contas: R$ {totalValue}</S.SaldoTotal>
+          {/* <S.SaldoTotal>Saldo das contas: R$ {totalValue}</S.SaldoTotal> */}
         </S.Footer>
       </S.Container>
     </>

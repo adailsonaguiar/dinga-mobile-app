@@ -131,12 +131,6 @@ const TransactionForm = ({navigation, route}) => {
       values.year = String(values.date.getFullYear());
 
       dispatch(saveTransactions({...values, account}));
-
-      console.log(
-        values.date.getDate(),
-        values.date.getMonth(),
-        values.date.getFullYear(),
-      );
     }
   }
 

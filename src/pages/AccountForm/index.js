@@ -80,7 +80,14 @@ export default function AccountForm({route, navigation}) {
     }
   };
 
-  async function onSubmit(values) {
+  async function verifyTransactionsAsociate(id) {
+    const data = await loadData('transaction', `accountId = ${id} LIMIT(1)`);
+    console.log(!!data.length);
+    if (data.length) return true;
+    return false;
+  }
+
+  async function saveAccountBd(values) {
     if (validateForm(values)) {
       if (!accountItem) {
         const idMaxAccount = await getId('contas');
@@ -100,6 +107,17 @@ export default function AccountForm({route, navigation}) {
       dispatch(saveAccount(values));
       navigation.goBack();
     }
+  }
+
+  async function onSubmit(values) {
+    if (!!accountItem) {
+      const transactionsAssociate = await verifyTransactionsAsociate(values.id);
+      if (transactionsAssociate) {
+        showAlertError(
+          'Você não pode editar essa conta, ela ainda contém transações',
+        );
+      } else saveAccountBd(values);
+    } else saveAccountBd(values);
   }
 
   return (
