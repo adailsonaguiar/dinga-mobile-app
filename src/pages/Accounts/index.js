@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {StatusBar, FlatList} from 'react-native';
 import {getAccountIndentity} from '../../utils/accounts';
 import {useDispatch, useSelector} from 'react-redux';
@@ -12,7 +12,6 @@ import CardTransaction from '../../components/CardTransaction';
 import {pages} from '../../routes';
 
 const Accounts = ({navigation}) => {
-  const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.accounts.accounts);
   const totalValueAccounts = useSelector(
@@ -27,18 +26,6 @@ const Accounts = ({navigation}) => {
     });
     return unsubscribe;
   }, []);
-
-  useEffect(() => {
-    sumTotalValue();
-  }, [accounts]);
-
-  const sumTotalValue = () => {
-    let sumValue = 0;
-    accounts.forEach((account) => {
-      sumValue += account.balance;
-    });
-    setTotalValue(formatMoney(sumValue));
-  };
 
   return (
     <>
@@ -69,7 +56,7 @@ const Accounts = ({navigation}) => {
         <S.Footer>
           <S.SaldoTotal>
             {totalValueAccounts
-              ? `Total das contas: R$ ${totalValueAccounts / 100}`
+              ? `Total das contas: R$ ${formatMoney(totalValueAccounts)}`
               : ''}
           </S.SaldoTotal>
           <S.BtnNovaConta

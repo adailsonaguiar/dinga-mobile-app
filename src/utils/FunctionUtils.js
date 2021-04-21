@@ -1,4 +1,4 @@
-import { transactionType } from '../schemas/TransactionSchema';
+import {transactionType} from '../schemas/TransactionSchema';
 import {categoriesExpense, categoriesIncome} from './categoriesTransactions';
 
 export function setTwoDigits(month) {
@@ -15,7 +15,8 @@ export const getDate = () => {
 };
 
 export const formatMoney = (value) => {
-  let amount = value / 100;
+  let amount = Number(value) / 100;
+  console.log('amount', amount);
   let decimalCount = 2;
   let decimal = ',';
   let thousands = '.';
