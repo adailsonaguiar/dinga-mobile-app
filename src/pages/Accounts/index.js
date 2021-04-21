@@ -15,6 +15,10 @@ const Accounts = ({navigation}) => {
   const [totalValue, setTotalValue] = useState(0);
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.accounts.accounts);
+  const totalValueAccounts = useSelector(
+    (state) => state.accounts.totalValueAccounts,
+  );
+
   const accountIndetify = getAccountIndentity();
 
   useEffect(() => {
@@ -64,7 +68,9 @@ const Accounts = ({navigation}) => {
         </S.Lista>
         <S.Footer>
           <S.SaldoTotal>
-            {totalValue !== 0 ? `Saldo inicial das contas: R$ ${totalValue}` : ''}
+            {totalValueAccounts
+              ? `Total das contas: R$ ${totalValueAccounts / 100}`
+              : ''}
           </S.SaldoTotal>
           <S.BtnNovaConta
             onPress={() => {

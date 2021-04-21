@@ -41,7 +41,7 @@ export default Dash = ({navigation}) => {
         <TxtDescricao>Saldo disponível</TxtDescricao>
         <ContainerSaldo>
           <Cifra>R$</Cifra>
-          <TxtSaldo>9.857,96</TxtSaldo>
+          <TxtSaldo>1</TxtSaldo>
         </ContainerSaldo>
         <Progressbar
           styleAttr="Horizontal"

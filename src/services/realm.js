@@ -2,10 +2,11 @@ import Realm from 'realm';
 
 import TransactionSchema from '../schemas/TransactionSchema';
 import ContasSchema from '../schemas/ContasSchema';
+import TotalsSchema from '../schemas/TotalsSchema';
 
 export default function getRealm() {
   return Realm.open({
-    schema: [ContasSchema, TransactionSchema],
+    schema: [ContasSchema, TransactionSchema, TotalsSchema],
   });
 }
 
