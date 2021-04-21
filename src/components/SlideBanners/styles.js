@@ -17,7 +17,7 @@ export const RnAnchorCarousel = styled(Carousel).attrs({
   flex: 4;
 `;
 
-export const CarouselItem = styled.TouchableOpacity`
+export const CarouselItem = styled.View`
   height: 100%;
   background-color: ${colors.backgroundColorSecondary};
   align-items: flex-start;
