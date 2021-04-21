@@ -1,46 +1,36 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import Carousel from 'react-native-anchor-carousel';
-import {screenWidth} from '../../styles/dimensons';
+import {getCategories, getTransactionStatus} from '../../utils/FunctionUtils';
+import CardTransaction from '../CardTransaction';
 import * as S from './styles';
 
-const SlideBanners = () => {
-  const data = ['1', '2', '3', '4'];
+const SlideBanners = ({cards, navigation}) => {
   const renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity style={styles.item}>
-        <Text>{item}</Text>
-      </TouchableOpacity>
+      <S.CarouselItem>
+        <S.TitleCard>{item.titleHead}</S.TitleCard>
+        <S.List
+          data={item.transactions}
+          renderItem={({item}) => (
+            <CardTransaction
+              transactionTitle={item.description}
+              categoryTransaction={getCategories(item)[item.category].label}
+              value={item.value}
+              date={{day: item.day, month: item.month, year: item.year}}
+              status={getTransactionStatus(item.status)}
+              type={item.type}
+            />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      </S.CarouselItem>
     );
   };
 
   return (
     <S.Container>
-      <Carousel
-        style={styles.carousel}
-        data={data}
-        renderItem={renderItem}
-        itemWidth={screenWidth}
-        separatorWidth={10}
-        inActiveScale={1}
-        itemContainerStyle={{padding: 0}}
-      />
+      <S.RnAnchorCarousel data={cards} renderItem={renderItem} />
     </S.Container>
   );
 };
 
 export default SlideBanners;
-
-const styles = StyleSheet.create({
-  carousel: {
-    flex: 4,
-    backgroundColor: 'yellow',
-  },
-  item: {
-    // width: '100%',
-    height: '100%',
-    backgroundColor: 'red',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

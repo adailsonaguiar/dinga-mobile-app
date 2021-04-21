@@ -10,6 +10,7 @@ import {
 import {navigate} from '../../services/navService';
 import {pages} from '../../routes';
 import {showError} from '../../services/alertService';
+import { getDate } from '../../utils/FunctionUtils';
 
 const loadTransactionsSuccess = (dispatch, transactions) => {
   dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: transactions});
@@ -40,6 +41,11 @@ export const loadTransactions = ({month, year}) => {
 
 const saveTransactionsSuccess = (dispatch) => {
   dispatch({type: SAVE_TRANSACTION_SUCCESS});
+  getDate().then((date) =>
+    dispatch(
+      loadTransactions({month: Number(date.month), year: Number(date.year)}),
+    ),
+  );
 };
 
 const saveTransactionsFailure = (dispatch) => {

@@ -1,3 +1,6 @@
+import { transactionType } from '../schemas/TransactionSchema';
+import {categoriesExpense, categoriesIncome} from './categoriesTransactions';
+
 export function setTwoDigits(month) {
   return month < 10 ? `0${month}` : `${month}`;
 }
@@ -47,3 +50,18 @@ export const formatteNumber = (number) => {
   if (number < 10) return `0${number}`;
   return number;
 };
+
+export function getCategories(transaction) {
+  if (transaction.type === transactionType.TRANSACTION_IN)
+    return categoriesIncome;
+  return categoriesExpense;
+}
+
+export function getTransactionStatus(status) {
+  const statusList = {
+    0: 'Pendente',
+    1: 'Confirmado',
+    2: '',
+  };
+  return statusList[status];
+}

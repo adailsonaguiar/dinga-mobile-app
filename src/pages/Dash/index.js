@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {loadAccounts} from '../../store/accounts/actions';
 import Tabs from '../../components/Tabs';
 import colors from '../../styles/colors';
+import {getDate} from '../../utils/FunctionUtils';
 
 import {
   Container,
@@ -15,12 +16,21 @@ import {
   Cifra,
 } from './styles';
 import SlideBanners from '../../components/SlideBanners';
+import {loadTransactions} from '../../store/transactions/actions';
 
 export default Dash = ({navigation}) => {
   const dispatch = useDispatch();
+  const transactions = useSelector((state) => state.transactions.list);
+
   useEffect(() => {
-    dispatch(loadAccounts());
-  });
+    getDate().then((date) =>
+      dispatch(
+        loadTransactions({month: Number(date.month), year: Number(date.year)}),
+      ),
+    );
+    // sumTotalValue();
+  }, []);
+
   return (
     <Container>
       <StatusBar
@@ -30,9 +40,9 @@ export default Dash = ({navigation}) => {
       <CompHead>
         <TxtDescricao>Saldo disponível</TxtDescricao>
         <ContainerSaldo>
-        <Cifra>R$</Cifra>
-        <TxtSaldo>9.857,96</TxtSaldo>
-      </ContainerSaldo>
+          <Cifra>R$</Cifra>
+          <TxtSaldo>9.857,96</TxtSaldo>
+        </ContainerSaldo>
         <Progressbar
           styleAttr="Horizontal"
           color={colors.greenApp}
@@ -40,7 +50,9 @@ export default Dash = ({navigation}) => {
           progress={0.8}
         />
       </CompHead>
-      <SlideBanners />
+      <SlideBanners
+        cards={[{titleHead: 'Últimas Transações', transactions: transactions}]}
+      />
       <Tabs navigation={navigation} />
     </Container>
   );

@@ -21,14 +21,14 @@ const Transactions = ({navigation}) => {
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions.list);
 
-  useEffect(() => {
-    getDate().then((date) =>
-      dispatch(
-        loadTransactions({month: Number(date.month), year: Number(date.year)}),
-      ),
-    );
-    // sumTotalValue();
-  }, []);
+  // useEffect(() => {
+  //   getDate().then((date) =>
+  //     dispatch(
+  //       loadTransactions({month: Number(date.month), year: Number(date.year)}),
+  //     ),
+  //   );
+  //   // sumTotalValue();
+  // }, []);
 
   const sumTotalValue = () => {
     let sumValue = 0;
