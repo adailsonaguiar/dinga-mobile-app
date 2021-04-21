@@ -16,7 +16,10 @@ const CardTransaction = ({
   type = 'TRANSACTION_IN',
 }) => {
   return (
-    <S.Conta onPress={() => navigation.navigate(screenNavigate, parameters)}>
+    <S.Conta
+      onPress={() =>
+        navigation && navigation.navigate(screenNavigate, parameters)
+      }>
       {lineLeftColor && <S.LineLeft lineLeftColor={lineLeftColor} />}
       <S.ColLeft>
         <S.TitleConta>{transactionTitle}</S.TitleConta>

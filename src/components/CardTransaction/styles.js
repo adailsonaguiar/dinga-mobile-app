@@ -9,8 +9,6 @@ export const Conta = styled(RectButton)`
   flex-direction: row;
   height: 70px;
   align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
 `;
 
 export const ColLeft = styled.View`

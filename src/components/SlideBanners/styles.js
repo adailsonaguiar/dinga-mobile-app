@@ -23,11 +23,15 @@ export const CarouselItem = styled.TouchableOpacity`
   align-items: flex-start;
   justify-content: flex-start;
   padding: 15px;
-  border-radius: 5;
+  border-radius: 5px;
 `;
 
 export const TitleCard = styled.Text`
   color: ${colors.fontLight};
   font-size: 18px;
   font-family: ${fontMedium};
+`;
+
+export const List = styled.FlatList`
+  width: 100%;
 `;
