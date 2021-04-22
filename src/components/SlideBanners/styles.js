@@ -22,16 +22,18 @@ export const CarouselItem = styled.View`
   background-color: ${colors.backgroundColorSecondary};
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 15px;
   border-radius: 5px;
+  padding-top: 15px;
 `;
 
 export const TitleCard = styled.Text`
   color: ${colors.fontLight};
   font-size: 18px;
   font-family: ${fontMedium};
+  padding: 0 15px;
 `;
 
 export const List = styled.FlatList`
   width: 100%;
+  padding: 0 15px;
 `;

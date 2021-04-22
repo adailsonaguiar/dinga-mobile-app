@@ -30,6 +30,7 @@ export default function AccountForm({route, navigation}) {
     date: accountItem ? accountItem.date : '',
     description: accountItem ? accountItem.item.description : '',
     balance: accountItem ? accountItem.item.balance / 100 : 0,
+    initialBalance: accountItem ? accountItem.item.balance / 100 : 0,
     account: accountItem ? accountItem : null,
   };
   const loading = useSelector((state) => state.accounts.loading);

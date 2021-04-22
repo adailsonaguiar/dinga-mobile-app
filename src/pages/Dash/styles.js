@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 import {widthPercentageToDP as wp} from '../../utils/ResponsiveDimensionsLayout';
 import colors from '../../styles/colors';
+import {fontBold, fontMedium} from '../../styles/fonts';
 
 export const Container = styled.View`
   background: ${colors.backgroundColorPrimary};
@@ -11,10 +12,8 @@ export const Container = styled.View`
 
 export const CompHead = styled.View`
   flex-direction: column;
-  align-items: center;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  /* flex: 1; */
+  align-items: flex-start;
+  padding: 30px 15px;
 `;
 export const TitleGrid = styled.Text`
   color: #00d0b4;
@@ -32,24 +31,24 @@ export const ContainerSaldo = styled.View`
 
 export const Cifra = styled.Text`
   color: #fff;
-  font-size: ${wp('3%')}px;
-  font-family: Roboto-Bold;
-  margin-bottom: 4px;
+  font-size: 16px;
+  font-family: ${fontMedium};
+  margin-bottom: 14px;
   margin-right: 5px;
 `;
 
 export const TxtSaldo = styled.Text`
   color: #fff;
-  font-size: ${wp('6%')}px;
-  font-family: Roboto-Bold;
+  font-size: 35px;
+  font-family: ${fontBold};
 `;
 
 export const TxtDescricao = styled.Text`
-  font-family: Roboto-Medium;
-  font-size: ${wp('2.5%')}px;
+  font-family: ${fontMedium};
+  font-size: 13px;
   color: #fff;
 `;
 
 export const Progressbar = styled.ProgressBarAndroid`
-  width: 80%;
+  width: 100%;
 `;

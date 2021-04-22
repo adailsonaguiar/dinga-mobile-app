@@ -21,6 +21,9 @@ import {loadTransactions} from '../../store/transactions/actions';
 export default Dash = ({navigation}) => {
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions.list);
+  const totalValueAccounts = useSelector(
+    (state) => state.accounts.totalValueAccounts,
+  );
 
   useEffect(() => {
     getDate().then((date) =>
@@ -28,7 +31,7 @@ export default Dash = ({navigation}) => {
         loadTransactions({month: Number(date.month), year: Number(date.year)}),
       ),
     );
-    // sumTotalValue();
+    dispatch(loadAccounts());
   }, []);
 
   return (
@@ -41,7 +44,7 @@ export default Dash = ({navigation}) => {
         <TxtDescricao>Saldo disponível</TxtDescricao>
         <ContainerSaldo>
           <Cifra>R$</Cifra>
-          <TxtSaldo>9.857,96</TxtSaldo>
+          <TxtSaldo>1</TxtSaldo>
         </ContainerSaldo>
         <Progressbar
           styleAttr="Horizontal"
@@ -50,9 +53,7 @@ export default Dash = ({navigation}) => {
           progress={0.8}
         />
       </CompHead>
-      <SlideBanners
-        cards={[{titleHead: 'Últimas Transações', transactions: transactions}]}
-      />
+      <SlideBanners cards={[{titleHead: 'Últimas Transações', transactions}]} />
       <Tabs navigation={navigation} />
     </Container>
   );

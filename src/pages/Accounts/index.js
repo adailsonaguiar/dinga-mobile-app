@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {StatusBar, FlatList} from 'react-native';
 import {getAccountIndentity} from '../../utils/accounts';
-import {useDispatch, useSelector} from 'react-redux';
-import {loadAccounts} from '../../store/accounts/actions';
+import {useSelector} from 'react-redux';
 import {formatMoney} from '../../utils/FunctionUtils';
 
 import * as S from './styles';
@@ -12,29 +11,12 @@ import CardTransaction from '../../components/CardTransaction';
 import {pages} from '../../routes';
 
 const Accounts = ({navigation}) => {
-  const [totalValue, setTotalValue] = useState(0);
-  const dispatch = useDispatch();
   const accounts = useSelector((state) => state.accounts.accounts);
+  const totalValueAccounts = useSelector(
+    (state) => state.accounts.totalValueAccounts,
+  );
+
   const accountIndetify = getAccountIndentity();
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      dispatch(loadAccounts());
-    });
-    return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    sumTotalValue();
-  }, [accounts]);
-
-  const sumTotalValue = () => {
-    let sumValue = 0;
-    accounts.forEach((account) => {
-      sumValue += account.balance;
-    });
-    setTotalValue(formatMoney(sumValue));
-  };
 
   return (
     <>
@@ -64,7 +46,9 @@ const Accounts = ({navigation}) => {
         </S.Lista>
         <S.Footer>
           <S.SaldoTotal>
-            {totalValue !== 0 ? `Saldo inicial das contas: R$ ${totalValue}` : ''}
+            {totalValueAccounts
+              ? `Total das contas: R$ ${formatMoney(totalValueAccounts)}`
+              : ''}
           </S.SaldoTotal>
           <S.BtnNovaConta
             onPress={() => {
