@@ -3,8 +3,8 @@ const TotalsSchema = {
   primaryKey: 'id',
   properties: {
     id: {type: 'int', indexed: true},
-    totalValueAccounts: 'string',
-    totalValueTransactions: 'string',
+    value: 'string',
+    type: 'string',
     year: 'string',
     month: 'string',
   },

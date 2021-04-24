@@ -6,7 +6,6 @@ import {
   LOAD_TOTALS_SUCCESS,
 } from './actionTypes';
 import {showError} from '../../services/alertService';
-import {getDate} from '../../utils/FunctionUtils';
 
 export const loadAccounts = () => {
   return async (dispatch) => {
@@ -17,10 +16,9 @@ export const loadAccounts = () => {
 
       const valuesTotals = await loadData('totals');
       if (valuesTotals.length) {
-        const {totalValueAccounts, totalValueTransactions} = valuesTotals[0];
+        const {value} = valuesTotals[0];
         totalsLoadSuccess(dispatch, {
-          totalValueAccounts,
-          totalValueTransactions,
+          totalValueAccounts: value,
         });
       }
     } catch (error) {
@@ -42,21 +40,16 @@ const totalsLoadSuccess = (dispatch, totals) => {
   dispatch({type: LOAD_TOTALS_SUCCESS, payload: totals});
 };
 
-export async function saveTotalValuesBd({
-  totalValueAccounts,
-  totalValueTransactions,
-  dispatch,
-}) {
+export async function saveTotalValuesBd({totalValueAccounts, dispatch}) {
   writeData('totals', {
     id: 1,
-    totalValueAccounts: String(totalValueAccounts),
-    totalValueTransactions: String(totalValueTransactions),
+    value: String(totalValueAccounts),
     month: '0',
     year: '0',
+    type: 'accounts',
   });
   totalsLoadSuccess(dispatch, {
     totalValueAccounts,
-    totalValueTransactions,
   });
 }
 
@@ -64,23 +57,21 @@ export const saveAccount = (account) => {
   return async (dispatch) => {
     try {
       writeData('contas', account);
-      const data = await loadData('totals', 'id = 1');
+      const data = await loadData('totals', "type = 'accounts'");
 
       if (data.length) {
-        const {totalValueAccounts, totalValueTransactions} = data[0];
+        const [{value}] = data;
         const withoutPrevValue =
-          Number(totalValueAccounts / 100) - Number(account.initialBalance);
+          Number(value / 100) - Number(account.initialBalance);
         const sum = withoutPrevValue + Number(account.balance / 100);
 
         saveTotalValuesBd({
           totalValueAccounts: sum * 100,
-          totalValueTransactions,
           dispatch,
         });
       } else {
         saveTotalValuesBd({
           totalValueAccounts: account.balance,
-          totalValueTransactions: '0',
           dispatch,
         });
       }
@@ -101,12 +92,11 @@ export const deleteAccount = (account) => {
 
       const data = await loadData('totals', 'id = 1');
       if (data.length) {
-        const {totalValueAccounts, totalValueTransactions} = data[0];
-        const sum = totalValueAccounts - initialValueAccount;
+        const {value} = data[0];
+        const sum = value - initialValueAccount;
 
         saveTotalValuesBd({
           totalValueAccounts: sum,
-          totalValueTransactions,
           dispatch,
         });
       }
