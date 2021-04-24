@@ -48,7 +48,7 @@ export default function AccountForm({route, navigation}) {
     return true;
   };
 
-  const askDelection = async (id) => {
+  const askDelection = async (account) => {
     Alert.alert(
       'Atenção',
       'Deseja realmente deletar essa conta?',
@@ -61,7 +61,7 @@ export default function AccountForm({route, navigation}) {
         {
           text: 'Sim',
           onPress: () => {
-            handleDeleteAccount(id);
+            handleDeleteAccount(account);
           },
         },
       ],
@@ -69,14 +69,17 @@ export default function AccountForm({route, navigation}) {
     );
   };
 
-  const handleDeleteAccount = async (id) => {
-    const data = await loadData('transaction', `accountId = ${id} LIMIT(1)`);
+  const handleDeleteAccount = async (account) => {
+    const data = await loadData(
+      'transaction',
+      `accountId = ${account.id} LIMIT(1)`,
+    );
     if (data.length)
       showAlertError(
         'Você não pode remover essa conta, ela ainda contém transações',
       );
     else {
-      dispatch(deleteAccount(id));
+      dispatch(deleteAccount(account));
       navigation.goBack();
     }
   };
@@ -175,7 +178,7 @@ export default function AccountForm({route, navigation}) {
             />
             {accountItem && (
               <ContainerFormFooter>
-                <BtnRemove onPress={() => askDelection(values.id)}>
+                <BtnRemove onPress={() => askDelection(values)}>
                   <LabelBtnRemove>Deletar Conta</LabelBtnRemove>
                 </BtnRemove>
               </ContainerFormFooter>

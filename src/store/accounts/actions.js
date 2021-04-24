@@ -6,6 +6,7 @@ import {
   LOAD_TOTALS_SUCCESS,
 } from './actionTypes';
 import {showError} from '../../services/alertService';
+import {getDate} from '../../utils/FunctionUtils';
 
 export const loadAccounts = () => {
   return async (dispatch) => {
@@ -41,41 +42,50 @@ const totalsLoadSuccess = (dispatch, totals) => {
   dispatch({type: LOAD_TOTALS_SUCCESS, payload: totals});
 };
 
+export async function saveTotalValuesBd({
+  totalValueAccounts,
+  totalValueTransactions,
+  dispatch,
+}) {
+  writeData('totals', {
+    id: 1,
+    totalValueAccounts: String(totalValueAccounts),
+    totalValueTransactions: String(totalValueTransactions),
+    month: '0',
+    year: '0',
+  });
+  totalsLoadSuccess(dispatch, {
+    totalValueAccounts,
+    totalValueTransactions,
+  });
+}
+
 export const saveAccount = (account) => {
   return async (dispatch) => {
     try {
       writeData('contas', account);
-      const data = await loadData('totals');
+      const data = await loadData('totals', 'id = 1');
 
       if (data.length) {
         const {totalValueAccounts, totalValueTransactions} = data[0];
         const withoutPrevValue =
           Number(totalValueAccounts / 100) - Number(account.initialBalance);
-        console.log(`${totalValueAccounts / 100} - ${account.initialBalance}`);
         const sum = withoutPrevValue + Number(account.balance / 100);
-        console.log(`${withoutPrevValue} + ${account.balance / 100}`);
 
-        writeData('totals', {
-          id: 1,
-          totalValueAccounts: String(sum * 100),
-          totalValueTransactions: totalValueTransactions,
-        });
-        totalsLoadSuccess(dispatch, {
+        saveTotalValuesBd({
           totalValueAccounts: sum * 100,
           totalValueTransactions,
+          dispatch,
         });
       } else {
-        const accountBalance = String(account.balance);
-        writeData('totals', {
-          id: 1,
-          totalValueAccounts: accountBalance,
+        saveTotalValuesBd({
+          totalValueAccounts: account.balance,
           totalValueTransactions: '0',
-        });
-        totalsLoadSuccess(dispatch, {
-          totalValueAccounts: accountBalance,
-          totalValueTransactions: '0',
+          dispatch,
         });
       }
+
+      dispatch(loadAccounts());
     } catch (e) {
       showError(e);
       return e;
@@ -83,10 +93,24 @@ export const saveAccount = (account) => {
   };
 };
 
-export const deleteAccount = (id) => {
+export const deleteAccount = (account) => {
   return async (dispatch) => {
     try {
-      await removeById('contas', id);
+      await removeById('contas', account.id);
+      const initialValueAccount = account.initialBalance * 100;
+
+      const data = await loadData('totals', 'id = 1');
+      if (data.length) {
+        const {totalValueAccounts, totalValueTransactions} = data[0];
+        const sum = totalValueAccounts - initialValueAccount;
+
+        saveTotalValuesBd({
+          totalValueAccounts: sum,
+          totalValueTransactions,
+          dispatch,
+        });
+      }
+
       dispatch(loadAccounts());
     } catch (e) {
       showError(e);

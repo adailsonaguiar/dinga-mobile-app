@@ -5,6 +5,8 @@ const TotalsSchema = {
     id: {type: 'int', indexed: true},
     totalValueAccounts: 'string',
     totalValueTransactions: 'string',
+    year: 'string',
+    month: 'string',
   },
 };
 

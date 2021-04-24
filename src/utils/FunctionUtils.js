@@ -16,7 +16,6 @@ export const getDate = () => {
 
 export const formatMoney = (value) => {
   let amount = Number(value) / 100;
-  console.log('amount', amount);
   let decimalCount = 2;
   let decimal = ',';
   let thousands = '.';

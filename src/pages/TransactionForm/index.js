@@ -58,6 +58,7 @@ const TransactionForm = ({navigation, route}) => {
     id: expenseEdit ? expenseEdit.id : '',
     category: expenseEdit ? getCategories()[expenseEdit.category] : {},
     value: expenseEdit ? expenseEdit.value / 100 : 0,
+    initialValue: expenseEdit ? expenseEdit.value / 100 : 0,
     date: dateExpense(),
     description: expenseEdit ? expenseEdit.description : '',
     accountId: expenseEdit ? expenseEdit.accountId : null,

@@ -10,7 +10,8 @@ import {
 import {navigate} from '../../services/navService';
 import {pages} from '../../routes';
 import {showError} from '../../services/alertService';
-import { getDate } from '../../utils/FunctionUtils';
+import {getDate} from '../../utils/FunctionUtils';
+import {saveTotalValuesBd} from '../accounts/actions';
 
 const loadTransactionsSuccess = (dispatch, transactions) => {
   dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: transactions});
@@ -57,6 +58,31 @@ export const saveTransactions = (transaction) => {
     try {
       dispatch({type: SAVE_TRANSACTION_REQUEST});
       await writeData('transaction', transaction);
+
+      const data = await loadData('totals');
+
+      /*  */
+      if (data.length) {
+        const {totalValueAccounts, totalValueTransactions} = data[0];
+        const withoutPrevValue =
+          Number(totalValueTransactions / 100) -
+          Number(transaction.initialValue);
+        const sum = withoutPrevValue + Number(transaction.value / 100);
+
+        saveTotalValuesBd({
+          totalValueAccounts,
+          totalValueTransactions: sum * 100,
+          dispatch,
+        });
+      } else {
+        saveTotalValuesBd({
+          totalValueAccounts: '0',
+          totalValueTransactions: account.value,
+          dispatch,
+        });
+      }
+
+      /*  */
       navigate(pages.dash);
       saveTransactionsSuccess(dispatch);
     } catch (e) {
@@ -90,3 +116,33 @@ export function loadTransactionsByAccount() {
     }
   };
 }
+
+
+// export async function saveTotalValuesBd({
+//   totalValueAccounts,
+//   totalValueTransactions,
+//   dispatch,
+// }) {
+//   const date = await getDate();
+//   const dataTotals = await loadData(
+//     'totals',
+//     `month = '${date.month}' AND year = '${date.year}'`,
+//   );
+
+//   console.info('aquii', dataTotals);
+
+//   if (!dataTotals.length) {
+//     const [{id}] = dataTotals;
+//     writeData('totals', {
+//       id,
+//       totalValueAccounts: String(totalValueAccounts),
+//       totalValueTransactions: String(totalValueTransactions),
+//       month: date.month,
+//       year: date.year,
+//     });
+//     totalsLoadSuccess(dispatch, {
+//       totalValueAccounts,
+//       totalValueTransactions,
+//     });
+//   }
+// }
