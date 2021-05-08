@@ -141,7 +141,7 @@ const TransactionForm = ({navigation, route}) => {
     return 'Nova receita';
   }
 
-  const askDelection = async (id) => {
+  const askDelection = async (transaction) => {
     Alert.alert(
       'Atenção',
       'Deseja realmente deletar essa transação?',
@@ -154,7 +154,7 @@ const TransactionForm = ({navigation, route}) => {
         {
           text: 'Sim',
           onPress: () => {
-            handleDelete(id);
+            handleDelete(transaction);
           },
         },
       ],
@@ -162,8 +162,8 @@ const TransactionForm = ({navigation, route}) => {
     );
   };
 
-  const handleDelete = (id) => {
-    dispatch(deleteTransaction(id));
+  const handleDelete = (transaction) => {
+    dispatch(deleteTransaction(transaction));
     navigation.goBack();
   };
 
@@ -246,7 +246,7 @@ const TransactionForm = ({navigation, route}) => {
                 <ContainerFormFooter>
                   <BtnRemove
                     onPress={() => {
-                      askDelection(expenseEdit.id);
+                      askDelection(INITIAL_VALUES);
                     }}>
                     <LabelBtnRemove>Deletar Transação</LabelBtnRemove>
                   </BtnRemove>

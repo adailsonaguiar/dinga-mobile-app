@@ -1,4 +1,4 @@
-import {loadData, removeById, writeData} from './../../services/realm';
+import {loadData, removeById, getId, writeData} from './../../services/realm';
 import {
   LOAD_TRANSACTIONS,
   LOAD_TRANSACTIONS_SUCCESS,
@@ -6,6 +6,7 @@ import {
   SAVE_TRANSACTION_REQUEST,
   SAVE_TRANSACTION_SUCCESS,
   SAVE_TRANSACTION_FAILURE,
+  LOAD_TOTALS_SUCCESS,
 } from './actionTypes';
 import {navigate} from '../../services/navService';
 import {pages} from '../../routes';
@@ -60,33 +61,45 @@ export const saveTransactions = (transaction) => {
 
       const dataTotals = await loadData(
         'totals',
-        `month = '${transaction.month}' AND year = '${transaction.year}'`,
+        `type ='${transaction.type}'  AND month = '${transaction.month}' AND year = '${transaction.year}'`,
       );
 
       /*  */
       if (dataTotals.length) {
-        const [{totalValueAccounts, totalValueTransactions}] = dataTotals;
+        const [totals] = dataTotals;
         const withoutPrevValue =
-          Number(totalValueTransactions / 100) -
-          Number(transaction.initialValue);
+          Number(totals.value / 100) - Number(transaction.initialValue);
         const sum = withoutPrevValue + Number(transaction.value / 100);
 
         saveTotalValuesBd({
-          totalValueAccounts,
-          totalValueTransactions: sum * 100,
           dispatch,
+          value: sum * 100,
+          transactionType: transaction.type,
+          month: transaction.month,
+          year: transaction.year,
+          totals,
         });
       } else {
         saveTotalValuesBd({
-          totalValueAccounts: '0',
-          totalValueTransactions: account.value,
           dispatch,
+          value: transaction.value,
+          transactionType: transaction.type,
+          month: transaction.month,
+          year: transaction.year,
         });
       }
 
       /*  */
-      navigate(pages.dash);
+      navigate(pages.transactions);
       saveTransactionsSuccess(dispatch);
+      getDate().then((date) =>
+        dispatch(
+          loadTransactions({
+            month: Number(date.month),
+            year: Number(date.year),
+          }),
+        ),
+      );
     } catch (e) {
       showError(e);
       saveTransactionsFailure(dispatch);
@@ -94,11 +107,36 @@ export const saveTransactions = (transaction) => {
   };
 };
 
-export const deleteTransaction = (id) => {
+export const deleteTransaction = (transaction) => {
   return async (dispatch) => {
     try {
-      await removeById('transaction', id);
-      dispatch(loadTransactions({}));
+      await removeById('transaction', transaction.id);
+
+      const dataTotals = await loadData(
+        'totals',
+        `type ='${transaction.type}'  AND month = '${transaction.month}' AND year = '${transaction.year}'`,
+      );
+      const [totals] = dataTotals;
+      // const sum = Number(totals.value / 100) - Number(transaction.initialValue);
+      // console.log(`${Number(totals.value / 100)} - ${Number(transaction.initialValue)};`);
+      console.log(totals);
+      // saveTotalValuesBd({
+      //   dispatch,
+      //   value: sum * 100,
+      //   transactionType: transaction.type,
+      //   month: transaction.month,
+      //   year: transaction.year,
+      //   totals,
+      // });
+
+      getDate().then((date) =>
+        dispatch(
+          loadTransactions({
+            month: Number(date.month),
+            year: Number(date.year),
+          }),
+        ),
+      );
     } catch (e) {
       console.error(e);
       showError(e);
@@ -119,30 +157,50 @@ export function loadTransactionsByAccount() {
   };
 }
 
+const totalsLoadSuccess = (dispatch, totals) => {
+  dispatch({type: LOAD_TOTALS_SUCCESS, payload: totals});
+};
+
 export async function saveTotalValuesBd({
-  totalValueAccounts,
-  totalValueTransactions,
+  value,
   month,
   year,
   dispatch,
+  transactionType,
+  totals,
 }) {
-  const dataTotals = await loadData(
-    'totals',
-    `month = '${month}' AND year = '${year}'`,
-  );
-
-  if (!dataTotals.length) {
-    const [{id}] = dataTotals;
+  console.log('totals', totals);
+  if (!!totals?.id) {
+    const id = totals.id;
     writeData('totals', {
       id,
-      totalValueAccounts: String(totalValueAccounts),
-      totalValueTransactions: String(totalValueTransactions),
+      value: String(value),
       month: month,
       year: year,
+      type: transactionType,
     });
-    totalsLoadSuccess(dispatch, {
-      totalValueAccounts,
-      totalValueTransactions,
+  } else {
+    const finalId = await getId('totals');
+    writeData('totals', {
+      id: finalId,
+      value: String(value),
+      month: month,
+      year: year,
+      type: transactionType,
     });
   }
+
+  /* 
+  TRANSACTION_IN: 'TRANSACTION_IN',
+  TRANSACTION_OUT: 'TRANSACTION_OUT',
+  */
+
+  if (transactionType === 'TRANSACTION_IN')
+    totalsLoadSuccess(dispatch, {
+      totalValueTransactionsIn: String(value),
+    });
+  if (transactionType === 'TRANSACTION_OUT')
+    totalsLoadSuccess(dispatch, {
+      totalValueTransactionsOut: String(value),
+    });
 }

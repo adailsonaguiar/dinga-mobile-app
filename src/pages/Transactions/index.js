@@ -18,6 +18,12 @@ import {transactionType} from '../../schemas/TransactionSchema';
 
 const Transactions = ({navigation}) => {
   const transactions = useSelector((state) => state.transactions.list);
+  const totalValueOut = useSelector(
+    (state) => state.transactions.totalValueTransactionsOut,
+  );
+  const totalValueIn = useSelector(
+    (state) => state.transactions.totalValueTransactionsIn,
+  );
 
   function getTransactionStatus(status) {
     const statusList = {
@@ -66,7 +72,9 @@ const Transactions = ({navigation}) => {
           />
         </S.List>
         <S.Footer>
-          {/* <S.SaldoTotal>Saldo das contas: R$ {totalValue}</S.SaldoTotal> */}
+          <S.SaldoTotal>
+            Saldo das contas: R$ {formatMoney(totalValueOut)} {formatMoney(totalValueIn)}
+          </S.SaldoTotal>
         </S.Footer>
       </S.Container>
     </>
