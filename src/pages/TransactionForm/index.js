@@ -52,8 +52,6 @@ const TransactionForm = ({navigation, route}) => {
         )
       : new Date();
 
-  console.log(dateExpense());
-
   const INITIAL_VALUES = {
     id: expenseEdit ? expenseEdit.id : '',
     category: expenseEdit ? getCategories()[expenseEdit.category] : {},
@@ -68,6 +66,8 @@ const TransactionForm = ({navigation, route}) => {
       : transactionType.TRANSACTION_IN,
     status: expenseEdit ? expenseEdit.status : 0,
     paid: expenseEdit ? !!expenseEdit.status : false,
+    month: expenseEdit ? expenseEdit.month : '',
+    year: expenseEdit ? expenseEdit.year : '',
   };
 
   const dispatch = useDispatch();

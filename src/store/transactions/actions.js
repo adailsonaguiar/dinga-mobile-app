@@ -117,17 +117,18 @@ export const deleteTransaction = (transaction) => {
         `type ='${transaction.type}'  AND month = '${transaction.month}' AND year = '${transaction.year}'`,
       );
       const [totals] = dataTotals;
-      // const sum = Number(totals.value / 100) - Number(transaction.initialValue);
-      // console.log(`${Number(totals.value / 100)} - ${Number(transaction.initialValue)};`);
-      console.log(totals);
-      // saveTotalValuesBd({
-      //   dispatch,
-      //   value: sum * 100,
-      //   transactionType: transaction.type,
-      //   month: transaction.month,
-      //   year: transaction.year,
-      //   totals,
-      // });
+      console.log(
+        transaction
+      );
+      const sum = Number(totals.value / 100) - Number(transaction.initialValue);
+      saveTotalValuesBd({
+        dispatch,
+        value: sum * 100,
+        transactionType: transaction.type,
+        month: transaction.month,
+        year: transaction.year,
+        totals,
+      });
 
       getDate().then((date) =>
         dispatch(
