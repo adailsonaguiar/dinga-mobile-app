@@ -12,6 +12,7 @@ import {navigate} from '../../services/navService';
 import {pages} from '../../routes';
 import {showError} from '../../services/alertService';
 import {getDate} from '../../utils/FunctionUtils';
+import {transactionType} from '../../schemas/TransactionSchema';
 
 const loadTransactionsSuccess = (dispatch, transactions) => {
   dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: transactions});
@@ -32,7 +33,26 @@ export const loadTransactions = ({month, year}) => {
       );
       loadTransactionsSuccess(dispatch, data);
 
-      // console.log(data);
+      const dataTotals = await loadData(
+        'totals',
+        `month = '${month}' AND year = '${year}'`,
+      );
+
+      const totalsTransactionsIn = dataTotals.find(
+        (item) => item.type === transactionType.TRANSACTION_IN,
+      );
+      const totalsTransactionsOut = dataTotals.find(
+        (item) => item.type === transactionType.TRANSACTION_OUT,
+      );
+
+      totalsLoadSuccess(dispatch, {
+        totalValueTransactionsIn: totalsTransactionsIn
+          ? String(totalsTransactionsIn.value)
+          : '0',
+        totalValueTransactionsOut: totalsTransactionsOut
+          ? String(totalsTransactionsOut.value)
+          : '0',
+      });
     } catch (error) {
       loadTransactionsFailure(dispatch);
       showError(error);
@@ -117,9 +137,7 @@ export const deleteTransaction = (transaction) => {
         `type ='${transaction.type}'  AND month = '${transaction.month}' AND year = '${transaction.year}'`,
       );
       const [totals] = dataTotals;
-      console.log(
-        transaction
-      );
+      console.log(transaction);
       const sum = Number(totals.value / 100) - Number(transaction.initialValue);
       saveTotalValuesBd({
         dispatch,
@@ -170,7 +188,6 @@ export async function saveTotalValuesBd({
   transactionType,
   totals,
 }) {
-  console.log('totals', totals);
   if (!!totals?.id) {
     const id = totals.id;
     writeData('totals', {

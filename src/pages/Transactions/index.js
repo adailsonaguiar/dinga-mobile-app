@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {StatusBar, FlatList} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import { useSelector} from 'react-redux';
 
-import {loadTransactions} from '../../store/transactions/actions';
-import {formatMoney, getDate} from '../../utils/FunctionUtils';
+import {formatMoney} from '../../utils/FunctionUtils';
 import colors from '../../styles/colors';
 
 import * as S from './styles';
