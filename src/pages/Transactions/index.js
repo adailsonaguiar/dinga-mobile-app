@@ -1,6 +1,6 @@
 import React from 'react';
 import {StatusBar, FlatList} from 'react-native';
-import { useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import {formatMoney} from '../../utils/FunctionUtils';
 import colors from '../../styles/colors';
@@ -72,7 +72,7 @@ const Transactions = ({navigation}) => {
         </S.List>
         <S.Footer>
           <S.SaldoTotal>
-            Saldo das contas: R$ {formatMoney(totalValueOut)} {formatMoney(totalValueIn)}
+            Economia do mês: R$ {formatMoney(totalValueIn - totalValueOut)}
           </S.SaldoTotal>
         </S.Footer>
       </S.Container>
