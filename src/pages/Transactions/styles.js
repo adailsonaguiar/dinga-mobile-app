@@ -10,7 +10,6 @@ export const Container = styled.View`
 
 export const List = styled.View`
   flex: 5;
-  padding: 0 20px;
 `;
 
 export const Conta = styled(RectButton)`

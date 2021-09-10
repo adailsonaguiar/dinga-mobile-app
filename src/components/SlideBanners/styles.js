@@ -35,5 +35,4 @@ export const TitleCard = styled.Text`
 
 export const List = styled.FlatList`
   width: 100%;
-  padding: 0 15px;
 `;

@@ -10,7 +10,6 @@ export const Container = styled.View`
 
 export const Lista = styled.View`
   flex: 5;
-  padding: 0 15px;
 `;
 
 export const Footer = styled.View`
