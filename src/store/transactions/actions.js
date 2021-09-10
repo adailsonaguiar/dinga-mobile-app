@@ -16,6 +16,7 @@ import {transactionType} from '../../schemas/TransactionSchema';
 
 import {TRANSACTION_STATUS} from '../../utils/transactionStatus';
 import {SCHEMAS} from '../../schemas';
+import {saveAccount} from '../accounts/actions';
 
 const loadTransactionsSuccess = (dispatch, transactions) => {
   dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: transactions});
@@ -113,10 +114,25 @@ export const saveTransactions = (transaction) => {
       }
 
       if (transaction.status === TRANSACTION_STATUS.PAID) {
-        const dataTotals = await loadData(
+        const accounts = await loadData(
           SCHEMAS.ACCOUNT,
-          `type ='${transaction.type}'  AND month = '${transaction.month}' AND year = '${transaction.year}'`,
+          `id ='${transaction.accountId}'`,
         );
+
+        const transactionAccount = accounts[0];
+        let newAccountBalance = 0;
+
+        if (transaction.type === transactionType.TRANSACTION_IN)
+          newAccountBalance = transactionAccount.balance + transaction.value;
+        if (transaction.type === transactionType.TRANSACTION_OUT)
+          newAccountBalance = transactionAccount.balance - transaction.value;
+
+        const newAccountValues = {
+          id: transactionAccount.id,
+          balance: newAccountBalance,
+        };
+
+        dispatch(saveAccount(newAccountValues));
       }
 
       /*  */
