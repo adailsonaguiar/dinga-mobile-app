@@ -1,5 +1,7 @@
+import {SCHEMAS} from '.';
+
 const ContasSchema = {
-  name: 'contas',
+  name: SCHEMAS.ACCOUNT,
   primaryKey: 'id',
   properties: {
     id: {type: 'int', indexed: true},

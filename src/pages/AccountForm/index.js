@@ -20,6 +20,7 @@ import {Formik} from 'formik';
 import Header from '../../components/Header';
 import {getId, loadData} from '../../services/realm';
 import {showAlertError} from '../../services/alertService';
+import { SCHEMAS } from '../../schemas';
 
 export default function AccountForm({route, navigation}) {
   const accountItem = route.params?.account || null;
@@ -94,7 +95,7 @@ export default function AccountForm({route, navigation}) {
   async function saveAccountBd(values) {
     if (validateForm(values)) {
       if (!accountItem) {
-        const idMaxAccount = await getId('contas');
+        const idMaxAccount = await getId(SCHEMAS.ACCOUNT);
         values.id = idMaxAccount;
       }
       if (typeof values.balance === 'string')

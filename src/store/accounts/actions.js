@@ -6,15 +6,16 @@ import {
   LOAD_TOTALS_SUCCESS,
 } from './actionTypes';
 import {showError} from '../../services/alertService';
+import { SCHEMAS } from '../../schemas';
 
 export const loadAccounts = () => {
   return async (dispatch) => {
     try {
       dispatch({type: LOAD_ACCOUNTS});
-      const data = await loadData('contas');
+      const data = await loadData(SCHEMAS.ACCOUNT);
       loadAccountsSuccess(dispatch, data);
 
-      const valuesTotals = await loadData('totals');
+      const valuesTotals = await loadData(SCHEMAS.TOTALS);
       if (valuesTotals.length) {
         const {value} = valuesTotals[0];
         totalsLoadSuccess(dispatch, {
@@ -41,7 +42,7 @@ const totalsLoadSuccess = (dispatch, totals) => {
 };
 
 export async function saveTotalValuesBd({totalValueAccounts, dispatch}) {
-  writeData('totals', {
+  writeData(SCHEMAS.TOTALS, {
     id: 1,
     value: String(totalValueAccounts),
     month: '0',
@@ -56,8 +57,8 @@ export async function saveTotalValuesBd({totalValueAccounts, dispatch}) {
 export const saveAccount = (account) => {
   return async (dispatch) => {
     try {
-      writeData('contas', account);
-      const data = await loadData('totals', "type = 'accounts'");
+      writeData(SCHEMAS.ACCOUNT, account);
+      const data = await loadData(SCHEMAS.TOTALS, "type = 'accounts'");
 
       if (data.length) {
         const [{value}] = data;
@@ -87,10 +88,10 @@ export const saveAccount = (account) => {
 export const deleteAccount = (account) => {
   return async (dispatch) => {
     try {
-      await removeById('contas', account.id);
+      await removeById(SCHEMAS.ACCOUNT, account.id);
       const initialValueAccount = account.initialBalance * 100;
 
-      const data = await loadData('totals', 'id = 1');
+      const data = await loadData(SCHEMAS.TOTALS, 'id = 1');
       if (data.length) {
         const {value} = data[0];
         const sum = value - initialValueAccount;

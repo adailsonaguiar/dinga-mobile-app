@@ -1,5 +1,7 @@
+import { SCHEMAS } from ".";
+
 const TransactionSchema = {
-  name: 'transaction',
+  name: SCHEMAS.TRANSACTION,
   primaryKey: 'id',
   properties: {
     id: {type: 'int', indexed: true},

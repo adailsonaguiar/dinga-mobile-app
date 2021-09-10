@@ -14,6 +14,9 @@ import {showError} from '../../services/alertService';
 import {getDate} from '../../utils/FunctionUtils';
 import {transactionType} from '../../schemas/TransactionSchema';
 
+import {TRANSACTION_STATUS} from '../../utils/transactionStatus';
+import {SCHEMAS} from '../../schemas';
+
 const loadTransactionsSuccess = (dispatch, transactions) => {
   dispatch({type: LOAD_TRANSACTIONS_SUCCESS, payload: transactions});
 };
@@ -28,13 +31,13 @@ export const loadTransactions = ({month, year}) => {
     try {
       dispatch({type: LOAD_TRANSACTIONS});
       const data = await loadData(
-        'transaction',
+        SCHEMAS.TRANSACTION,
         `month = '${month}' AND year = '${year}'`,
       );
       loadTransactionsSuccess(dispatch, data);
 
       const dataTotals = await loadData(
-        'totals',
+        SCHEMAS.TOTALS,
         `month = '${month}' AND year = '${year}'`,
       );
 
@@ -77,10 +80,10 @@ export const saveTransactions = (transaction) => {
   return async (dispatch) => {
     try {
       dispatch({type: SAVE_TRANSACTION_REQUEST});
-      await writeData('transaction', transaction);
+      await writeData(SCHEMAS.TRANSACTION, transaction);
 
       const dataTotals = await loadData(
-        'totals',
+        SCHEMAS.TOTALS,
         `type ='${transaction.type}'  AND month = '${transaction.month}' AND year = '${transaction.year}'`,
       );
 
@@ -109,6 +112,13 @@ export const saveTransactions = (transaction) => {
         });
       }
 
+      if (transaction.status === TRANSACTION_STATUS.PAID) {
+        const dataTotals = await loadData(
+          SCHEMAS.ACCOUNT,
+          `type ='${transaction.type}'  AND month = '${transaction.month}' AND year = '${transaction.year}'`,
+        );
+      }
+
       /*  */
       navigate(pages.transactions);
       saveTransactionsSuccess(dispatch);
@@ -130,10 +140,10 @@ export const saveTransactions = (transaction) => {
 export const deleteTransaction = (transaction) => {
   return async (dispatch) => {
     try {
-      await removeById('transaction', transaction.id);
+      await removeById(SCHEMAS.TRANSACTION, transaction.id);
 
       const dataTotals = await loadData(
-        'totals',
+        SCHEMAS.TOTALS,
         `type ='${transaction.type}'  AND month = '${transaction.month}' AND year = '${transaction.year}'`,
       );
       const [totals] = dataTotals;
@@ -167,7 +177,10 @@ export function loadTransactionsByAccount() {
   return async (dispatch) => {
     try {
       dispatch({type: LOAD_TRANSACTIONS});
-      const data = await loadData('transaction', 'accountId = 1 LIMIT(5)');
+      const data = await loadData(
+        SCHEMAS.TRANSACTION,
+        'accountId = 1 LIMIT(5)',
+      );
       loadTransactionsSuccess(dispatch, data);
     } catch (error) {
       loadTransactionsFailure();
@@ -190,7 +203,7 @@ export async function saveTotalValuesBd({
 }) {
   if (!!totals?.id) {
     const id = totals.id;
-    writeData('totals', {
+    writeData(SCHEMAS.TOTALS, {
       id,
       value: String(value),
       month: month,
@@ -198,8 +211,8 @@ export async function saveTotalValuesBd({
       type: transactionType,
     });
   } else {
-    const finalId = await getId('totals');
-    writeData('totals', {
+    const finalId = await getId(SCHEMAS.TOTALS);
+    writeData(SCHEMAS.TOTALS, {
       id: finalId,
       value: String(value),
       month: month,

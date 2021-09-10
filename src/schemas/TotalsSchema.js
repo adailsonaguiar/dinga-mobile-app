@@ -1,5 +1,7 @@
+import { SCHEMAS } from ".";
+
 const TotalsSchema = {
-  name: 'totals',
+  name: SCHEMAS.TOTALS,
   primaryKey: 'id',
   properties: {
     id: {type: 'int', indexed: true},

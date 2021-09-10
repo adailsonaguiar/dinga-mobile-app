@@ -30,6 +30,7 @@ import {
   LabelBtnRemove,
 } from '../AccountForm/styles';
 import {formatteNumber} from '../../utils/FunctionUtils';
+import {SCHEMAS} from '../../schemas';
 
 const TransactionForm = ({navigation, route}) => {
   const FORM_TYPE = route.params?.formType;
@@ -118,7 +119,7 @@ const TransactionForm = ({navigation, route}) => {
   async function onSubmit(values) {
     if (validateForm(values)) {
       if (!expenseEdit) {
-        const idMaxAccount = await getId('transaction');
+        const idMaxAccount = await getId(SCHEMAS.TRANSACTION);
         values.id = idMaxAccount;
       }
       if (typeof values.value === 'string')
