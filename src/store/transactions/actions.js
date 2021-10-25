@@ -37,6 +37,7 @@ export const loadTransactions = ({month, year}) => {
       );
       loadTransactionsSuccess(dispatch, data);
 
+      /*
       const dataTotals = await loadData(
         SCHEMAS.TOTALS,
         `month = '${month}' AND year = '${year}'`,
@@ -57,6 +58,7 @@ export const loadTransactions = ({month, year}) => {
           ? String(totalsTransactionsOut.value)
           : '0',
       });
+      */
     } catch (error) {
       loadTransactionsFailure(dispatch);
       showError(error);
@@ -77,63 +79,127 @@ const saveTransactionsFailure = (dispatch) => {
   dispatch({type: SAVE_TRANSACTION_FAILURE});
 };
 
+async function updateAccountBalance(dispatch, transaction) {
+  const accounts = await loadData(
+    SCHEMAS.ACCOUNT,
+    `id ='${transaction.accountId}'`,
+  );
+
+  const transactionAccount = accounts[0];
+  const prevValueTransaction = transaction.initialValue * 100;
+  let newAccountBalance = 0;
+
+  if (transaction.type === transactionType.TRANSACTION_IN)
+    newAccountBalance =
+      transactionAccount.balance + transaction.value - prevValueTransaction;
+
+  if (transaction.type === transactionType.TRANSACTION_OUT) {
+    newAccountBalance =
+      transactionAccount.balance + prevValueTransaction - transaction.value;
+  }
+  const newAccountValues = {
+    id: transactionAccount.id,
+    balance: newAccountBalance,
+  };
+
+  dispatch(saveAccount(newAccountValues));
+}
+
+async function getDataTotals(transaction) {
+  const dataTotals = await loadData(
+    SCHEMAS.TOTALS,
+    `type ='${transaction.type}'  AND month = '${transaction.month}' AND year = '${transaction.year}'`,
+  );
+  return dataTotals;
+}
+
+function incrementDataTotals(transaction, totals) {
+  const withoutPrevValue =
+    Number(totals.value / 100) - Number(transaction.initialValue);
+  return withoutPrevValue + Number(transaction.value / 100);
+}
+
+export async function saveTotalValuesBd({
+  value,
+  transaction,
+  dispatch,
+  totals,
+}) {
+  writeData(SCHEMAS.TOTALS, {
+    value: String(value),
+    month: transaction.month,
+    year: transaction.year,
+    type: transaction.type,
+  });
+
+  if (transactionType === 'TRANSACTION_IN')
+    totalsLoadSuccess(dispatch, {
+      totalValueTransactionsIn: String(value),
+    });
+  if (transactionType === 'TRANSACTION_OUT')
+    totalsLoadSuccess(dispatch, {
+      totalValueTransactionsOut: String(value),
+    });
+}
+
 export const saveTransactions = (transaction) => {
   return async (dispatch) => {
     try {
       dispatch({type: SAVE_TRANSACTION_REQUEST});
       await writeData(SCHEMAS.TRANSACTION, transaction);
 
-      const dataTotals = await loadData(
-        SCHEMAS.TOTALS,
-        `type ='${transaction.type}'  AND month = '${transaction.month}' AND year = '${transaction.year}'`,
+      const dataTotalsByType = await getDataTotals(transaction);
+      const transactionConfirmed = transaction;
+      transactionConfirmed.type = `${transaction.type}_CONFIRMED`;
+      const dataTotalsTypeConfirmed = await getDataTotals(transactionConfirmed);
+      console.log(
+        'confirmed =>',
+        dataTotalsTypeConfirmed,
+        'type =>',
+        dataTotalsByType,
       );
 
-      /*  */
-      if (dataTotals.length) {
-        const [totals] = dataTotals;
-        const withoutPrevValue =
-          Number(totals.value / 100) - Number(transaction.initialValue);
-        const sum = withoutPrevValue + Number(transaction.value / 100);
+      if (dataTotalsByType.length) {
+        const [totals] = dataTotalsByType;
+
+        const sum = incrementDataTotals(transaction, totals);
 
         saveTotalValuesBd({
           dispatch,
           value: sum * 100,
-          transactionType: transaction.type,
-          month: transaction.month,
-          year: transaction.year,
+          transaction: transaction,
           totals,
         });
       } else {
         saveTotalValuesBd({
           dispatch,
           value: transaction.value,
-          transactionType: transaction.type,
-          month: transaction.month,
-          year: transaction.year,
+          transaction: transaction,
         });
       }
 
       if (transaction.status === TRANSACTION_STATUS.PAID) {
-        const accounts = await loadData(
-          SCHEMAS.ACCOUNT,
-          `id ='${transaction.accountId}'`,
-        );
+        if (dataTotalsTypeConfirmed.length) {
+          const [totals] = dataTotalsTypeConfirmed;
 
-        const transactionAccount = accounts[0];
-        let newAccountBalance = 0;
+          const sum = incrementDataTotals(dataTotalsTypeConfirmed, totals);
 
-        if (transaction.type === transactionType.TRANSACTION_IN)
-          newAccountBalance = transactionAccount.balance + transaction.value;
-        if (transaction.type === transactionType.TRANSACTION_OUT)
-          newAccountBalance = transactionAccount.balance - transaction.value;
-
-        const newAccountValues = {
-          id: transactionAccount.id,
-          balance: newAccountBalance,
-        };
-
-        dispatch(saveAccount(newAccountValues));
+          saveTotalValuesBd({
+            dispatch,
+            value: sum * 100,
+            transaction: transactionConfirmed,
+            totals,
+          });
+        } else {
+          saveTotalValuesBd({
+            dispatch,
+            value: dataTotalsTypeConfirmed.value,
+            transaction: transactionConfirmed,
+          });
+        }
       }
+
+      await updateAccountBalance(dispatch, transaction);
 
       /*  */
       navigate(pages.transactions);
@@ -174,6 +240,8 @@ export const deleteTransaction = (transaction) => {
         totals,
       });
 
+      await updateAccountBalance(dispatch, transaction);
+
       getDate().then((date) =>
         dispatch(
           loadTransactions({
@@ -208,46 +276,3 @@ export function loadTransactionsByAccount() {
 const totalsLoadSuccess = (dispatch, totals) => {
   dispatch({type: LOAD_TOTALS_SUCCESS, payload: totals});
 };
-
-export async function saveTotalValuesBd({
-  value,
-  month,
-  year,
-  dispatch,
-  transactionType,
-  totals,
-}) {
-  if (!!totals?.id) {
-    const id = totals.id;
-    writeData(SCHEMAS.TOTALS, {
-      id,
-      value: String(value),
-      month: month,
-      year: year,
-      type: transactionType,
-    });
-  } else {
-    const finalId = await getId(SCHEMAS.TOTALS);
-    writeData(SCHEMAS.TOTALS, {
-      id: finalId,
-      value: String(value),
-      month: month,
-      year: year,
-      type: transactionType,
-    });
-  }
-
-  /* 
-  TRANSACTION_IN: 'TRANSACTION_IN',
-  TRANSACTION_OUT: 'TRANSACTION_OUT',
-  */
-
-  if (transactionType === 'TRANSACTION_IN')
-    totalsLoadSuccess(dispatch, {
-      totalValueTransactionsIn: String(value),
-    });
-  if (transactionType === 'TRANSACTION_OUT')
-    totalsLoadSuccess(dispatch, {
-      totalValueTransactionsOut: String(value),
-    });
-}

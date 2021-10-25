@@ -1,12 +1,11 @@
-import { SCHEMAS } from ".";
+import {SCHEMAS} from '.';
 
 const TotalsSchema = {
   name: SCHEMAS.TOTALS,
-  primaryKey: 'id',
+  primaryKey: 'type',
   properties: {
-    id: {type: 'int', indexed: true},
-    value: 'string',
     type: 'string',
+    value: 'string',
     year: 'string',
     month: 'string',
   },

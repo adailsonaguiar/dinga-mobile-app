@@ -12,8 +12,11 @@ import {pages} from '../../routes';
 
 const Accounts = ({navigation}) => {
   const accounts = useSelector((state) => state.accounts.accounts);
-  const totalValueAccounts = useSelector(
-    (state) => state.accounts.totalValueAccounts,
+  const totalValueOut = useSelector(
+    (state) => state.transactions.totalValueTransactionsOut,
+  );
+  const totalValueIn = useSelector(
+    (state) => state.transactions.totalValueTransactionsIn,
   );
 
   const accountIndetify = getAccountIndentity();
@@ -46,9 +49,7 @@ const Accounts = ({navigation}) => {
         </S.Lista>
         <S.Footer>
           <S.SaldoTotal>
-            {totalValueAccounts
-              ? `Total das contas: R$ ${formatMoney(totalValueAccounts)}`
-              : ''}
+            Total das contas: R$ ${formatMoney(totalValueIn - totalValueOut)}
           </S.SaldoTotal>
           <S.BtnNovaConta
             onPress={() => {

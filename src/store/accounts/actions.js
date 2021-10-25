@@ -1,4 +1,4 @@
-import {loadData, removeById, writeData} from './../../services/realm';
+import {getId, loadData, removeById, writeData} from './../../services/realm';
 import {
   LOAD_ACCOUNTS_SUCCESS,
   LOAD_ACCOUNTS,
@@ -7,6 +7,7 @@ import {
 } from './actionTypes';
 import {showError} from '../../services/alertService';
 import { SCHEMAS } from '../../schemas';
+import { saveTransactions } from '../transactions/actions';
 
 export const loadAccounts = () => {
   return async (dispatch) => {
@@ -15,6 +16,7 @@ export const loadAccounts = () => {
       const data = await loadData(SCHEMAS.ACCOUNT);
       loadAccountsSuccess(dispatch, data);
 
+      /*
       const valuesTotals = await loadData(SCHEMAS.TOTALS);
       if (valuesTotals.length) {
         const {value} = valuesTotals[0];
@@ -22,6 +24,7 @@ export const loadAccounts = () => {
           totalValueAccounts: value,
         });
       }
+      */
     } catch (error) {
       messageResponse.error(error);
       loadAccountsFailure(dispatch);

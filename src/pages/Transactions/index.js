@@ -23,6 +23,7 @@ const Transactions = ({navigation}) => {
   const totalValueIn = useSelector(
     (state) => state.transactions.totalValueTransactionsIn,
   );
+  console.log(totalValueIn, totalValueOut);
 
   function getTransactionStatus(status) {
     const statusList = {

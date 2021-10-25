@@ -26,7 +26,7 @@ export const getId = async (schema) => {
 export const loadData = async (schema, filter = '') => {
   return getRealm()
     .then((date) => {
-      const data = date.objects(schema).sorted('id', 1);
+      const data = date.objects(schema);
       if (!!filter) {
         const thanData = data.filtered(filter);
         return thanData;

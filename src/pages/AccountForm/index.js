@@ -98,9 +98,8 @@ export default function AccountForm({route, navigation}) {
         const idMaxAccount = await getId(SCHEMAS.ACCOUNT);
         values.id = idMaxAccount;
       }
-      if (typeof values.balance === 'string')
-        values.balance = refs.balance.getRawValue();
-      values.balance = values.balance * 100;
+      
+      values.balance = 0;
 
       const date = new Date();
       values.day = String(date.getDate());
@@ -159,23 +158,6 @@ export default function AccountForm({route, navigation}) {
               onChangeText={(text) => {
                 setFieldValue('description', text);
               }}
-            />
-            <Input
-              label="Valor"
-              placeholder="R$40,00"
-              type={'money'}
-              options={{
-                precision: 2,
-                separator: ',',
-                delimiter: '.',
-                unit: 'R$',
-                suffixUnit: '',
-              }}
-              value={values.balance}
-              onChangeText={(maskedText) => {
-                setFieldValue('balance', maskedText);
-              }}
-              ref={(ref) => (refs.balance = ref)}
             />
             {accountItem && (
               <ContainerFormFooter>
